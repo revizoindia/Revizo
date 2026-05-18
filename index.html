@@ -28,7 +28,7 @@
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const shopId = urlParams.get('shop') || 'SHOP1';
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTPfy8DDrUs_xbidCA54uSBdZDRwAXkgux8JXLTLumH9dDkxI73h3y2s-IndWSGW6B/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz05XI5gdV_RlCXaIzgGn2PFL0TZwMNiPIb4clA7v_P1wUl-gN-Yin7B5Zqh5r3pxxQ/exec";
 
     // Inject the customer/shop data into the invisible iframe
     document.getElementById('app-frame').src = SCRIPT_URL + '?' + urlParams.toString();
