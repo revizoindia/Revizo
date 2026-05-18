@@ -34,7 +34,7 @@
           document.getElementById('dynamic-favicon').href = data.logoUrl;
           document.getElementById('dynamic-apple-icon').href = data.logoUrl;
           
-          // THE MAGIC TRICK: Force Android to recognize the dynamic app icon
+          // BULLETPROOF ANDROID TRICK: Data URI Manifest + "any" size
           const manifestJSON = {
             "name": data.shopName || "Rewards App",
             "short_name": data.shopName || "Rewards",
@@ -42,12 +42,13 @@
             "start_url": window.location.href,
             "icons": [{
               "src": data.logoUrl,
-              "sizes": "192x192 512x512",
-              "type": "image/jpeg"
+              "sizes": "192x192 512x512 any" // "any" stops Chrome from rejecting custom sizes
             }]
           };
-          const blob = new Blob([JSON.stringify(manifestJSON)], {type: 'application/json'});
-          document.getElementById('dynamic-manifest').href = URL.createObjectURL(blob);
+          
+          // Force-feed Chrome the manifest as raw text so it can't ignore it
+          const manifestDataUrl = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifestJSON));
+          document.getElementById('dynamic-manifest').href = manifestDataUrl;
         }
       })
       .catch(err => console.log("Meta load error", err));
