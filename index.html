@@ -8,9 +8,9 @@
   <title>Rewards Portal</title>
   <link id="dynamic-favicon" rel="icon" href="">
   <link id="dynamic-apple-icon" rel="apple-touch-icon" href="">
+  <link id="dynamic-manifest" rel="manifest" href="">
   
   <style>
-    /* This strips away all borders and makes the iframe act like a native app */
     body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #f0f4f8; }
     iframe { width: 100%; height: 100%; border: none; }
   </style>
@@ -20,25 +20,34 @@
   <iframe id="app-frame" src=""></iframe>
 
   <script>
-    // 1. Grab all parameters from the URL (shop, page, and auth token)
     const urlParams = new URLSearchParams(window.location.search);
     const shopId = urlParams.get('shop') || 'SHOP1';
-
-    // 2. Your Master Google Apps Script Web App Link
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsACkMhtohSGiImCyid7VUt1H72nPDF-ONZK2V8XkJfofF9iS7Voq-aOyRZfgwQyP7/exec";
 
-    // 3. Inject ALL parameters into the iframe (This passes the hidden ?auth=1234 to the cashier securely)
     document.getElementById('app-frame').src = SCRIPT_URL + '?' + urlParams.toString();
 
-    // 4. Secretly ask the Google Sheet for this specific shop's logo
     fetch(`${SCRIPT_URL}?action=getShopMeta&shop=${shopId}`)
       .then(res => res.json())
       .then(data => {
         if(data.shopName) document.title = data.shopName;
         if(data.logoUrl) {
-          // 5. Update the invisible iOS/Android app icons so "Add to Home Screen" uses the client's actual logo
           document.getElementById('dynamic-favicon').href = data.logoUrl;
           document.getElementById('dynamic-apple-icon').href = data.logoUrl;
+          
+          // THE MAGIC TRICK: Force Android to recognize the dynamic app icon
+          const manifestJSON = {
+            "name": data.shopName || "Rewards App",
+            "short_name": data.shopName || "Rewards",
+            "display": "standalone",
+            "start_url": window.location.href,
+            "icons": [{
+              "src": data.logoUrl,
+              "sizes": "192x192 512x512",
+              "type": "image/jpeg"
+            }]
+          };
+          const blob = new Blob([JSON.stringify(manifestJSON)], {type: 'application/json'});
+          document.getElementById('dynamic-manifest').href = URL.createObjectURL(blob);
         }
       })
       .catch(err => console.log("Meta load error", err));
