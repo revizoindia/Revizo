@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="https://i.ibb.co/cSFSkRSZ/20260506-124457.png">
   <link rel="shortcut icon" href="https://i.ibb.co/cSFSkRSZ/20260506-124457.png">
 
-  <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%20%22name%22%3A%20%22Revizo%20Rewards%22%2C%20%22short_name%22%3A%20%22Revizo%22%2C%20%22display%22%3A%20%22standalone%22%2C%20%22start_url%22%3A%20%22.%2F%22%2C%20%22icons%22%3A%20%5B%7B%20%22src%22%3A%20%22https%3A%2F%2Fi.ibb.co%2FcSFSkRSZ%2F20260506-124457.png%22%2C%20%22sizes%22%3A%20%22192x192%20512x512%20any%22%2C%20%22type%22%3A%20%22image%2Fpng%22%20%7D%5D%20%7D'>
+  <link id="dynamic-manifest" rel="manifest" href="">
   
   <style>
     body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #f0f4f8; }
@@ -26,16 +26,29 @@
   <iframe id="app-frame" src=""></iframe>
 
   <script>
-    // 1. Your exact active Google Deployment Link (UPDATED)
+    // 1. Your exact active Google Deployment Link
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyQclVaM9uGT_1bx9qdc-sDgRpey89SftQCcR_Ry7XrT9SiGk5VK5yJabJvhCdYN_jp/exec";
 
-    // 2. Safely grab the full query string exactly as typed (e.g., ?page=cashier&shop=IQBAL&auth=1111)
+    // 2. Safely grab the full query string exactly as typed (e.g., ?page=cashier&shop=IQBAL)
     const rawParams = window.location.search;
 
-    // 3. Inject it instantly into the iframe
+    // 3. DYNAMIC APP MANIFEST FIX: This forces the phone icon to remember EXACTLY which page it was saved on.
+    const manifestData = {
+      "name": "Revizo Rewards",
+      "short_name": "Revizo",
+      "display": "standalone",
+      "start_url": rawParams || "?", // <-- This is the magic fix that saves the Cashier link
+      "icons": [{"src": "https://i.ibb.co/cSFSkRSZ/20260506-124457.png", "sizes": "192x192 512x512 any", "type": "image/png"}]
+    };
+    
+    // Inject the smart manifest into the page
+    const manifestString = JSON.stringify(manifestData);
+    document.getElementById('dynamic-manifest').href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(manifestString);
+
+    // 4. Inject it instantly into the iframe
     document.getElementById('app-frame').src = GAS_URL + rawParams;
 
-    // 4. Update the browser tab dynamically
+    // 5. Update the browser tab dynamically
     const parsedParams = new URLSearchParams(rawParams);
     const shopId = parsedParams.get('shop') || 'SHOP1';
     
