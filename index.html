@@ -26,17 +26,20 @@
   <iframe id="app-frame" src=""></iframe>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const shopId = urlParams.get('shop') || 'SHOP1';
+    // 1. Your exact active Google Deployment Link (UPDATED)
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyQclVaM9uGT_1bx9qdc-sDgRpey89SftQCcR_Ry7XrT9SiGk5VK5yJabJvhCdYN_jp/exec";
+
+    // 2. Safely grab the full query string exactly as typed (e.g., ?page=cashier&shop=IQBAL&auth=1111)
+    const rawParams = window.location.search;
+
+    // 3. Inject it instantly into the iframe
+    document.getElementById('app-frame').src = GAS_URL + rawParams;
+
+    // 4. Update the browser tab dynamically
+    const parsedParams = new URLSearchParams(rawParams);
+    const shopId = parsedParams.get('shop') || 'SHOP1';
     
-    // Your brand new Google Deployment Link is perfectly placed right here
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzg1a1j1sX2hkhaJ3qXaWv8nONAWhlxsGh8jGf7VWhO74X4sVZRAAqoizpuSdKQx_Mp/exec";
-
-    // Inject the customer/shop data into the invisible iframe
-    document.getElementById('app-frame').src = SCRIPT_URL + '?' + urlParams.toString();
-
-    // Dynamically change the top browser tab name to the client's shop name
-    fetch(`${SCRIPT_URL}?action=getShopMeta&shop=${shopId}`)
+    fetch(GAS_URL + '?action=getShopMeta&shop=' + shopId)
       .then(res => res.json())
       .then(data => {
         if(data.shopName) document.title = data.shopName + " Rewards";
