@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Smart Rewards</title>
-    <style>body, html {margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #0f172a;}</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Connect</title>
+    <style>
+        body, html {margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden;}
+        iframe {width: 100%; height: 100%; border: none;}
+    </style>
 </head>
 <body>
-    <iframe id="appFrame" style="width:100%; height:100%; border:none;"></iframe>
+    <iframe id="appFrame" 
+            allow="geolocation; microphone; camera; midi; encrypted-media" 
+            style="width:100%; height:100%; border:none;">
+    </iframe>
     <script>
-        // This magic script reads your link and connects to your Google Sheet!
         const urlParams = new URLSearchParams(window.location.search);
         const shopID = urlParams.get('shop') || '';
         const page = urlParams.get('page') || '';
         
-        // Your Master V3 Google Link
         let scriptUrl = "https://script.google.com/macros/s/AKfycbyxbGnwYbRkO1-tUPkY7PVhuc0HNPo4QXtOLukwQk2RSXzvM5SEiVdW8cDN_y0r0-MZ/exec";
         
-        // Connect them together
         let finalUrl = scriptUrl + "?shop=" + shopID;
         if(page) finalUrl += "&page=" + page;
         
