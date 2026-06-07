@@ -4,35 +4,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Smart Connect</title>
     <style>
-        body { font-family: -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f4f8; }
-        .loader { text-align: center; }
-        .spinner { border: 4px solid rgba(0,0,0,0.1); width: 40px; height: 40px; border-radius: 50%; border-left-color: #25D366; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        body, html {margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background-color: #f0f4f8;}
+        iframe {width: 100%; height: 100%; border: none;}
     </style>
 </head>
 <body>
-    
-    <div class="loader">
-        <div class="spinner"></div>
-        <h3 style="color: #333;">Connecting to VIP Wallet...</h3>
-    </div>
-
+    <iframe id="appFrame" 
+            allow="geolocation; microphone; camera; midi; encrypted-media" 
+            style="width:100%; height:100%; border:none;">
+    </iframe>
     <script>
-        // 1. Get the parameters from your GitHub URL
         const urlParams = new URLSearchParams(window.location.search);
         const shopID = urlParams.get('shop') || '';
         const page = urlParams.get('page') || '';
         
-        // 2. Your EXACT Google Apps Script Web App URL
         let scriptUrl = "https://script.google.com/macros/s/AKfycbyxbGnwYbRkO1-tUPkY7PVhuc0HNPo4QXtOLukwQk2RSXzvM5SEiVdW8cDN_y0r0-MZ/exec";
         
-        // 3. Build the final connection link
         let finalUrl = scriptUrl + "?shop=" + shopID;
         if(page) finalUrl += "&page=" + page;
         
-        // 4. DIRECT REDIRECT (This completely fixes the dead buttons!)
-        window.location.replace(finalUrl);
+        document.getElementById("appFrame").src = finalUrl;
     </script>
-
 </body>
 </html>
