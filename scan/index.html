@@ -18,9 +18,14 @@
         const shopID = urlParams.get('shop') || '';
         const page = urlParams.get('page') || '';
         
-        let scriptUrl = "https://script.google.com/macros/s/AKfycbyxbGnwYbRkO1-tUPkY7PVhuc0HNPo4QXtOLukwQk2RSXzvM5SEiVdW8cDN_y0r0-MZ/exec";
+        // Your Web App URL
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbyxbGnwYbRkO1-tUPkY7PVhuc0HNPo4QXtOLukwQk2RSXzvM5SEiVdW8cDN_y0r0-MZ/exec";
         
-        let finalUrl = scriptUrl + "?shop=" + shopID;
+        // This forces the PIN 1111 every time
+        const authPin = "1111"; 
+        
+        // Build the URL with Shop, Page, AND Auth PIN
+        let finalUrl = scriptUrl + "?shop=" + shopID + "&auth=" + authPin;
         if(page) finalUrl += "&page=" + page;
         
         document.getElementById("appFrame").src = finalUrl;
