@@ -566,4 +566,28 @@
         const masked = '******' + String(num).slice(-4);
         list.innerHTML += `<div class='list-card' id='card-${num}'><div style='font-size:20px; font-weight:bold;'>${masked}</div><div style='display:flex; gap:8px;'><button class='btn-reject' onclick='rejectReq("${num}")'>❌</button><button class='btn-approve' onclick='approveReq("${num}")'>✓ APPROVE</button></div></div>`;
       });
-    } else { list.inne
+        } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
+    
+    const remList = document.getElementById('reminderList'); remList.innerHTML = '';
+    if(reminders && reminders.length > 0) {
+      document.getElementById('remindersSection').style.display = 'block';
+      reminders.forEach(rem => {
+        const msg = encodeURIComponent(`Hi ${rem.name}! Your ${rem.type} is ${rem.time} away! Claim VIP offers at the store.`);
+        remList.innerHTML += `<div class='list-card crm-card'><div><div style='font-weight:bold;'>${rem.name}</div><div style='font-size:12px; color:#00ff87;'><b>${rem.time}</b> to ${rem.type}</div></div><a href='https://wa.me/91${rem.mobile}?text=${msg}' target='_blank' style='background:#25D366; color:#fff; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:bold;'>💬 MSG</a></div>`;
+      });
+    } else { document.getElementById('remindersSection').style.display = 'none'; }
+  }
+
+  function approveReq(mobile) {
+    document.getElementById('card-'+mobile).style.opacity = '0.5';
+    fetch(REVIZO_API + "?action=approveUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken).then(r => r.json()).then(d => { if(d.success) document.getElementById('card-'+mobile).remove(); loadPending(); });
+  }
+
+  function rejectReq(mobile) {
+    document.getElementById('card-'+mobile).style.opacity = '0.5';
+    fetch(REVIZO_API + "?action=rejectUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken).then(r => r.json()).then(d => { if(d.success) document.getElementById('card-'+mobile).remove(); loadPending(); });
+  }
+</script>
+</body>
+</html>
+
