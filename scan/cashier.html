@@ -20,26 +20,39 @@
   .stat-num { font-size: 24px; font-weight: 900; color: #00ff87; }
   .list-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 18px 20px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; text-align: left;}
   .crm-card { border-left: 4px solid #ff8a00; }
-  .btn-approve { background: #25D366; color: white; border: none; padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-  .btn-reject { background: rgba(255,59,48,0.2); color: #ff3b30; border: 1px solid rgba(255,59,48,0.5); padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+  .btn-approve { background: #25D366; color: white; border: none; padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: transform 0.1s; }
+  .btn-approve:active { transform: scale(0.95); }
+  .btn-reject { background: rgba(255,59,48,0.2); color: #ff3b30; border: 1px solid rgba(255,59,48,0.5); padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: transform 0.1s; }
+  .btn-reject:active { transform: scale(0.95); }
   .pin-input { width: 100%; padding: 16px; font-size: 28px; text-align: center; letter-spacing: 12px; border-radius: 14px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: var(--text); margin-bottom: 20px; outline: none; }
 </style>
 </head>
 <body>
 
 <div id="cashier-view" style="width: 100%; max-width: 500px;">
+  
+  <!-- PIN LOGIN SCREEN -->
   <div id="cashier-login" class="card active">
+    <!-- LOGO ADDED HERE -->
+    <img src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 100px; border-radius: 20px; margin-bottom: 15px; object-fit: contain;">
     <h2 style="margin-top:0;">Cashier Terminal</h2>
     <p style="opacity:0.7;">Enter 4-Digit PIN</p>
     <input type="password" id="pinInput" class="pin-input" maxlength="4" placeholder="••••" inputmode="numeric">
     <button id="unlockBtn" class="futuristic-btn" style="background:#00c6ff;" onclick="unlockDashboard()">UNLOCK TERMINAL</button>
   </div>
 
+  <!-- MAIN DASHBOARD -->
   <div id="cashier-dashboard" class="card" style="display:none; text-align: left;">
-    <div style="text-align:center; margin-bottom:20px;"><h2 style="margin:0;">🛒 Dashboard</h2></div>
+    <div style="text-align:center; margin-bottom:20px;">
+      <!-- LOGO ADDED HERE -->
+      <img src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 60px; border-radius: 15px; margin-bottom: 10px; object-fit: contain;">
+      <h2 style="margin:0;">🛒 Dashboard</h2>
+    </div>
+    
     <div class="stats-bar">
-      <div class="stat-box"><div class="stat-num" id="statToday">0</div><div style="font-size:11px; text-transform:uppercase; opacity:0.7;">Visits Today</div></div>
-      <div class="stat-box"><div class="stat-num" id="statVIPs" style="color:#00c6ff;">0</div><div style="font-size:11px; text-transform:uppercase; opacity:0.7;">Total VIPs</div></div>
+      <!-- CHANGED '0' TO '⏳' FOR LOADING -->
+      <div class="stat-box"><div class="stat-num" id="statToday">⏳</div><div style="font-size:11px; text-transform:uppercase; opacity:0.7;">Visits Today</div></div>
+      <div class="stat-box"><div class="stat-num" id="statVIPs" style="color:#00c6ff;">⏳</div><div style="font-size:11px; text-transform:uppercase; opacity:0.7;">Total VIPs</div></div>
     </div>
     
     <div id="remindersSection" style="display:none; margin-bottom:25px;">
@@ -48,7 +61,9 @@
     </div>
     
     <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">⏳ Pending Verifications</h3>
-    <div id="pendingList"></div>
+    <div id="pendingList">
+      <div style='color:#888; text-align:center;'>Fetching live data...</div>
+    </div>
   </div>
 </div>
 
@@ -101,8 +116,14 @@
     if(reminders && reminders.length > 0) {
       document.getElementById('remindersSection').style.display = 'block';
       reminders.forEach(rem => {
+        
+        // BULLETPROOF WHATSAPP NUMBER CLEANER
+        let cleanMobile = String(rem.mobile).replace(/\D/g, '');
+        if (cleanMobile.length === 10) { cleanMobile = '91' + cleanMobile; }
+
         const msg = encodeURIComponent(`Hi ${rem.name}! Your ${rem.type} is ${rem.time} away! Claim VIP offers at the store.`);
-        remList.innerHTML += `<div class='list-card crm-card'><div><div style='font-weight:bold;'>${rem.name}</div><div style='font-size:12px; color:#00ff87;'><b>${rem.time}</b> to ${rem.type}</div></div><a href='https://wa.me/91${rem.mobile}?text=${msg}' target='_blank' style='background:#25D366; color:#fff; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:bold;'>💬 MSG</a></div>`;
+        
+        remList.innerHTML += `<div class='list-card crm-card'><div><div style='font-weight:bold;'>${rem.name}</div><div style='font-size:12px; color:#00ff87;'><b>${rem.time}</b> to ${rem.type}</div></div><a href='https://wa.me/${cleanMobile}?text=${msg}' target='_blank' style='background:#25D366; color:#fff; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:bold; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);'>💬 MSG</a></div>`;
       });
     } else { document.getElementById('remindersSection').style.display = 'none'; }
   }
