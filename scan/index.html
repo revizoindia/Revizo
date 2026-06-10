@@ -20,12 +20,10 @@
 
   input, button { touch-action: manipulation; box-sizing: border-box; }
 
-  /* Premium Squircle Inputs */
   .dark-input { width: 100%; padding: 18px; font-size: clamp(16px, 4vw, 18px); border-radius: 24px; text-align: center; background: var(--input); border: 2px solid var(--border); box-shadow: inset 0 2px 4px rgba(255,255,255,0.1), 0 5px 10px rgba(0,0,0,0.4); color: var(--text) !important; font-weight: 700; transition: 0.3s; outline: none; }
   .dark-input::placeholder { color: #888; font-weight: 500; }
   .dark-input:focus { border-color: #4CAF50; }
   
-  /* Locked +91 Wrapper */
   .phone-wrapper { display: flex; align-items: center; background: var(--input); border: 2px solid var(--border); border-radius: 24px; box-shadow: inset 0 2px 4px rgba(255,255,255,0.1), 0 5px 10px rgba(0,0,0,0.4); transition: 0.3s; overflow: hidden; margin-bottom: 5px; }
   .phone-wrapper:focus-within { border-color: #4CAF50; }
   .prefix { padding: 18px 0 18px 18px; color: #888; font-weight: 700; font-size: clamp(16px, 4vw, 18px); user-select: none; }
@@ -39,16 +37,13 @@
   .btn-mic-dark:hover { background: #444; }
   .btn-mic-dark:active { transform: scale(0.95); }
 
-  /* Error Animations */
   @keyframes errorShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
   .error-border { border-color: #ff5252 !important; animation: errorShake 0.4s; background: rgba(255,82,82,0.1) !important; }
   .error-text { color: #ff5252; font-size: 12px; display: none; text-align: left; margin-bottom: 10px; padding-left: 15px; font-weight: bold; }
 
-  /* Mic Animations */
   @keyframes micPulse { 0% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 82, 82, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0); } }
   .mic-listening { animation: micPulse 1.5s infinite; border-color: #ff5252 !important; background: #552222 !important; }
 
-  /* Futuristic Buttons */
   .submit-container { width: 100%; margin-top: 25px; display: flex; justify-content: center; flex-direction: column; gap: 15px; }
   .futuristic-btn { position: relative; border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 50px; color: #000000 !important; font-weight: 900; font-size: clamp(16px, 4vw, 20px); letter-spacing: 1px; padding: 18px 20px; width: 100%; cursor: pointer; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); transition: all 0.3s ease; animation: floatAnim 3s ease-in-out infinite, fastColorGlow 2s infinite linear, glassLightPulse 0.5s infinite alternate; }
   .btn-visitor { background: rgba(255, 255, 255, 0.1) !important; border-color: rgba(255, 255, 255, 0.3); color: var(--text) !important; animation: none; font-size: 15px; padding: 15px; }
@@ -65,7 +60,6 @@
   @keyframes fastColorGlow { 0% { background-color: rgba(100, 200, 255, 0.3); box-shadow: 0 0 20px rgba(100,200,255,0.5); } 25% { background-color: rgba(255, 150, 200, 0.3); box-shadow: 0 0 20px rgba(255,150,200,0.5); } 50% { background-color: rgba(150, 255, 150, 0.3); box-shadow: 0 0 20px rgba(150,255,150,0.5); } 75% { background-color: rgba(255, 200, 100, 0.3); box-shadow: 0 0 20px rgba(255,200,100,0.5); } 100% { background-color: rgba(100, 200, 255, 0.3); box-shadow: 0 0 20px rgba(100,200,255,0.5); } }
   @keyframes glassLightPulse { 0% { filter: brightness(1) drop-shadow(0 0 5px rgba(255,255,255,0.2)); } 100% { filter: brightness(1.3) drop-shadow(0 0 15px rgba(255,255,255,0.8)); } }
 
-  /* Wallet & Overlays */
   .consent-box { display: flex; align-items: center; gap: 10px; font-size: 13px; margin: 25px 0 15px 0; color: #bbb; text-align: left; }
   .listening-text { color: var(--text); font-weight: bold; margin-bottom: 5px; display: none; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
   .listening-hint { font-size: 11px; color: #888; display: none; margin-bottom: 15px; } 
@@ -81,7 +75,6 @@
   #network-badge { position: absolute; top: 20px; right: 20px; width: 12px; height: 12px; border-radius: 50%; background: #4CAF50; box-shadow: 0 0 10px #4CAF50; transition: 0.3s; }
   .badge-offline { background: #ff5252 !important; box-shadow: 0 0 10px #ff5252 !important; }
 
-  /* Cashier Terminal Elements */
   #cashier-view { width: 100%; max-width: 500px; display: none; }
   .stats-bar { display: flex; gap: 10px; margin-bottom: 20px; }
   .stat-box { flex: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 15px; border-radius: 12px; text-align: center; }
@@ -107,7 +100,7 @@
   <div id="step-1" class="card active">
     <div id="network-badge" title="Network Status"></div>
     
-    <img id="shopLogo" src="PASTE_YOUR_LOGO_LINK_HERE" onerror="this.style.display='none'" style="max-width: 120px; max-height: 120px; border-radius: 30px; margin-bottom: 15px; object-fit: contain;">
+    <img id="shopLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 120px; max-height: 120px; border-radius: 30px; margin-bottom: 15px; object-fit: contain;">
     <h2 id="shopTitle" style="color: var(--text); margin-top: 0;">Welcome VIP</h2>
     <p style="font-size:12px; opacity:0.7; margin-top:-10px; margin-bottom:20px;">Returning VIPs: Only Number is required!</p>
     
@@ -151,16 +144,16 @@
     <div class="submit-container">
       <button class="futuristic-btn" id="btn-submit" onclick="submitForm()">ACCESS VIP WALLET</button>
       
-      <button class="futuristic-btn btn-visitor" onclick="toggleVisitorMenu()">👁️ CONTINUE AS VISITOR</button>
+      <button type="button" class="futuristic-btn btn-visitor" onclick="toggleVisitorMenu(event)">👁️ CONTINUE AS VISITOR</button>
       <div id="visitor-ages" style="display:none;">
         <p style="font-size:12px; color:#bbb; margin:0 0 5px 0;">Select your age group to join our community:</p>
         <div class="age-grid">
-          <button class="age-btn" onclick="joinVisitor('16 to 20')">16 - 20</button>
-          <button class="age-btn" onclick="joinVisitor('21 to 25')">21 - 25</button>
-          <button class="age-btn" onclick="joinVisitor('26 to 35')">26 - 35</button>
-          <button class="age-btn" onclick="joinVisitor('36 to 44')">36 - 44</button>
-          <button class="age-btn" onclick="joinVisitor('45 to 55')">45 - 55</button>
-          <button class="age-btn" onclick="joinVisitor('default')">55+</button>
+          <button type="button" class="age-btn" onclick="joinVisitor('16 to 20')">16 - 20</button>
+          <button type="button" class="age-btn" onclick="joinVisitor('21 to 25')">21 - 25</button>
+          <button type="button" class="age-btn" onclick="joinVisitor('26 to 35')">26 - 35</button>
+          <button type="button" class="age-btn" onclick="joinVisitor('36 to 44')">36 - 44</button>
+          <button type="button" class="age-btn" onclick="joinVisitor('45 to 55')">45 - 55</button>
+          <button type="button" class="age-btn" onclick="joinVisitor('default')">55+</button>
         </div>
       </div>
     </div>
@@ -191,7 +184,7 @@
     <div class="submit-container" style="margin-top:20px;">
       <button id="newStampBtn" class="futuristic-btn" style="padding: 15px; font-size: 16px;" onclick="requestNewStamp()">📤 CLAIM RE-VISIT REWARDS</button>
       <a id="dynamicWaBtn" href="#" target="_blank" style="text-decoration: none; display: none;">
-        <button class="futuristic-btn btn-whatsapp">💬 VIP WHATSAPP GROUP</button>
+        <button type="button" class="futuristic-btn btn-whatsapp">💬 VIP WHATSAPP GROUP</button>
       </a>
     </div>
   </div>
@@ -220,16 +213,14 @@
     <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">⏳ Pending Verifications</h3>
     <div id="pendingList"></div>
   </div>
-        </div>
+      </div>
 
   <script>
   // ==========================================
   // MASTER CONFIGURATION & VISITOR LINKS
   // ==========================================
-  // PASTE YOUR SCRIPT URL HERE:
   const REVIZO_API = "https://script.google.com/macros/s/AKfycbyxbGnwYbRkO1-tUPkY7PVhuc0HNPo4QXtOLukwQk2RSXzvM5SEiVdW8cDN_y0r0-MZ/exec"; 
   
-  // PASTE YOUR WHATSAPP COMMUNITY LINKS HERE:
   const VISITOR_LINKS = {
       "default": "PASTE_LINK_DEFAULT",
       "16 to 20": "PASTE_LINK_16_20",
@@ -258,23 +249,19 @@
       initCustomerKiosk();
     }
     
-    // Apple App Warning
     const ua = navigator.userAgent || navigator.vendor || window.opera;
     if (ua.indexOf('FBAN') > -1 || ua.indexOf('FBAV') > -1 || ua.indexOf('Instagram') > -1 || ua.indexOf('WhatsApp') > -1) {
       document.getElementById('inapp-warning').style.display = 'flex';
     }
-    // Mic Hardware Hider
     if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
       document.querySelectorAll('.btn-mic-dark').forEach(m => m.style.display = 'none');
     }
     
-    // Offline Ping
     let startTime = Date.now();
     fetch('https://www.google.com/favicon.ico', { mode: 'no-cors', cache: 'no-store' }).then(() => {
       if(Date.now() - startTime > 1000) networkTimeoutLimit = 10000; 
     }).catch(() => toggleOffline(true));
 
-    // Draft Saver & Auto-scroll
     document.querySelectorAll('.save-draft').forEach(input => {
       let saved = localStorage.getItem('draft_' + input.id);
       if(saved) { input.value = saved; isFormDirty = true; }
@@ -311,10 +298,16 @@
   // ==========================================
   // VISITOR MENU ADDITION
   // ==========================================
-  function toggleVisitorMenu() {
+  function toggleVisitorMenu(e) {
+    if(e) e.preventDefault();
     const menu = document.getElementById("visitor-ages");
-    menu.style.display = menu.style.display === "none" ? "block" : "none";
+    if (menu.style.display === "none" || menu.style.display === "") {
+      menu.style.display = "block";
+    } else {
+      menu.style.display = "none";
+    }
   }
+
   function joinVisitor(ageGroup) {
     const link = VISITOR_LINKS[ageGroup] || VISITOR_LINKS["default"];
     if (link && link !== "PASTE_LINK_DEFAULT" && link !== "PASTE_LINK_"+ageGroup.replace(/ /g,"_")) {
@@ -442,7 +435,6 @@
     fetch(REVIZO_API + "?action=submitVisit&shopId=" + SHOP_ID + "&mobile=" + mobile).then(r => r.json()).then(data => {
       if(data.status === "RATE_LIMITED") { alert("Too many requests."); btn.disabled=false; btn.innerHTML="📤 CLAIM RE-VISIT REWARDS"; return; }
       
-      // THE 24-HOUR HOME SCAMMER LOCK ADDITION
       if (data.status === "ALREADY_APPROVED") {
         btn.innerHTML = "⏳ COME BACK TOMORROW";
         btn.disabled = true;
@@ -490,7 +482,6 @@
     
     let nBtn = document.getElementById("newStampBtn");
     
-    // Check Status to Update Re-visit button state
     if(data.status === "APPROVED" || data.status === "CLAIMED") {
       document.getElementById("visitStatus").innerText = "✅ Card Up to Date"; document.getElementById("visitStatus").className = "status-badge bg-success";
       nBtn.disabled = true; nBtn.innerHTML = "⏳ COME BACK TOMORROW";
@@ -566,7 +557,7 @@
         const masked = '******' + String(num).slice(-4);
         list.innerHTML += `<div class='list-card' id='card-${num}'><div style='font-size:20px; font-weight:bold;'>${masked}</div><div style='display:flex; gap:8px;'><button class='btn-reject' onclick='rejectReq("${num}")'>❌</button><button class='btn-approve' onclick='approveReq("${num}")'>✓ APPROVE</button></div></div>`;
       });
-        } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
+    } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
     
     const remList = document.getElementById('reminderList'); remList.innerHTML = '';
     if(reminders && reminders.length > 0) {
@@ -590,4 +581,3 @@
 </script>
 </body>
 </html>
-
