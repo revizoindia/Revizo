@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>VIP Kiosk Dashboard</title>
+<title>NEW RIWAZ GARMENTS Dashboard</title>
 <style>
   :root { --bg: #1a1a1a; --card: #252525; --input: #333333; --border: #4a4a4a; --text: #ffffff; }
   @media (prefers-color-scheme: light) { 
@@ -557,7 +557,7 @@
         const masked = '******' + String(num).slice(-4);
         list.innerHTML += `<div class='list-card' id='card-${num}'><div style='font-size:20px; font-weight:bold;'>${masked}</div><div style='display:flex; gap:8px;'><button class='btn-reject' onclick='rejectReq("${num}")'>❌</button><button class='btn-approve' onclick='approveReq("${num}")'>✓ APPROVE</button></div></div>`;
       });
-    } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
+        } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
     
     const remList = document.getElementById('reminderList'); remList.innerHTML = '';
     if(reminders && reminders.length > 0) {
