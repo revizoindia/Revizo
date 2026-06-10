@@ -1,7 +1,7 @@
 {
   "name": "Revizo",
   "short_name": "Revizo",
-  "start_url": ".",
+  "start_url": "cashier.html",
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#1a1a1a",
