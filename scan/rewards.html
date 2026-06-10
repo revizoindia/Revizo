@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>VIP Rewards Wallet</title>
+<style>
+  :root { --bg: #1a1a1a; --card: #252525; --text: #ffffff; }
+  @media (prefers-color-scheme: light) { :root { --bg: #e0e0e0; --card: #ffffff; --text: #000000; } }
+
+  body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 90vh; transition: background-color 0.5s; }
+  .card { background: var(--card); width: 100%; max-width: 400px; padding: 30px; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); text-align: center; display: none; position: relative; box-sizing: border-box; }
+  .active { display: block; }
+  
+  .loyalty-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 15px; margin-bottom: 15px; text-align: left; }
+  .visit-row { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 14px; font-weight: bold; display: flex; justify-content: space-between; }
+  .status-badge { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 15px; }
+  .bg-warning { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid #ffc107; }
+  .bg-success { background: rgba(40, 167, 69, 0.2); color: #28a745; border: 1px solid #28a745; }
+
+  .submit-container { width: 100%; margin-top: 20px; display: flex; justify-content: center; flex-direction: column; gap: 15px; }
+  .futuristic-btn { position: relative; border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 50px; color: #000000 !important; font-weight: 900; font-size: clamp(16px, 4vw, 20px); letter-spacing: 1px; padding: 18px 20px; width: 100%; cursor: pointer; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); transition: all 0.3s ease; animation: floatAnim 3s ease-in-out infinite, fastColorGlow 2s infinite linear, glassLightPulse 0.5s infinite alternate; }
+  .btn-whatsapp { animation: none; background: #25D366; border: none; color: #fff !important; margin-top: 10px; font-size: 16px;}
+  .futuristic-btn:active { transform: scale(0.95) !important; }
+  .futuristic-btn:disabled { background-color: rgba(100, 100, 100, 0.1) !important; color: #666 !important; animation: none; box-shadow: none; cursor: not-allowed; border-color: #444; }
+
+  @keyframes floatAnim { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
+  @keyframes fastColorGlow { 0% { background-color: rgba(100, 200, 255, 0.3); box-shadow: 0 0 20px rgba(100,200,255,0.5); } 25% { background-color: rgba(255, 150, 200, 0.3); box-shadow: 0 0 20px rgba(255,150,200,0.5); } 50% { background-color: rgba(150, 255, 150, 0.3); box-shadow: 0 0 20px rgba(150,255,150,0.5); } 75% { background-color: rgba(255, 200, 100, 0.3); box-shadow: 0 0 20px rgba(255,200,100,0.5); } 100% { background-color: rgba(100, 200, 255, 0.3); box-shadow: 0 0 20px rgba(100,200,255,0.5); } }
+  @keyframes glassLightPulse { 0% { filter: brightness(1) drop-shadow(0 0 5px rgba(255,255,255,0.2)); } 100% { filter: brightness(1.3) drop-shadow(0 0 15px rgba(255,255,255,0.8)); } }
+</style>
+</head>
+<body>
+
+<div id="step-loading" class="card active"><h2>⏳ Securely Loading...</h2></div>
+
+<div id="step-wallet" class="card">
+  <h2 id="greetingText" style="margin-top:0; font-weight:900;">My Rewards</h2>
+  <div id="visitStatus" class="status-badge"></div>
+
+  <div class="loyalty-card">
+    <div style="font-size: 11px; opacity: 0.7; letter-spacing: 1px;">NEXT COUPON</div>
+    <div id="revVoucher" style="font-size: 26px; font-weight: 900; margin-top: 6px; color: #4CAF50;">...</div>
+  </div>
+
+  <div class="loyalty-card">
+    <div style="font-size: 11px; opacity: 0.7; margin-bottom: 12px; letter-spacing: 1px;">STAMP JOURNEY (<span id="stampCountText">0</span>/5)</div>
+    <div id="journeyList"></div>
+  </div>
+
+  <div id="congratsBox" style="display:none; margin-bottom: 15px;">
+    <h2 style="margin: 0 0 5px 0; color: #ff5252;">🎉 UNLOCKED!</h2>
+    <div style="font-size: 14px; font-weight:bold;">Show to cashier!</div>
+  </div>
+
+  <div class="submit-container">
+    <button id="newStampBtn" class="futuristic-btn" style="padding: 15px; font-size: 16px;" onclick="requestNewStamp()">📤 CLAIM RE-VISIT REWARDS</button>
+    <a id="dynamicWaBtn" href="#" target="_blank" style="text-decoration: none; display: none;">
+      <button type="button" class="futuristic-btn btn-whatsapp">💬 VIP WHATSAPP GROUP</button>
+    </a>
+  </div>
+</div>
+
+<script>
+  const REVIZO_API = "https://script.google.com/macros/s/AKfycbyxbGnwYbRkO1-tUPkY7PVhuc0HNPo4QXtOLukwQk2RSXzvM5SEiVdW8cDN_y0r0-MZ/exec"; 
+  const urlParams = new URLSearchParams(window.location.search);
+  const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
+  const savedMobile = localStorage.getItem("revizo3_mobile");
+
+  window.onload = function() {
+    if (!savedMobile) {
+      window.location.href = "index.html?shop=" + SHOP_ID;
+      return;
+    }
+    fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile)
+      .then(r => r.json()).then(d => { 
+          if(d.status !== "NOT_FOUND") showRewards(d); 
+          else { window.location.href = "index.html?shop=" + SHOP_ID; } 
+      }).catch(() => { alert("Network Error Loading Wallet"); });
+  };
+
+  function requestNewStamp() {
+    var btn = document.getElementById("newStampBtn");
+    let lastSub = sessionStorage.getItem('last_stamp_req');
+    if(lastSub && (Date.now() - lastSub < 10000)) return alert("Wait before requesting again.");
+    sessionStorage.setItem('last_stamp_req', Date.now());
+
+    btn.disabled = true; btn.innerHTML = "⏳ REQUESTING...";
+    
+    fetch(REVIZO_API + "?action=submitVisit&shopId=" + SHOP_ID + "&mobile=" + savedMobile).then(r => r.json()).then(data => {
+      if(data.status === "RATE_LIMITED") { alert("Too many requests."); btn.disabled=false; btn.innerHTML="📤 CLAIM RE-VISIT REWARDS"; return; }
+      
+      if (data.status === "ALREADY_APPROVED") {
+        btn.innerHTML = "⏳ COME BACK TOMORROW";
+        btn.disabled = true;
+        document.getElementById("visitStatus").innerText = "✅ Limit Reached For Today"; 
+        document.getElementById("visitStatus").className = "status-badge bg-success";
+        return;
+      }
+
+      if (data.status === "SUCCESS" || data.status === "ALREADY_PENDING") {
+        btn.innerHTML = "⏳ WAITING...";
+        document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
+        document.getElementById("visitStatus").className = "status-badge bg-warning";
+        waitForCashier(savedMobile);
+      } else { 
+        fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile).then(r => r.json()).then(showRewards); 
+      }
+    }).catch(() => { btn.disabled=false; btn.innerHTML="📤 CLAIM RE-VISIT REWARDS"; alert("Network error."); });
+  }
+
+  function waitForCashier(mobile) {
+    let checkInterval = setInterval(() => {
+      fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + mobile).then(r => r.json()).then(data => { 
+        if(data.status === "APPROVED" || data.status === "CLAIMED") { clearInterval(checkInterval); showRewards(data); } 
+      });
+    }, 4000);
+  }
+
+  function showRewards(data) {
+    document.getElementById("step-loading").classList.remove('active'); document.getElementById("step-wallet").classList.add('active');
+    
+    document.getElementById("greetingText").innerText = "Hello, " + (data.customerName ? data.customerName.split(" ")[0] : "VIP") + "!";
+    if(data.dynamicWaLink) { document.getElementById("dynamicWaBtn").href = data.dynamicWaLink; document.getElementById("dynamicWaBtn").style.display = "block"; }
+    
+    let sCount = data.stamps || 0; const rewards = [50, 75, 100, 150, 50]; 
+    document.getElementById("revVoucher").innerHTML = `<span style='font-size:20px;'>₹</span> ${rewards[sCount % 5]} <span style='font-size:16px;'>OFF</span>`;
+    document.getElementById("stampCountText").innerText = sCount;
+    
+    let jHTML = ""; 
+    for(let i = 1; i <= 5; i++) {
+      if(i <= sCount) jHTML += `<div class="visit-row" style="color:#4CAF50;">✅ VISIT ${i} <span style="font-size:12px; background:rgba(76, 175, 80, 0.2); padding:3px 8px; border-radius:10px;">₹${rewards[i-1]} Redeemed</span></div>`; 
+      else jHTML += `<div class="visit-row" style="opacity:0.5;">⬜ VISIT ${i} <span>₹${rewards[i-1]} Reward</span></div>`;
+    }
+    document.getElementById("journeyList").innerHTML = jHTML;
+    document.getElementById("congratsBox").style.display = (sCount >= 5) ? "block" : "none";
+    
+    let nBtn = document.getElementById("newStampBtn");
+    
+    if(data.status === "APPROVED" || data.status === "CLAIMED") {
+      document.getElementById("visitStatus").innerText = "✅ Card Up to Date"; document.getElementById("visitStatus").className = "status-badge bg-success";
+      nBtn.disabled = true; nBtn.innerHTML = "⏳ COME BACK TOMORROW";
+    } else if (data.status === "PENDING") {
+      document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; document.getElementById("visitStatus").className = "status-badge bg-warning";
+      nBtn.disabled = true; nBtn.innerHTML = "⏳ WAITING...";
+    } else {
+      nBtn.disabled = false; nBtn.innerHTML = "📤 CLAIM RE-VISIT REWARDS";
+    }
+  }
+</script>
+</body>
+</html>
