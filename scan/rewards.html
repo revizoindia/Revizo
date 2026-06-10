@@ -5,59 +5,83 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VIP Rewards Wallet</title>
 <style>
-  :root { --bg: #1a1a1a; --card: #252525; --text: #ffffff; }
-  @media (prefers-color-scheme: light) { :root { --bg: #e0e0e0; --card: #ffffff; --text: #000000; } }
+  :root { --bg: #f0f4f8; --card: #ffffff; --text: #000000; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --card: #252525; --text: #ffffff; } }
 
-  body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 90vh; transition: background-color 0.5s; }
-  .card { background: var(--card); width: 100%; max-width: 400px; padding: 30px; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); text-align: center; display: none; position: relative; box-sizing: border-box; }
+  body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; justify-content: center; overflow-x: hidden; min-height: 90vh; align-items: center; transition: background-color 0.5s;}
+  .container { width: 100%; max-width: 440px; background: var(--card); padding: 20px 15px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; box-sizing: border-box; margin: auto; display: none; }
   .active { display: block; }
   
-  .loyalty-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 15px; margin-bottom: 15px; text-align: left; }
-  .visit-row { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 14px; font-weight: bold; display: flex; justify-content: space-between; }
-  .status-badge { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 15px; }
-  .bg-warning { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid #ffc107; }
-  .bg-success { background: rgba(40, 167, 69, 0.2); color: #28a745; border: 1px solid #28a745; }
+  /* 2050 FULL GLOSSY BUTTONS */
+  .btn-2050 { position: relative; width: 100%; padding: 18px 10px; border-radius: 20px; font-size: 17px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(255, 255, 255, 0.5); cursor: pointer; overflow: hidden; transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); box-sizing: border-box; text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-top: 15px; display: block; }
+  .btn-2050::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%; background: linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0)); border-radius: 20px 20px 100px 100px / 20px 20px 25px 25px; pointer-events: none; }
+  .btn-2050:active { transform: scale(0.95); }
+  .btn-2050:disabled { background: #888 !important; box-shadow: none !important; cursor: not-allowed; border-color: #555; }
+      
+  /* SPECIFIC BUTTON COLORS */
+  .neon-green { background: linear-gradient(135deg, #00ff87, #00b75a); box-shadow: 0 12px 25px rgba(0, 255, 135, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
+  .neon-orange { background: linear-gradient(135deg, #ff8a00, #e52e71); box-shadow: 0 12px 25px rgba(229, 46, 113, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
+  .neon-blue { background: linear-gradient(135deg, #00c6ff, #0072ff); box-shadow: 0 12px 25px rgba(0, 114, 255, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
 
-  .submit-container { width: 100%; margin-top: 20px; display: flex; justify-content: center; flex-direction: column; gap: 15px; }
-  .futuristic-btn { position: relative; border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 50px; color: #000000 !important; font-weight: 900; font-size: clamp(16px, 4vw, 20px); letter-spacing: 1px; padding: 18px 20px; width: 100%; cursor: pointer; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); transition: all 0.3s ease; animation: floatAnim 3s ease-in-out infinite, fastColorGlow 2s infinite linear, glassLightPulse 0.5s infinite alternate; }
-  .btn-whatsapp { animation: none; background: #25D366; border: none; color: #fff !important; margin-top: 10px; font-size: 16px;}
-  .futuristic-btn:active { transform: scale(0.95) !important; }
-  .futuristic-btn:disabled { background-color: rgba(100, 100, 100, 0.1) !important; color: #666 !important; animation: none; box-shadow: none; cursor: not-allowed; border-color: #444; }
-
-  @keyframes floatAnim { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
-  @keyframes fastColorGlow { 0% { background-color: rgba(100, 200, 255, 0.3); box-shadow: 0 0 20px rgba(100,200,255,0.5); } 25% { background-color: rgba(255, 150, 200, 0.3); box-shadow: 0 0 20px rgba(255,150,200,0.5); } 50% { background-color: rgba(150, 255, 150, 0.3); box-shadow: 0 0 20px rgba(150,255,150,0.5); } 75% { background-color: rgba(255, 200, 100, 0.3); box-shadow: 0 0 20px rgba(255,200,100,0.5); } 100% { background-color: rgba(100, 200, 255, 0.3); box-shadow: 0 0 20px rgba(100,200,255,0.5); } }
-  @keyframes glassLightPulse { 0% { filter: brightness(1) drop-shadow(0 0 5px rgba(255,255,255,0.2)); } 100% { filter: brightness(1.3) drop-shadow(0 0 15px rgba(255,255,255,0.8)); } }
+  .fancy-card { border-radius: 15px; padding: 15px; margin-bottom: 12px; color: white; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
+  .c-purple { background: linear-gradient(135deg, #8E54E9, #4776E6); }
+  .c-green { background: linear-gradient(135deg, #00b09b, #96c93d); }
+  .c-blue { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+  
+  .status-badge { display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+  .bg-warning { background: #fff3cd; color: #856404; border: 1px solid #856404;}
+  .bg-success { background: #d4edda; color: #155724; border: 1px solid #155724;}
+  
+  .visit-row { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;}
+  .visit-row:last-child { border-bottom: none; }
+  .tag-done { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 8px; font-size: 12px; }
+  .tag-surprise { background: #ffd700; color: #000; padding: 4px 10px; border-radius: 8px; font-size: 12px; animation: pulse 1.5s infinite; }
+  
+  .congrats-box { background: linear-gradient(135deg, #FFD700, #FFA500); padding: 20px; border-radius: 15px; margin-top: 15px; margin-bottom: 15px; color: #000; box-shadow: 0 5px 15px rgba(255,165,0,0.4); animation: popIn 0.5s ease; border: 2px solid #fff; display: none;}
+  
+  @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 </style>
 </head>
 <body>
 
-<div id="step-loading" class="card active"><h2>⏳ Securely Loading...</h2></div>
+<div id="step-loading" class="container active"><h2>⏳ Securely Loading...</h2></div>
 
-<div id="step-wallet" class="card">
-  <h2 id="greetingText" style="margin-top:0; font-weight:900;">My Rewards</h2>
+<div id="step-wallet" class="container">
+  
+  <img id="shopLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 120px; max-height: 120px; border-radius: 30px; margin-bottom: 15px; object-fit: contain;">
+  
+  <h2 id="greetingText" style="margin-top:0; font-weight:900;">My Rewards Wallet</h2>
   <div id="visitStatus" class="status-badge"></div>
 
-  <div class="loyalty-card">
-    <div style="font-size: 11px; opacity: 0.7; letter-spacing: 1px;">NEXT COUPON</div>
-    <div id="revVoucher" style="font-size: 26px; font-weight: 900; margin-top: 6px; color: #4CAF50;">...</div>
+  <div class="fancy-card c-purple">
+    <div style="font-size: 10px; opacity: 0.9; letter-spacing: 1px;">MONTHLY LUCKY DRAW</div>
+    <div style="font-size: 16px; font-weight: 900; margin-top: 4px;">LIFETIME ENTRY CONFIRMED ✅</div>
   </div>
 
-  <div class="loyalty-card">
-    <div style="font-size: 11px; opacity: 0.7; margin-bottom: 12px; letter-spacing: 1px;">STAMP JOURNEY (<span id="stampCountText">0</span>/5)</div>
+  <div class="fancy-card c-green">
+    <div style="font-size: 10px; opacity: 0.9; letter-spacing: 1px;">YOUR NEXT-BUY COUPON</div>
+    <div id="revVoucher" style="font-size: 22px; font-weight: 900; margin-top: 4px;">...</div>
+  </div>
+
+  <div class="fancy-card c-blue">
+    <div style="font-size: 10px; opacity: 0.9; margin-bottom: 10px; letter-spacing: 1px;">STAMP JOURNEY (<span id="stampCountText">0</span>/5)</div>
     <div id="journeyList"></div>
   </div>
 
-  <div id="congratsBox" style="display:none; margin-bottom: 15px;">
-    <h2 style="margin: 0 0 5px 0; color: #ff5252;">🎉 UNLOCKED!</h2>
-    <div style="font-size: 14px; font-weight:bold;">Show to cashier!</div>
+  <div id="congratsBox" class="congrats-box">
+    <h2 style="margin: 0 0 10px 0; font-size: 24px;">🎉 CONGRATULATIONS! 🎉</h2>
+    <p style="font-size: 16px; margin-bottom: 10px;">You completed 5 visits!</p>
+    <div style="background: white; padding: 10px; border-radius: 8px; font-weight: 900; font-size: 16px; color: #d32f2f;">
+      Show this screen to the cashier to get your SURPRISE REWARD! 🎁
+    </div>
   </div>
 
-  <div class="submit-container">
-    <button id="newStampBtn" class="futuristic-btn" style="padding: 15px; font-size: 16px;" onclick="requestNewStamp()">📤 CLAIM RE-VISIT REWARDS</button>
-    <a id="dynamicWaBtn" href="#" target="_blank" style="text-decoration: none; display: none;">
-      <button type="button" class="futuristic-btn btn-whatsapp">💬 VIP WHATSAPP GROUP</button>
-    </a>
-  </div>
+  <button id="newStampBtn" class="btn-2050 neon-blue" onclick="requestNewStamp()">📍 I'M AT THE SHOP - LOG VISIT</button>
+  
+  <a id="dynamicWaBtn" href="#" target="_blank" style="text-decoration: none; display: none;">
+    <button type="button" class="btn-2050 neon-orange">💬 JOIN VIP WHATSAPP GROUP</button>
+  </a>
 </div>
 
 <script>
@@ -65,6 +89,16 @@
   const urlParams = new URLSearchParams(window.location.search);
   const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
   const savedMobile = localStorage.getItem("revizo3_mobile");
+
+  // SOLUTION 1: WHATSAPP LINKS LOADED INTO MEMORY
+  const VISITOR_LINKS = {
+      "default": "PASTE_LINK_DEFAULT",
+      "16 to 20": "PASTE_LINK_16_20",
+      "21 to 25": "PASTE_LINK_21_25",
+      "26 to 35": "PASTE_LINK_26_35",
+      "36 to 44": "PASTE_LINK_36_44",
+      "45 to 55": "PASTE_LINK_45_55"
+  };
 
   window.onload = function() {
     if (!savedMobile) {
@@ -87,8 +121,9 @@
     btn.disabled = true; btn.innerHTML = "⏳ REQUESTING...";
     
     fetch(REVIZO_API + "?action=submitVisit&shopId=" + SHOP_ID + "&mobile=" + savedMobile).then(r => r.json()).then(data => {
-      if(data.status === "RATE_LIMITED") { alert("Too many requests."); btn.disabled=false; btn.innerHTML="📤 CLAIM RE-VISIT REWARDS"; return; }
+      if(data.status === "RATE_LIMITED") { alert("Too many requests."); btn.disabled=false; btn.innerHTML="📍 I'M AT THE SHOP - LOG VISIT"; return; }
       
+      // ANTI-FRAUD 24 HOUR LOCK
       if (data.status === "ALREADY_APPROVED") {
         btn.innerHTML = "⏳ COME BACK TOMORROW";
         btn.disabled = true;
@@ -105,7 +140,7 @@
       } else { 
         fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile).then(r => r.json()).then(showRewards); 
       }
-    }).catch(() => { btn.disabled=false; btn.innerHTML="📤 CLAIM RE-VISIT REWARDS"; alert("Network error."); });
+    }).catch(() => { btn.disabled=false; btn.innerHTML="📍 I'M AT THE SHOP - LOG VISIT"; alert("Network error."); });
   }
 
   function waitForCashier(mobile) {
@@ -117,33 +152,67 @@
   }
 
   function showRewards(data) {
-    document.getElementById("step-loading").classList.remove('active'); document.getElementById("step-wallet").classList.add('active');
+    document.getElementById("step-loading").classList.remove('active'); 
+    document.getElementById("step-wallet").classList.add('active');
     
-    document.getElementById("greetingText").innerText = "Hello, " + (data.customerName ? data.customerName.split(" ")[0] : "VIP") + "!";
-    if(data.dynamicWaLink) { document.getElementById("dynamicWaBtn").href = data.dynamicWaLink; document.getElementById("dynamicWaBtn").style.display = "block"; }
+    // CUSTOMER FIRST NAME
+    if(data.customerName) {
+        document.getElementById("greetingText").innerText = "Hello, " + data.customerName.split(" ")[0] + "!";
+    }
     
-    let sCount = data.stamps || 0; const rewards = [50, 75, 100, 150, 50]; 
-    document.getElementById("revVoucher").innerHTML = `<span style='font-size:20px;'>₹</span> ${rewards[sCount % 5]} <span style='font-size:16px;'>OFF</span>`;
+    // AGE-SPECIFIC WHATSAPP LINK ACTIVATION (SOLUTION 1)
+    let waLink = data.dynamicWaLink || localStorage.getItem("saved_wa_link");
+    if (!waLink || waLink === "") {
+        let cat = data.category || "default";
+        waLink = VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
+    }
+    if(waLink && !waLink.includes("PASTE_LINK")) {
+        document.getElementById("dynamicWaBtn").href = waLink;
+        document.getElementById("dynamicWaBtn").style.display = "block";
+    }
+    
+    let sCount = data.stamps || 0; 
+    let vText = data.voucher ? data.voucher.toString().toUpperCase() : "";
+    
+    if(vText === "TRY AGAIN" || vText === "JACKPOT" || vText.includes("FREE")) {
+        document.getElementById("revVoucher").innerHTML = vText;
+    } else {
+        document.getElementById("revVoucher").innerHTML = "<span style='font-size: 16px; opacity: 0.8;'>₹</span> " + vText + " <span style='font-size: 14px; opacity: 0.8;'>OFF</span>";
+    }
     document.getElementById("stampCountText").innerText = sCount;
     
-    let jHTML = ""; 
+    // CUSTOM PRICING FOR VISITS (0 on 1st, Exact ₹ amounts on 2nd-5th)
+    const rewardPrices = [0, 50, 75, 100, 150]; 
+    let journeyHTML = ""; 
     for(let i = 1; i <= 5; i++) {
-      if(i <= sCount) jHTML += `<div class="visit-row" style="color:#4CAF50;">✅ VISIT ${i} <span style="font-size:12px; background:rgba(76, 175, 80, 0.2); padding:3px 8px; border-radius:10px;">₹${rewards[i-1]} Redeemed</span></div>`; 
-      else jHTML += `<div class="visit-row" style="opacity:0.5;">⬜ VISIT ${i} <span>₹${rewards[i-1]} Reward</span></div>`;
+      if(i <= sCount) {
+        if(i === 1) {
+            journeyHTML += `<div class="visit-row">✅ VISIT 1 <span class="tag-done">Joined</span></div>`;
+        } else {
+            journeyHTML += `<div class="visit-row">✅ VISIT ${i} <span class="tag-done">₹${rewardPrices[i-1]} Redeemed</span></div>`;
+        }
+      } else if (i === 5) {
+        journeyHTML += `<div class="visit-row" style="opacity: 0.6;">⬜ VISIT 5 <span class="tag-surprise">🎁 ₹${rewardPrices[i-1]} Reward</span></div>`;
+      } else {
+        journeyHTML += `<div class="visit-row" style="opacity: 0.6;">⬜ VISIT ${i} <span style="font-size:12px;">₹${rewardPrices[i-1]} Reward</span></div>`;
+      }
     }
-    document.getElementById("journeyList").innerHTML = jHTML;
+    document.getElementById("journeyList").innerHTML = journeyHTML;
+    
     document.getElementById("congratsBox").style.display = (sCount >= 5) ? "block" : "none";
     
     let nBtn = document.getElementById("newStampBtn");
     
     if(data.status === "APPROVED" || data.status === "CLAIMED") {
-      document.getElementById("visitStatus").innerText = "✅ Card Up to Date"; document.getElementById("visitStatus").className = "status-badge bg-success";
+      document.getElementById("visitStatus").innerText = "✅ Loyalty Card Up to Date"; 
+      document.getElementById("visitStatus").className = "status-badge bg-success";
       nBtn.disabled = true; nBtn.innerHTML = "⏳ COME BACK TOMORROW";
     } else if (data.status === "PENDING") {
-      document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; document.getElementById("visitStatus").className = "status-badge bg-warning";
+      document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
+      document.getElementById("visitStatus").className = "status-badge bg-warning";
       nBtn.disabled = true; nBtn.innerHTML = "⏳ WAITING...";
     } else {
-      nBtn.disabled = false; nBtn.innerHTML = "📤 CLAIM RE-VISIT REWARDS";
+      nBtn.disabled = false; nBtn.innerHTML = "📍 I'M AT THE SHOP - LOG VISIT";
     }
   }
 </script>
