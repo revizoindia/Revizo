@@ -92,7 +92,11 @@
   const REVIZO_API = "https://script.google.com/macros/s/AKfycbyxbGnwYbRkO1-tUPkY7PVhuc0HNPo4QXtOLukwQk2RSXzvM5SEiVdW8cDN_y0r0-MZ/exec"; 
   const urlParams = new URLSearchParams(window.location.search);
   const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
-  const savedMobile = localStorage.getItem("revizo3_mobile");
+  const savedMobile = localStorage.getItem("revizo_mobile");
+if (!savedMobile) {
+    window.location.replace("index.html" + window.location.search);
+}
+
 
   // SOLUTION 1: WHATSAPP LINKS LOADED INTO MEMORY (ACTIVE LINK APPLIED)
   const VISITOR_LINKS = {
