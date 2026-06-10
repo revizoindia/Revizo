@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>NEW RIWAZ GARMENTS Dashboard</title>
+<title>VIP Kiosk Dashboard</title>
 <style>
   :root { --bg: #1a1a1a; --card: #252525; --input: #333333; --border: #4a4a4a; --text: #ffffff; }
   @media (prefers-color-scheme: light) { 
@@ -15,7 +15,7 @@
   .active { display: block; }
   
   @media screen and (orientation: landscape) and (max-height: 500px) {
-    body::before { content: "Please rotate your phone to portrait mode for the best experience."; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #fff; z-index: 99999; display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; font-size: 14px; font-weight: bold; }
+    body::before { content: "Please rotate your phone to portrait mode for the best experience."; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #fff; z-index: 99999; display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; font-size: 20px; font-weight: bold; }
   }
 
   input, button { touch-action: manipulation; box-sizing: border-box; }
@@ -101,7 +101,7 @@
     <div id="network-badge" title="Network Status"></div>
     
     <img id="shopLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 120px; max-height: 120px; border-radius: 30px; margin-bottom: 15px; object-fit: contain;">
-    <h2 id="shopTitle" style="color: var(--text); margin-top: 0;">Welcome VIP</h2>
+    <div id="shopTitle" style="color: var(--text); margin-top: 0; font-size: 14pt; font-weight: bold;">Loading...</div>
     <p style="font-size:12px; opacity:0.7; margin-top:-10px; margin-bottom:20px;">Returning VIPs: Only Number is required!</p>
     
     <div id="listen-status" class="listening-text">🎤 Listening... Speak clearly!</div>
@@ -557,7 +557,7 @@
         const masked = '******' + String(num).slice(-4);
         list.innerHTML += `<div class='list-card' id='card-${num}'><div style='font-size:20px; font-weight:bold;'>${masked}</div><div style='display:flex; gap:8px;'><button class='btn-reject' onclick='rejectReq("${num}")'>❌</button><button class='btn-approve' onclick='approveReq("${num}")'>✓ APPROVE</button></div></div>`;
       });
-        } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
+    }     } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
     
     const remList = document.getElementById('reminderList'); remList.innerHTML = '';
     if(reminders && reminders.length > 0) {
