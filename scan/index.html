@@ -210,6 +210,8 @@
       .then(res => res.json()).then(data => {
         if(data.status !== "NOT_FOUND") {
           localStorage.setItem("revizo3_mobile", phone); 
+          localStorage.setItem("revizo_category", cat);
+
           isFormDirty = false;
           window.location.href = "rewards.html?shop=" + SHOP_ID; 
         } else {
