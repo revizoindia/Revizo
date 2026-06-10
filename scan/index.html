@@ -3,20 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>VIP Kiosk Dashboard</title>
+<title>Welcome to VIP Kiosk</title>
 <style>
   :root { --bg: #1a1a1a; --card: #252525; --input: #333333; --border: #4a4a4a; --text: #ffffff; }
-  @media (prefers-color-scheme: light) { 
-    :root { --bg: #e0e0e0; --card: #ffffff; --input: #f0f0f0; --border: #cccccc; --text: #000000; }
-  }
+  @media (prefers-color-scheme: light) { :root { --bg: #e0e0e0; --card: #ffffff; --input: #f0f0f0; --border: #cccccc; --text: #000000; } }
 
   body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 90vh; transition: background-color 0.5s; }
-  .card { background: var(--card); width: 100%; max-width: 400px; padding: 30px; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); text-align: center; display: none; position: relative; box-sizing: border-box; }
-  .active { display: block; }
+  .card { background: var(--card); width: 100%; max-width: 400px; padding: 30px; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); text-align: center; display: block; position: relative; box-sizing: border-box; }
   
-  @media screen and (orientation: landscape) and (max-height: 500px) {
-    body::before { content: "Please rotate your phone to portrait mode for the best experience."; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #fff; z-index: 99999; display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; font-size: 20px; font-weight: bold; }
-  }
+  @media screen and (orientation: landscape) and (max-height: 500px) { body::before { content: "Please rotate your phone to portrait mode for the best experience."; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #fff; z-index: 99999; display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; font-size: 20px; font-weight: bold; } }
 
   input, button { touch-action: manipulation; box-sizing: border-box; }
 
@@ -51,8 +46,6 @@
   .age-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
   .age-btn { background: var(--input); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; }
   .age-btn:active { background: #4CAF50; color: #000; }
-
-  .btn-whatsapp { animation: none; background: #25D366; border: none; color: #fff !important; margin-top: 10px; font-size: 16px;}
   .futuristic-btn:active { transform: scale(0.95) !important; }
   .futuristic-btn:disabled { background-color: rgba(100, 100, 100, 0.1) !important; color: #666 !important; animation: none; box-shadow: none; cursor: not-allowed; border-color: #444; }
 
@@ -63,27 +56,12 @@
   .consent-box { display: flex; align-items: center; gap: 10px; font-size: 13px; margin: 25px 0 15px 0; color: #bbb; text-align: left; }
   .listening-text { color: var(--text); font-weight: bold; margin-bottom: 5px; display: none; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
   .listening-hint { font-size: 11px; color: #888; display: none; margin-bottom: 15px; } 
-  .loyalty-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 15px; margin-bottom: 15px; text-align: left; }
-  .visit-row { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 14px; font-weight: bold; display: flex; justify-content: space-between; }
-  .status-badge { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 15px; }
-  .bg-warning { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid #ffc107; }
-  .bg-success { background: rgba(40, 167, 69, 0.2); color: #28a745; border: 1px solid #28a745; }
   .footer-links { font-size: 10px; color: #666; margin-top: 20px; text-align: center; text-decoration: underline; cursor: pointer; }
 
   #inapp-warning { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; backdrop-filter: blur(15px); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; text-align: center; }
   .warning-box { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 35px; border-radius: 30px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
   #network-badge { position: absolute; top: 20px; right: 20px; width: 12px; height: 12px; border-radius: 50%; background: #4CAF50; box-shadow: 0 0 10px #4CAF50; transition: 0.3s; }
   .badge-offline { background: #ff5252 !important; box-shadow: 0 0 10px #ff5252 !important; }
-
-  #cashier-view { width: 100%; max-width: 500px; display: none; }
-  .stats-bar { display: flex; gap: 10px; margin-bottom: 20px; }
-  .stat-box { flex: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 15px; border-radius: 12px; text-align: center; }
-  .stat-num { font-size: 24px; font-weight: 900; color: #00ff87; }
-  .list-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 18px 20px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; text-align: left;}
-  .crm-card { border-left: 4px solid #ff8a00; }
-  .btn-approve { background: #25D366; color: white; border: none; padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-  .btn-reject { background: rgba(255,59,48,0.2); color: #ff3b30; border: 1px solid rgba(255,59,48,0.5); padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-  .pin-input { width: 100%; padding: 16px; font-size: 28px; text-align: center; letter-spacing: 12px; border-radius: 14px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: #fff; margin-bottom: 20px; outline: none; }
 </style>
 </head>
 <body>
@@ -96,171 +74,91 @@
   </div>
 </div>
 
-<div id="customer-view" style="width: 100%; display: flex; justify-content: center;">
-  <div id="step-1" class="card active">
-    <div id="network-badge" title="Network Status"></div>
-    
-    <img id="shopLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 120px; max-height: 120px; border-radius: 30px; margin-bottom: 15px; object-fit: contain;">
-    <div id="shopTitle" style="color: var(--text); margin-top: 0; font-size: 14pt; font-weight: bold;">Loading...</div>
-    <p style="font-size:12px; opacity:0.7; margin-top:-10px; margin-bottom:20px;">Returning VIPs: Only Number is required!</p>
-    
-    <div id="listen-status" class="listening-text">🎤 Listening... Speak clearly!</div>
-    <div id="listen-hint" class="listening-hint">Speak in any language, we'll format it.</div>
+<div class="card" id="step-1">
+  <div id="network-badge" title="Network Status"></div>
+  <img id="shopLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 120px; max-height: 120px; border-radius: 30px; margin-bottom: 15px; object-fit: contain;">
+  <div id="shopTitle" style="color: var(--text); margin-top: 0; font-size: 14pt; font-weight: bold;">Loading...</div>
+  <p style="font-size:12px; opacity:0.7; margin-top:-10px; margin-bottom:20px;">Returning VIPs: Only Number is required!</p>
+  
+  <div id="listen-status" class="listening-text">🎤 Listening... Speak clearly!</div>
+  <div id="listen-hint" class="listening-hint">Speak in any language, we'll format it.</div>
 
-    <div class="input-wrapper">
-      <div class="phone-wrapper" id="phone-box-visual">
-        <div class="prefix">+91</div>
-        <input type="tel" id="input-phone" class="phone-input-raw save-draft" placeholder="WhatsApp Number" maxlength="10" autocomplete="off" autocorrect="off" spellcheck="false" inputmode="numeric">
-      </div>
-      <p id="phone-error" class="error-text">Invalid 10-digit number detected.</p>
+  <div class="input-wrapper">
+    <div class="phone-wrapper" id="phone-box-visual">
+      <div class="prefix">+91</div>
+      <input type="tel" id="input-phone" class="phone-input-raw save-draft" placeholder="WhatsApp Number" maxlength="10" autocomplete="off" autocorrect="off" spellcheck="false" inputmode="numeric">
     </div>
-
-    <div class="input-group">
-      <input type="text" id="input-name" class="dark-input save-draft" placeholder="Name" maxlength="50" autocomplete="off" autocorrect="off" spellcheck="false">
-      <button class="btn-mic-dark" onclick="startMic('input-name', this)">🎙️</button>
-    </div>
-    <p id="name-error" class="error-text">Please enter a valid name (No numbers).</p>
-    
-    <div class="input-group">
-      <input type="text" id="input-age" class="dark-input save-draft" placeholder="Age" maxlength="3" autocomplete="off" inputmode="numeric">
-      <button class="btn-mic-dark" onclick="startMic('input-age', this)">🎙️</button>
-    </div>
-    
-    <div class="input-group">
-      <input type="text" id="input-dob" class="dark-input save-draft" placeholder="Birthday" maxlength="30" autocomplete="off">
-      <button class="btn-mic-dark" onclick="startMic('input-dob', this)">🎙️</button>
-    </div>
-
-    <div class="input-group">
-      <input type="text" id="input-anni" class="dark-input save-draft" placeholder="Anniversary (Optional)" maxlength="30" autocomplete="off">
-      <button class="btn-mic-dark" onclick="startMic('input-anni', this)">🎙️</button>
-    </div>
-
-    <div class="consent-box">
-      <input type="checkbox" id="consent-check" checked style="width: 22px; height: 22px; margin: 0; flex-shrink: 0;">
-      <label for="consent-check" style="line-height: 1.3;">I consent to receive offers via WhatsApp.</label>
-    </div>
-    
-    <div class="submit-container">
-      <button class="futuristic-btn" id="btn-submit" onclick="submitForm()">ACCESS VIP WALLET</button>
-      
-      <button type="button" class="futuristic-btn btn-visitor" onclick="toggleVisitorMenu(event)">👁️ CONTINUE AS VISITOR</button>
-      <div id="visitor-ages" style="display:none;">
-        <p style="font-size:12px; color:#bbb; margin:0 0 5px 0;">Select your age group to join our community:</p>
-        <div class="age-grid">
-          <button type="button" class="age-btn" onclick="joinVisitor('16 to 20')">16 - 20</button>
-          <button type="button" class="age-btn" onclick="joinVisitor('21 to 25')">21 - 25</button>
-          <button type="button" class="age-btn" onclick="joinVisitor('26 to 35')">26 - 35</button>
-          <button type="button" class="age-btn" onclick="joinVisitor('36 to 44')">36 - 44</button>
-          <button type="button" class="age-btn" onclick="joinVisitor('45 to 55')">45 - 55</button>
-          <button type="button" class="age-btn" onclick="joinVisitor('default')">55+</button>
-        </div>
-      </div>
-    </div>
-    <div class="footer-links">Privacy Policy & Data Protection</div>
+    <p id="phone-error" class="error-text">Invalid 10-digit number detected.</p>
   </div>
 
-  <div id="step-loading" class="card"><h2>⏳ Securely Loading...</h2></div>
+  <div class="input-group">
+    <input type="text" id="input-name" class="dark-input save-draft" placeholder="Name" maxlength="50" autocomplete="off" autocorrect="off" spellcheck="false">
+    <button class="btn-mic-dark" onclick="startMic('input-name', this)">🎙️</button>
+  </div>
+  <p id="name-error" class="error-text">Please enter a valid name (No numbers).</p>
+  
+  <div class="input-group">
+    <input type="text" id="input-age" class="dark-input save-draft" placeholder="Age" maxlength="3" autocomplete="off" inputmode="numeric">
+    <button class="btn-mic-dark" onclick="startMic('input-age', this)">🎙️</button>
+  </div>
+  
+  <div class="input-group">
+    <input type="text" id="input-dob" class="dark-input save-draft" placeholder="Birthday" maxlength="30" autocomplete="off">
+    <button class="btn-mic-dark" onclick="startMic('input-dob', this)">🎙️</button>
+  </div>
 
-  <div id="step-wallet" class="card">
-    <h2 id="greetingText" style="margin-top:0; font-weight:900;">My Rewards</h2>
-    <div id="visitStatus" class="status-badge"></div>
+  <div class="input-group">
+    <input type="text" id="input-anni" class="dark-input save-draft" placeholder="Anniversary (Optional)" maxlength="30" autocomplete="off">
+    <button class="btn-mic-dark" onclick="startMic('input-anni', this)">🎙️</button>
+  </div>
 
-    <div class="loyalty-card">
-      <div style="font-size: 11px; opacity: 0.7; letter-spacing: 1px;">NEXT COUPON</div>
-      <div id="revVoucher" style="font-size: 26px; font-weight: 900; margin-top: 6px; color: #4CAF50;">...</div>
-    </div>
-
-    <div class="loyalty-card">
-      <div style="font-size: 11px; opacity: 0.7; margin-bottom: 12px; letter-spacing: 1px;">STAMP JOURNEY (<span id="stampCountText">0</span>/5)</div>
-      <div id="journeyList"></div>
-    </div>
-
-    <div id="congratsBox" style="display:none; margin-bottom: 15px;">
-      <h2 style="margin: 0 0 5px 0; color: #ff5252;">🎉 UNLOCKED!</h2>
-      <div style="font-size: 14px; font-weight:bold;">Show to cashier!</div>
-    </div>
-
-    <div class="submit-container" style="margin-top:20px;">
-      <button id="newStampBtn" class="futuristic-btn" style="padding: 15px; font-size: 16px;" onclick="requestNewStamp()">📤 CLAIM RE-VISIT REWARDS</button>
-      <a id="dynamicWaBtn" href="#" target="_blank" style="text-decoration: none; display: none;">
-        <button type="button" class="futuristic-btn btn-whatsapp">💬 VIP WHATSAPP GROUP</button>
-      </a>
+  <div class="consent-box">
+    <input type="checkbox" id="consent-check" checked style="width: 22px; height: 22px; margin: 0; flex-shrink: 0;">
+    <label for="consent-check" style="line-height: 1.3;">I consent to receive offers via WhatsApp.</label>
+  </div>
+  
+  <div class="submit-container">
+    <button class="futuristic-btn" id="btn-submit" onclick="submitForm()">ACCESS VIP WALLET</button>
+    
+    <button type="button" class="futuristic-btn btn-visitor" onclick="toggleVisitorMenu(event)">👁️ CONTINUE AS VISITOR</button>
+    <div id="visitor-ages" style="display:none;">
+      <p style="font-size:12px; color:#bbb; margin:0 0 5px 0;">Select your age group to join our community:</p>
+      <div class="age-grid">
+        <button type="button" class="age-btn" onclick="joinVisitor('16 to 20')">16 - 20</button>
+        <button type="button" class="age-btn" onclick="joinVisitor('21 to 25')">21 - 25</button>
+        <button type="button" class="age-btn" onclick="joinVisitor('26 to 35')">26 - 35</button>
+        <button type="button" class="age-btn" onclick="joinVisitor('36 to 44')">36 - 44</button>
+        <button type="button" class="age-btn" onclick="joinVisitor('45 to 55')">45 - 55</button>
+        <button type="button" class="age-btn" onclick="joinVisitor('default')">55+</button>
+      </div>
     </div>
   </div>
+  <div class="footer-links">Privacy Policy & Data Protection</div>
 </div>
 
-<div id="cashier-view">
-  <div id="cashier-login" class="card active" style="margin: 0 auto;">
-    <h2 style="margin-top:0;">Cashier Terminal</h2>
-    <p style="opacity:0.7;">Enter 4-Digit PIN</p>
-    <input type="password" id="pinInput" class="pin-input" maxlength="4" placeholder="••••" inputmode="numeric">
-    <button id="unlockBtn" class="futuristic-btn" style="background:#00c6ff; animation:none;" onclick="unlockDashboard()">UNLOCK TERMINAL</button>
-  </div>
-
-  <div id="cashier-dashboard" style="display:none; width: 100%;">
-    <div style="text-align:center; margin-bottom:20px;"><h2 style="margin:0;">🛒 Dashboard</h2></div>
-    <div class="stats-bar">
-      <div class="stat-box"><div class="stat-num" id="statToday">0</div><div style="font-size:11px; text-transform:uppercase; opacity:0.7;">Visits Today</div></div>
-      <div class="stat-box"><div class="stat-num" id="statVIPs" style="color:#00c6ff;">0</div><div style="font-size:11px; text-transform:uppercase; opacity:0.7;">Total VIPs</div></div>
-    </div>
-    
-    <div id="remindersSection" style="display:none; margin-bottom:25px;">
-      <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">📅 CRM Event Alerts</h3>
-      <div id="reminderList"></div>
-    </div>
-    
-    <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">⏳ Pending Verifications</h3>
-    <div id="pendingList"></div>
-  </div>
-      </div>
-
-  <script>
-  // ==========================================
-  // MASTER CONFIGURATION & VISITOR LINKS
-  // ==========================================
+<script>
   const REVIZO_API = "https://script.google.com/macros/s/AKfycbyxbGnwYbRkO1-tUPkY7PVhuc0HNPo4QXtOLukwQk2RSXzvM5SEiVdW8cDN_y0r0-MZ/exec"; 
-  
-  const VISITOR_LINKS = {
-      "default": "PASTE_LINK_DEFAULT",
-      "16 to 20": "PASTE_LINK_16_20",
-      "21 to 25": "PASTE_LINK_21_25",
-      "26 to 35": "PASTE_LINK_26_35",
-      "36 to 44": "PASTE_LINK_36_44",
-      "45 to 55": "PASTE_LINK_45_55"
-  };
-  
+  const VISITOR_LINKS = { "default": "PASTE_LINK_DEFAULT", "16 to 20": "PASTE_LINK_16_20", "21 to 25": "PASTE_LINK_21_25", "26 to 35": "PASTE_LINK_26_35", "36 to 44": "PASTE_LINK_36_44", "45 to 55": "PASTE_LINK_45_55" };
   const urlParams = new URLSearchParams(window.location.search);
   const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
-  const PAGE_MODE = urlParams.get('page') || 'kiosk';
   
-  let authToken = localStorage.getItem('revizo3_auth_' + SHOP_ID) || '';
-  let networkTimeoutLimit = 5000;
   let isFormDirty = false;
 
   window.onload = function() {
-    if (PAGE_MODE === 'cashier') {
-      document.getElementById('customer-view').style.display = 'none';
-      document.getElementById('cashier-view').style.display = 'flex';
-      document.getElementById('cashier-view').style.justifyContent = 'center';
-      if(authToken) launchDashboard();
-    } else {
-      document.getElementById('cashier-view').style.display = 'none';
-      initCustomerKiosk();
+    var savedMobile = localStorage.getItem("revizo3_mobile"); 
+    if (savedMobile) {
+      window.location.href = "rewards.html?shop=" + SHOP_ID;
+      return;
     }
-    
+
+    fetch(REVIZO_API + "?action=getShopMeta&shopId=" + SHOP_ID)
+      .then(r => r.json()).then(meta => { if(meta.shopName) document.getElementById('shopTitle').innerText = meta.shopName; });
+
     const ua = navigator.userAgent || navigator.vendor || window.opera;
-    if (ua.indexOf('FBAN') > -1 || ua.indexOf('FBAV') > -1 || ua.indexOf('Instagram') > -1 || ua.indexOf('WhatsApp') > -1) {
-      document.getElementById('inapp-warning').style.display = 'flex';
-    }
-    if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
-      document.querySelectorAll('.btn-mic-dark').forEach(m => m.style.display = 'none');
-    }
+    if (ua.indexOf('FBAN') > -1 || ua.indexOf('FBAV') > -1 || ua.indexOf('Instagram') > -1 || ua.indexOf('WhatsApp') > -1) { document.getElementById('inapp-warning').style.display = 'flex'; }
+    if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) { document.querySelectorAll('.btn-mic-dark').forEach(m => m.style.display = 'none'); }
     
-    let startTime = Date.now();
-    fetch('https://www.google.com/favicon.ico', { mode: 'no-cors', cache: 'no-store' }).then(() => {
-      if(Date.now() - startTime > 1000) networkTimeoutLimit = 10000; 
-    }).catch(() => toggleOffline(true));
+    fetch('https://www.google.com/favicon.ico', { mode: 'no-cors', cache: 'no-store' }).catch(() => toggleOffline(true));
 
     document.querySelectorAll('.save-draft').forEach(input => {
       let saved = localStorage.getItem('draft_' + input.id);
@@ -277,92 +175,23 @@
   window.addEventListener('online', () => { toggleOffline(false); syncOfflineData(); });
   window.addEventListener('beforeunload', (e) => { if(isFormDirty) { e.preventDefault(); e.returnValue = ''; } });
 
-  function toggleOffline(isOff) {
-    const b = document.getElementById('network-badge');
-    if(isOff) b.classList.add('badge-offline'); else b.classList.remove('badge-offline');
-  }
+  function toggleOffline(isOff) { const b = document.getElementById('network-badge'); if(isOff) b.classList.add('badge-offline'); else b.classList.remove('badge-offline'); }
+  function unlockAudio() { if(window.speechSynthesis) { let s = new SpeechSynthesisUtterance(''); s.volume = 0; window.speechSynthesis.speak(s); } }
 
-  function unlockAudio() {
-    if(window.speechSynthesis) { let s = new SpeechSynthesisUtterance(''); s.volume = 0; window.speechSynthesis.speak(s); }
-  }
-
-  // ==========================================
-  // SMART NLP TRANSLATION ENGINE
-  // ==========================================
   function formatSmartDate(raw) {
     if (!raw) return ""; let clean = raw.toLowerCase().replace(/(st|nd|rd|th|वीं|वें)/g, ""); const months = { 'jan': '01', 'january': '01', 'janvari': '01', 'जनवरी': '01', 'ਜਨਵਰੀ': '01', 'feb': '02', 'february': '02', 'farvari': '02', 'फरवरी': '02', 'फ़रवरी': '02', 'ਫਰਵਰੀ': '02', 'mar': '03', 'march': '03', 'मार्च': '03', 'ਮਾਰਚ': '03', 'apr': '04', 'april': '04', 'aprail': '04', 'अप्रैल': '04', 'ਅਪ੍ਰੈਲ': '04', 'may': '05', 'mai': '05', 'मई': '05', 'ਮਈ': '05', 'jun': '06', 'june': '06', 'जून': '06', 'ਜੂਨ': '06', 'jul': '07', 'july': '07', 'julai': '07', 'जुलाई': '07', 'ਜੁਲਾਈ': '07', 'aug': '08', 'august': '08', 'agast': '08', 'अगस्त': '08', 'ਅਗਸਤ': '08', 'sep': '09', 'september': '09', 'sitambar': '09', 'सितंबर': '09', 'सितम्बर': '09', 'ਸਤੰਬਰ': '09', 'oct': '10', 'october': '10', 'aktubar': '10', 'अक्टूबर': '10', 'अकतूबर': '10', 'nov': '11', 'november': '11', 'navambar': '11', 'नवंबर': '11', 'नवम्बर': '11', 'ਨਵੰਬਰ': '11', 'dec': '12', 'december': '12', 'disambar': '12', 'दिसंबर': '12', 'दिसम्बर': '12', 'ਦਸੰਬਰ': '12' };
     for (let m in months) clean = clean.replace(new RegExp(m, 'g'), " " + months[m] + " "); let n = clean.match(/\d+/g); if (!n) return ""; let d = n[0].padStart(2, '0'), y = new Date().getFullYear(); if (n.length >= 3) y = n[2].length === 2 ? (parseInt(n[2]) > 30 ? '19'+n[2] : '20'+n[2]) : n[2]; return `${y}-${(n[1]||'01').padStart(2, '0')}-${d}`;
   }
   function formatSmartAge(raw) { if (!raw) return ""; let numbers = raw.match(/\d+/g); return (numbers && numbers.length > 0) ? numbers[0] : ""; }
 
-  // ==========================================
-  // VISITOR MENU ADDITION
-  // ==========================================
-  function toggleVisitorMenu(e) {
-    if(e) e.preventDefault();
-    const menu = document.getElementById("visitor-ages");
-    if (menu.style.display === "none" || menu.style.display === "") {
-      menu.style.display = "block";
-    } else {
-      menu.style.display = "none";
-    }
-  }
-
-  function joinVisitor(ageGroup) {
-    const link = VISITOR_LINKS[ageGroup] || VISITOR_LINKS["default"];
-    if (link && link !== "PASTE_LINK_DEFAULT" && link !== "PASTE_LINK_"+ageGroup.replace(/ /g,"_")) {
-      window.open(link, '_blank');
-      document.getElementById("visitor-ages").style.display = "none";
-    } else {
-      alert("Community link not yet configured for this age group.");
-    }
-  }
-
-  // ==========================================
-  // CUSTOMER KIOSK LOGIC
-  // ==========================================
-  function initCustomerKiosk() {
-    fetch(REVIZO_API + "?action=getShopMeta&shopId=" + SHOP_ID)
-      .then(r => r.json()).then(meta => {
-        if(meta.shopName) document.getElementById('shopTitle').innerText = meta.shopName;
-      });
-
-    var savedMobile = localStorage.getItem("revizo3_mobile"); 
-    if (savedMobile) {
-      document.getElementById("step-1").classList.remove('active'); 
-      document.getElementById("step-loading").classList.add('active');
-      fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile)
-        .then(r => r.json()).then(d => { 
-            if(d.status !== "NOT_FOUND") showRewards(d); 
-            else { document.getElementById("step-loading").classList.remove('active'); document.getElementById("step-1").classList.add('active'); } 
-        }).catch(() => { document.getElementById("step-loading").classList.remove('active'); document.getElementById("step-1").classList.add('active'); });
-    }
-  }
+  function toggleVisitorMenu(e) { if(e) e.preventDefault(); const menu = document.getElementById("visitor-ages"); menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none"; }
+  function joinVisitor(ageGroup) { const link = VISITOR_LINKS[ageGroup] || VISITOR_LINKS["default"]; if (link && link !== "PASTE_LINK_DEFAULT" && !link.includes("PASTE_LINK")) { window.open(link, '_blank'); document.getElementById("visitor-ages").style.display = "none"; } else { alert("Community link not yet configured."); } }
 
   document.getElementById('input-phone').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
-  
-  document.getElementById('input-name').addEventListener('blur', function() {
-    let val = this.value.trim().replace(/[<>]/g, ""); 
-    this.value = val.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
-    const err = document.getElementById('name-error');
-    if(/\d/.test(this.value)) { this.classList.add('error-border'); err.style.display = 'block'; } else { this.classList.remove('error-border'); err.style.display = 'none'; }
-  });
+  document.getElementById('input-name').addEventListener('blur', function() { let val = this.value.trim().replace(/[<>]/g, ""); this.value = val.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()); const err = document.getElementById('name-error'); if(/\d/.test(this.value)) { this.classList.add('error-border'); err.style.display = 'block'; } else { this.classList.remove('error-border'); err.style.display = 'none'; } });
+  document.getElementById('input-phone').addEventListener('blur', function() { const isLazy = /^(?!([0-9])\1{9})[6-9]\d{9}$/.test(this.value); const err = document.getElementById('phone-error'); if(!isLazy && this.value !== '') { document.getElementById('phone-box-visual').classList.add('error-border'); err.style.display = 'block'; } else { document.getElementById('phone-box-visual').classList.remove('error-border'); err.style.display = 'none'; } });
 
-  document.getElementById('input-phone').addEventListener('blur', function() {
-    const isLazy = /^(?!([0-9])\1{9})[6-9]\d{9}$/.test(this.value);
-    const err = document.getElementById('phone-error');
-    if(!isLazy && this.value !== '') { document.getElementById('phone-box-visual').classList.add('error-border'); err.style.display = 'block'; } 
-    else { document.getElementById('phone-box-visual').classList.remove('error-border'); err.style.display = 'none'; }
-  });
-
-  function syncOfflineData() {
-    let savedProfile = localStorage.getItem('offline_payload');
-    if (savedProfile) {
-        let data = JSON.parse(savedProfile);
-        fetch(REVIZO_API + "?action=submitFullProfile&shopId=" + data.shopId + "&mobile=" + data.mobile + "&name=" + encodeURIComponent(data.name) + "&category=" + data.category + "&dob=" + data.dob + "&anniversary=" + data.anniversary)
-        .then(() => { localStorage.removeItem('offline_payload'); });
-    }
-  }
+  function syncOfflineData() { let savedProfile = localStorage.getItem('offline_payload'); if (savedProfile) { let data = JSON.parse(savedProfile); fetch(REVIZO_API + "?action=submitFullProfile&shopId=" + data.shopId + "&mobile=" + data.mobile + "&name=" + encodeURIComponent(data.name) + "&category=" + data.category + "&dob=" + data.dob + "&anniversary=" + data.anniversary).then(() => { localStorage.removeItem('offline_payload'); }); } }
 
   function submitForm() {
     const phone = document.getElementById('input-phone').value;
@@ -380,17 +209,16 @@
     fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + phone)
       .then(res => res.json()).then(data => {
         if(data.status !== "NOT_FOUND") {
-          localStorage.setItem("revizo3_mobile", phone); showRewards(data);
+          localStorage.setItem("revizo3_mobile", phone); 
+          window.location.href = "rewards.html?shop=" + SHOP_ID; 
         } else {
           let name = nameInput.value.trim().replace(/[<>]/g, ""); 
           let ageStr = formatSmartAge(document.getElementById('input-age').value);
           let dob = formatSmartDate(document.getElementById('input-dob').value);
-          
           let profileErr = false;
           if (name.length < 2 || /\d/.test(name)) { nameInput.classList.add('error-border'); profileErr = true; } 
           if(!ageStr) { document.getElementById('input-age').classList.add('error-border'); profileErr = true; }
           if(!dob) { document.getElementById('input-dob').classList.add('error-border'); profileErr = true; }
-          
           if(profileErr) { alert("NEW VIP: Please fill Name, Age, and Birthday to create wallet!"); btn.disabled = false; btn.innerText = "ACCESS VIP WALLET"; return; }
           
           let ageNum = parseInt(ageStr); let cat = "Other";
@@ -402,15 +230,7 @@
           fetch(REVIZO_API + "?action=submitFullProfile&shopId=" + SHOP_ID + "&mobile=" + phone + "&name=" + encodeURIComponent(name) + "&category=" + cat + "&dob=" + dob + "&anniversary=" + ann)
             .then(() => {
               isFormDirty = false; document.querySelectorAll('.save-draft').forEach(i => localStorage.removeItem('draft_' + i.id));
-              document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
-              document.getElementById("visitStatus").className = "status-badge bg-warning";
-              document.getElementById("step-1").classList.remove('active'); 
-              document.getElementById("step-wallet").classList.add('active');
-              
-              fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + phone).then(r => r.json()).then(fData => {
-                if(fData.dynamicWaLink) window.open(fData.dynamicWaLink, '_blank');
-              });
-              waitForCashier(phone);
+              window.location.href = "rewards.html?shop=" + SHOP_ID; 
             }).catch(() => {
               let offData = { shopId: SHOP_ID, mobile: phone, name: name, category: cat, dob: dob, anniversary: ann };
               localStorage.setItem('offline_payload', JSON.stringify(offData));
@@ -422,162 +242,16 @@
       }).catch(() => { btn.disabled = false; btn.innerText = "ACCESS VIP WALLET"; btn.style.backgroundColor = "rgba(255, 80, 80, 0.8)"; setTimeout(() => { btn.style.backgroundColor = ""; }, 3000); });
   }
 
-  function requestNewStamp() {
-    var mobile = localStorage.getItem("revizo3_mobile"); 
-    var btn = document.getElementById("newStampBtn");
-    
-    let lastSub = sessionStorage.getItem('last_stamp_req');
-    if(lastSub && (Date.now() - lastSub < 10000)) return alert("Wait before requesting again.");
-    sessionStorage.setItem('last_stamp_req', Date.now());
-
-    btn.disabled = true; btn.innerHTML = "⏳ REQUESTING...";
-    
-    fetch(REVIZO_API + "?action=submitVisit&shopId=" + SHOP_ID + "&mobile=" + mobile).then(r => r.json()).then(data => {
-      if(data.status === "RATE_LIMITED") { alert("Too many requests."); btn.disabled=false; btn.innerHTML="📤 CLAIM RE-VISIT REWARDS"; return; }
-      
-      if (data.status === "ALREADY_APPROVED") {
-        btn.innerHTML = "⏳ COME BACK TOMORROW";
-        btn.disabled = true;
-        document.getElementById("visitStatus").innerText = "✅ Limit Reached For Today"; 
-        document.getElementById("visitStatus").className = "status-badge bg-success";
-        return;
-      }
-
-      if (data.status === "SUCCESS" || data.status === "ALREADY_PENDING") {
-        btn.innerHTML = "⏳ WAITING...";
-        document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
-        document.getElementById("visitStatus").className = "status-badge bg-warning";
-        waitForCashier(mobile);
-      } else { 
-        fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + mobile).then(r => r.json()).then(showRewards); 
-      }
-    }).catch(() => { btn.disabled=false; btn.innerHTML="📤 CLAIM RE-VISIT REWARDS"; alert("Network error."); });
-  }
-
-  function waitForCashier(mobile) {
-    let checkInterval = setInterval(() => {
-      fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + mobile).then(r => r.json()).then(data => { 
-        if(data.status === "APPROVED" || data.status === "CLAIMED") { clearInterval(checkInterval); showRewards(data); } 
-      });
-    }, 4000);
-  }
-
-  function showRewards(data) {
-    document.getElementById("step-1").classList.remove('active'); document.getElementById("step-loading").classList.remove('active'); document.getElementById("step-wallet").classList.add('active');
-    
-    document.getElementById("greetingText").innerText = "Hello, " + (data.customerName ? data.customerName.split(" ")[0] : "VIP") + "!";
-    if(data.dynamicWaLink) { document.getElementById("dynamicWaBtn").href = data.dynamicWaLink; document.getElementById("dynamicWaBtn").style.display = "block"; }
-    
-    let sCount = data.stamps || 0; const rewards = [50, 75, 100, 150, 50]; 
-    document.getElementById("revVoucher").innerHTML = `<span style='font-size:20px;'>₹</span> ${rewards[sCount % 5]} <span style='font-size:16px;'>OFF</span>`;
-    document.getElementById("stampCountText").innerText = sCount;
-    
-    let jHTML = ""; 
-    for(let i = 1; i <= 5; i++) {
-      if(i <= sCount) jHTML += `<div class="visit-row" style="color:#4CAF50;">✅ VISIT ${i} <span style="font-size:12px; background:rgba(76, 175, 80, 0.2); padding:3px 8px; border-radius:10px;">₹${rewards[i-1]} Redeemed</span></div>`; 
-      else jHTML += `<div class="visit-row" style="opacity:0.5;">⬜ VISIT ${i} <span>₹${rewards[i-1]} Reward</span></div>`;
-    }
-    document.getElementById("journeyList").innerHTML = jHTML;
-    document.getElementById("congratsBox").style.display = (sCount >= 5) ? "block" : "none";
-    
-    let nBtn = document.getElementById("newStampBtn");
-    
-    if(data.status === "APPROVED" || data.status === "CLAIMED") {
-      document.getElementById("visitStatus").innerText = "✅ Card Up to Date"; document.getElementById("visitStatus").className = "status-badge bg-success";
-      nBtn.disabled = true; nBtn.innerHTML = "⏳ COME BACK TOMORROW";
-    } else if (data.status === "PENDING") {
-      document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; document.getElementById("visitStatus").className = "status-badge bg-warning";
-      nBtn.disabled = true; nBtn.innerHTML = "⏳ WAITING...";
-    } else {
-      nBtn.disabled = false; nBtn.innerHTML = "📤 CLAIM RE-VISIT REWARDS";
-    }
-  }
-
   function startMic(id, btnElement) {
     document.getElementById(id).value = ''; 
     const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     rec.lang = 'en-IN'; 
-    document.getElementById('listen-status').style.display = 'block';
-    document.getElementById('listen-hint').style.display = 'block';
-    btnElement.classList.add('mic-listening'); 
-
-    rec.onresult = (e) => { 
-      let spoken = e.results[0][0].transcript;
-      if(spoken.trim() === "") alert("We couldn't hear you. Please speak clearly!");
-      else {
-        document.getElementById(id).value = spoken; 
-        document.getElementById(id).dispatchEvent(new Event('input')); 
-        document.getElementById(id).dispatchEvent(new Event('blur'));  
-      }
-      endMic(btnElement); 
-    };
+    document.getElementById('listen-status').style.display = 'block'; document.getElementById('listen-hint').style.display = 'block'; btnElement.classList.add('mic-listening'); 
+    rec.onresult = (e) => { let spoken = e.results[0][0].transcript; if(spoken.trim() === "") alert("We couldn't hear you. Please speak clearly!"); else { document.getElementById(id).value = spoken; document.getElementById(id).dispatchEvent(new Event('input')); document.getElementById(id).dispatchEvent(new Event('blur')); } endMic(btnElement); };
     rec.onerror = (e) => { endMic(btnElement); alert("Microphone error: " + e.error + ". Please grant permissions."); };
     rec.start();
   }
-
-  function endMic(btnElement) {
-    document.getElementById('listen-status').style.display = 'none';
-    document.getElementById('listen-hint').style.display = 'none';
-    btnElement.classList.remove('mic-listening'); 
-  }
-
-  // ==========================================
-  // CASHIER LOGIC
-  // ==========================================
-  function unlockDashboard() {
-    const pin = document.getElementById('pinInput').value;
-    if(pin.length < 4) return;
-    document.getElementById('unlockBtn').innerText = 'CHECKING...';
-    
-    fetch(REVIZO_API + "?action=getCashierData&shopId=" + SHOP_ID + "&auth=" + pin)
-      .then(r => r.json()).then(data => {
-        if(data.error) {
-          alert("Invalid PIN"); document.getElementById('pinInput').value = ''; document.getElementById('unlockBtn').innerText = 'UNLOCK TERMINAL';
-        } else { authToken = pin; localStorage.setItem('revizo3_auth_' + SHOP_ID, pin); launchDashboard(); }
-      }).catch(() => { document.getElementById('unlockBtn').innerText = 'UNLOCK TERMINAL'; alert("Network Error"); });
-  }
-
-  function launchDashboard() {
-    document.getElementById('cashier-login').classList.remove('active');
-    document.getElementById('cashier-dashboard').style.display = 'block';
-    loadPending(); setInterval(() => { if(!document.hidden) loadPending(); }, 8000);
-  }
-
-  function loadPending() {
-    fetch(REVIZO_API + "?action=getCashierData&shopId=" + SHOP_ID + "&auth=" + authToken)
-      .then(r => r.json()).then(data => {
-        if(!data.error) { document.getElementById('statToday').innerText = data.data.stats.today; document.getElementById('statVIPs').innerText = data.data.stats.vips; renderList(data.data.pending, data.data.reminders); }
-      });
-  }
-
-  function renderList(pending, reminders) {
-    const list = document.getElementById('pendingList'); list.innerHTML = '';
-    if(pending && pending.length > 0) {
-      pending.forEach(num => {
-        const masked = '******' + String(num).slice(-4);
-        list.innerHTML += `<div class='list-card' id='card-${num}'><div style='font-size:20px; font-weight:bold;'>${masked}</div><div style='display:flex; gap:8px;'><button class='btn-reject' onclick='rejectReq("${num}")'>❌</button><button class='btn-approve' onclick='approveReq("${num}")'>✓ APPROVE</button></div></div>`;
-      });
-    }     } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
-    
-    const remList = document.getElementById('reminderList'); remList.innerHTML = '';
-    if(reminders && reminders.length > 0) {
-      document.getElementById('remindersSection').style.display = 'block';
-      reminders.forEach(rem => {
-        const msg = encodeURIComponent(`Hi ${rem.name}! Your ${rem.type} is ${rem.time} away! Claim VIP offers at the store.`);
-        remList.innerHTML += `<div class='list-card crm-card'><div><div style='font-weight:bold;'>${rem.name}</div><div style='font-size:12px; color:#00ff87;'><b>${rem.time}</b> to ${rem.type}</div></div><a href='https://wa.me/91${rem.mobile}?text=${msg}' target='_blank' style='background:#25D366; color:#fff; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:bold;'>💬 MSG</a></div>`;
-      });
-    } else { document.getElementById('remindersSection').style.display = 'none'; }
-  }
-
-  function approveReq(mobile) {
-    document.getElementById('card-'+mobile).style.opacity = '0.5';
-    fetch(REVIZO_API + "?action=approveUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken).then(r => r.json()).then(d => { if(d.success) document.getElementById('card-'+mobile).remove(); loadPending(); });
-  }
-
-  function rejectReq(mobile) {
-    document.getElementById('card-'+mobile).style.opacity = '0.5';
-    fetch(REVIZO_API + "?action=rejectUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken).then(r => r.json()).then(d => { if(d.success) document.getElementById('card-'+mobile).remove(); loadPending(); });
-  }
+  function endMic(btnElement) { document.getElementById('listen-status').style.display = 'none'; document.getElementById('listen-hint').style.display = 'none'; btnElement.classList.remove('mic-listening'); }
 </script>
 </body>
 </html>
