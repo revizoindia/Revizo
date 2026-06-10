@@ -212,6 +212,7 @@
       document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
       document.getElementById("visitStatus").className = "status-badge bg-warning";
       nBtn.disabled = true; nBtn.innerHTML = "⏳ WAITING...";
+      waitForCashier(savedMobile);
     } else {
       nBtn.disabled = false; nBtn.innerHTML = "📍 I'M AT THE SHOP - LOG VISIT";
     }
