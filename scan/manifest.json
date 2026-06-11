@@ -1,6 +1,7 @@
 {
-  "name": "Revizo",
+  "name": "Revizo Cashier",
   "short_name": "Revizo",
+  "id": "cashier-terminal-app",
   "start_url": "cashier.html",
   "display": "standalone",
   "background_color": "#1a1a1a",
