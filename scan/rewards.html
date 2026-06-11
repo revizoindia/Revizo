@@ -8,7 +8,9 @@
   :root { --bg: #f0f4f8; --card: #ffffff; --text: #000000; }
   @media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --card: #252525; --text: #ffffff; } }
 
-  body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; justify-content: center; overflow-x: hidden; min-height: 90vh; align-items: center; transition: background-color 0.5s;}
+  /* ZERO FLICKER & FADE OUT READY */
+  body { display: none; font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; justify-content: center; overflow-x: hidden; min-height: 90vh; align-items: center; transition: opacity 0.1s ease, background-color 0.5s; opacity: 1; }
+  
   .container { width: 100%; max-width: 440px; background: var(--card); padding: 20px 15px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; box-sizing: border-box; margin: auto; display: none; }
   .active { display: block; }
   
@@ -25,7 +27,7 @@
 
   .fancy-card { border-radius: 15px; padding: 15px; margin-bottom: 12px; color: white; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
   .c-purple { background: linear-gradient(135deg, #8E54E9, #4776E6); }
-  .c-light-purple { background: linear-gradient(135deg, #ab47bc, #df78ef); } /* New Light Purple */
+  .c-light-purple { background: linear-gradient(135deg, #ab47bc, #df78ef); }
   .c-green { background: linear-gradient(135deg, #00b09b, #96c93d); }
   .c-blue { background: linear-gradient(135deg, #00c6ff, #0072ff); }
   
@@ -83,6 +85,9 @@
   <a id="dynamicWaBtn" href="#" target="_blank" style="text-decoration: none; display: none;">
     <button type="button" class="btn-2050 neon-green">💬 JOIN WHATSAPP TO SAVE REWARDS</button>
   </a>
+
+  <!-- 100% BULLETPROOF LOG OUT BUTTON -->
+  <button id="logoutBtn" onclick="secureLogout()" style="background: transparent; border: 2px solid #ff4444; color: #ff4444; padding: 12px; border-radius: 12px; margin-top: 25px; width: 100%; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; box-sizing: border-box;">🚪 LOG OUT</button>
 </div>
 
 <script>
@@ -91,7 +96,42 @@
   const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
   const savedMobile = localStorage.getItem("revizo3_mobile");
 
-  // SOLUTION 1: WHATSAPP LINKS LOADED INTO MEMORY (ACTIVE LINK APPLIED)
+  // ZERO-FLICKER KILL SWITCH
+  if (!savedMobile) {
+      window.location.replace("index.html" + window.location.search);
+  } else {
+      document.body.style.display = "flex"; // Show exactly centered
+  }
+
+  // ULTIMATE "SCORCHED EARTH" LOGOUT FUNCTION
+  function secureLogout() {
+      // Shield: Prevent double clicks
+      var lBtn = document.getElementById("logoutBtn");
+      lBtn.disabled = true;
+      lBtn.innerHTML = "⏳ CLEARING...";
+      
+      // Visual Kill: Instantly fade screen to hide processing
+      document.body.style.opacity = '0';
+      
+      // Execute Advanced Clear after a microscopic delay
+      setTimeout(() => {
+          // targeted burn + carpet bomb
+          localStorage.removeItem("revizo3_mobile");
+          localStorage.removeItem("revizo_category");
+          localStorage.clear();
+          sessionStorage.clear();
+          
+          // Preserves your URL parameters while adding the cache-busting timestamp
+          let searchParams = window.location.search;
+          let separator = searchParams ? "&" : "?";
+          const freshUrl = "index.html" + searchParams + separator + "nocache=" + Date.now();
+          
+          // History Eraser & Exit
+          window.history.replaceState(null, null, freshUrl);
+          window.location.replace(freshUrl);
+      }, 50);
+  }
+
   const VISITOR_LINKS = {
       "default": "https://wa.me/919811026506",
       "16 to 20": "https://wa.me/919811026506",
@@ -102,14 +142,15 @@
   };
 
   window.onload = function() {
-    if (!savedMobile) {
-      window.location.href = "index.html?shop=" + SHOP_ID;
-      return;
-    }
+    if (!savedMobile) return;
+
     fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile)
       .then(r => r.json()).then(d => { 
-          if(d.status !== "NOT_FOUND") showRewards(d); 
-          else { window.location.href = "index.html?shop=" + SHOP_ID; } 
+          if(d.status !== "NOT_FOUND") {
+              showRewards(d); 
+          } else { 
+              secureLogout(); // Automatically trigger advanced logout if not found
+          } 
       }).catch(() => { alert("Network Error Loading Wallet"); });
   };
 
@@ -212,7 +253,7 @@
       document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
       document.getElementById("visitStatus").className = "status-badge bg-warning";
       nBtn.disabled = true; nBtn.innerHTML = "⏳ WAITING...";
-waitForCashier(savedMobile);
+      waitForCashier(savedMobile);
     } else {
       nBtn.disabled = false; nBtn.innerHTML = "📍 I'M AT THE SHOP - LOG VISIT";
     }
