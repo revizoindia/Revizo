@@ -8,9 +8,7 @@
   :root { --bg: #f0f4f8; --card: #ffffff; --text: #000000; }
   @media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --card: #252525; --text: #ffffff; } }
 
-  /* ZERO-FLICKER FIX: Body starts hidden (display: none). JS will turn it back to 'flex' if logged in. */
-  body { display: none; font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; justify-content: center; overflow-x: hidden; min-height: 90vh; align-items: center; transition: background-color 0.5s; }
-  
+  body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; justify-content: center; overflow-x: hidden; min-height: 90vh; align-items: center; transition: background-color 0.5s;}
   .container { width: 100%; max-width: 440px; background: var(--card); padding: 20px 15px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; box-sizing: border-box; margin: auto; display: none; }
   .active { display: block; }
   
@@ -27,7 +25,7 @@
 
   .fancy-card { border-radius: 15px; padding: 15px; margin-bottom: 12px; color: white; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
   .c-purple { background: linear-gradient(135deg, #8E54E9, #4776E6); }
-  .c-light-purple { background: linear-gradient(135deg, #ab47bc, #df78ef); }
+  .c-light-purple { background: linear-gradient(135deg, #ab47bc, #df78ef); } /* New Light Purple */
   .c-green { background: linear-gradient(135deg, #00b09b, #96c93d); }
   .c-blue { background: linear-gradient(135deg, #00c6ff, #0072ff); }
   
@@ -85,26 +83,15 @@
   <a id="dynamicWaBtn" href="#" target="_blank" style="text-decoration: none; display: none;">
     <button type="button" class="btn-2050 neon-green">💬 JOIN WHATSAPP TO SAVE REWARDS</button>
   </a>
-
-  <!-- LOG OUT BUTTON -->
-  <button onclick="localStorage.clear(); window.location.replace('index.html' + window.location.search);" style="background: transparent; border: 2px solid #ff4444; color: #ff4444; padding: 12px; border-radius: 12px; margin-top: 25px; width: 100%; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; box-sizing: border-box;">🚪 LOG OUT</button>
-  
 </div>
 
 <script>
   const REVIZO_API = "https://script.google.com/macros/s/AKfycbyxbGnwYbRkO1-tUPkY7PVhuc0HNPo4QXtOLukwQk2RSXzvM5SEiVdW8cDN_y0r0-MZ/exec"; 
   const urlParams = new URLSearchParams(window.location.search);
   const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
-  const savedMobile = localStorage.getItem("revizo_mobile");
+  const savedMobile = localStorage.getItem("revizo3_mobile");
 
-  // THE KILL SWITCH (Zero-Flicker Redirection)
-  if (!savedMobile) {
-      window.location.replace("index.html" + window.location.search);
-  } else {
-      document.body.style.display = "flex"; // Restores your perfect centered layout!
-  }
-
-  // WHATSAPP LINKS
+  // SOLUTION 1: WHATSAPP LINKS LOADED INTO MEMORY (ACTIVE LINK APPLIED)
   const VISITOR_LINKS = {
       "default": "https://wa.me/919811026506",
       "16 to 20": "https://wa.me/919811026506",
@@ -115,14 +102,14 @@
   };
 
   window.onload = function() {
+    if (!savedMobile) {
+      window.location.href = "index.html?shop=" + SHOP_ID;
+      return;
+    }
     fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile)
       .then(r => r.json()).then(d => { 
-          if(d.status !== "NOT_FOUND") {
-              showRewards(d); 
-          } else { 
-              localStorage.clear();
-              window.location.replace("index.html" + window.location.search); 
-          } 
+          if(d.status !== "NOT_FOUND") showRewards(d); 
+          else { window.location.href = "index.html?shop=" + SHOP_ID; } 
       }).catch(() => { alert("Network Error Loading Wallet"); });
   };
 
@@ -173,6 +160,7 @@
         document.getElementById("greetingText").innerText = "Hello, " + data.customerName.split(" ")[0] + "!";
     }
     
+    // AGE-SPECIFIC WHATSAPP LINK ACTIVATION (SOLUTION 1)
     let cat = localStorage.getItem("revizo_category") || data.category || "default";
     let waLink = VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
     
@@ -187,10 +175,12 @@
     if(vText === "TRY AGAIN" || vText === "JACKPOT" || vText.includes("FREE")) {
         document.getElementById("revVoucher").innerHTML = vText;
     } else {
+        // ADDED MINIMUM PURCHASE TEXT BELOW COUPON
         document.getElementById("revVoucher").innerHTML = "<span style='font-size: 16px; opacity: 0.8;'>₹</span> " + vText + " <span style='font-size: 14px; opacity: 0.8;'>OFF</span><br><span style='font-size: 12px; font-weight: 800; color: #e0f7fa; letter-spacing: 0.5px;'>*Min. purchase ₹499</span>";
     }
     document.getElementById("stampCountText").innerText = sCount;
     
+    // CUSTOM PRICING FOR VISITS (0 on 1st, Exact ₹ amounts on 2nd-4th, Gift on 5th)
     const rewardPrices = [0, 50, 75, 100, 150]; 
     let journeyHTML = ""; 
     for(let i = 1; i <= 5; i++) {
@@ -222,7 +212,7 @@
       document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
       document.getElementById("visitStatus").className = "status-badge bg-warning";
       nBtn.disabled = true; nBtn.innerHTML = "⏳ WAITING...";
-      waitForCashier(savedMobile);
+waitForCashier(savedMobile);
     } else {
       nBtn.disabled = false; nBtn.innerHTML = "📍 I'M AT THE SHOP - LOG VISIT";
     }
