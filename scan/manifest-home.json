@@ -1,6 +1,7 @@
 {
   "name": "VIP Kiosk",
   "short_name": "VIP Kiosk",
+  "id": "vip-kiosk-app-1", 
   "start_url": "./?shop=NEWRIWAZ",
   "display": "standalone",
   "background_color": "#1a1a1a",
