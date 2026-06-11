@@ -94,7 +94,7 @@
   const REVIZO_API = "https://script.google.com/macros/s/AKfycbyxbGnwYbRkO1-tUPkY7PVhuc0HNPo4QXtOLukwQk2RSXzvM5SEiVdW8cDN_y0r0-MZ/exec"; 
   const urlParams = new URLSearchParams(window.location.search);
   const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
-  const savedMobile = localStorage.getItem("revizo3_mobile");
+  const savedMobile = localStorage.getItem("revizo_mobile");
 
   // ZERO-FLICKER KILL SWITCH
   if (!savedMobile) {
@@ -116,7 +116,7 @@
       // Execute Advanced Clear after a microscopic delay
       setTimeout(() => {
           // targeted burn + carpet bomb
-          localStorage.removeItem("revizo3_mobile");
+          localStorage.removeItem("revizo_mobile");
           localStorage.removeItem("revizo_category");
           localStorage.clear();
           sessionStorage.clear();
