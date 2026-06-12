@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Welcome to VIP Kiosk</title>
-  <!-- ADD TO HOME SCREEN APP SETTINGS -->
-<meta name="mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="application-name" content="VIP Kiosk">
 <meta name="apple-mobile-web-app-title" content="VIP Kiosk">
@@ -151,10 +150,21 @@
 
 <script>
   const REVIZO_API = "https://script.google.com/macros/s/AKfycbyxbGnwYbRkO1-tUPkY7PVhuc0HNPo4QXtOLukwQk2RSXzvM5SEiVdW8cDN_y0r0-MZ/exec"; 
-  const VISITOR_LINKS = { "default": "PASTE_LINK_DEFAULT", "16 to 20": "PASTE_LINK_16_20", "21 to 25": "PASTE_LINK_21_25", "26 to 35": "PASTE_LINK_26_35", "36 to 44": "PASTE_LINK_36_44", "45 to 55": "PASTE_LINK_45_55" };
   const urlParams = new URLSearchParams(window.location.search);
   const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
   
+  let VISITOR_LINKS = { "default": "", "16 to 20": "", "21 to 25": "", "26 to 35": "", "36 to 44": "", "45 to 55": "" };
+
+  // DYNAMIC BRIDGE: Automatically pulls your WhatsApp links from your Google Sheet
+  fetch(REVIZO_API + "?action=getShopMeta&shop=" + SHOP_ID)
+    .then(res => res.json())
+    .then(data => {
+      if(data.waLinks) {
+        VISITOR_LINKS = data.waLinks;
+      }
+    })
+    .catch(err => console.log("Failed to load WhatsApp links from sheet", err));
+
   let isFormDirty = false;
 
   window.onload = function() {
