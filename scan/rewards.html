@@ -44,6 +44,11 @@
   
   @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
   @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+  /* ANTI-FRAUD CSS INJECTIONS */
+  @keyframes pulseFraud { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+  .anti-fraud-pulse { animation: pulseFraud 1.5s infinite; border: 2px dashed #25D366 !important; }
+  .live-clock { font-family: monospace; font-size: 14px; color: #fff; font-weight: bold; margin-top: 10px; text-align: center; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 8px; display: none; }
 </style>
 </head>
 <body>
@@ -62,9 +67,10 @@
     <div style="font-size: 16px; font-weight: 900; margin-top: 4px;">LIFETIME ENTRY CONFIRMED ✅</div>
   </div>
 
-  <div class="fancy-card c-light-purple">
+  <div id="voucher-box" class="fancy-card c-light-purple">
     <div style="font-size: 14px; opacity: 1; font-weight: 900; letter-spacing: 1px;">YOUR NEXT-BUY COUPON</div>
     <div id="revVoucher" style="font-size: 22px; font-weight: 900; margin-top: 4px;">...</div>
+    <div id="live-time" class="live-clock"></div>
   </div>
 
   <div class="fancy-card c-blue">
@@ -141,15 +147,24 @@
       "45 to 55": "https://wa.me/919811026506"
   };
 
+  // ANTI-FRAUD LIVE CLOCK
+  setInterval(function() {
+    let clockElement = document.getElementById('live-time');
+    if (clockElement && clockElement.style.display === "block") {
+      clockElement.innerText = "Live Verification: " + new Date().toLocaleTimeString();
+    }
+  }, 1000);
+
   window.onload = function() {
     if (!savedMobile) return;
 
     fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile)
       .then(r => r.json()).then(d => { 
-          if(d.status !== "NOT_FOUND") {
+          // EXPIRED STATUS CATCHER ADDED HERE
+          if(d.status !== "NOT_FOUND" && d.status !== "EXPIRED") {
               showRewards(d); 
           } else { 
-              secureLogout(); // Automatically trigger advanced logout if not found
+              secureLogout(); // Automatically trigger advanced logout if not found or if expired auto-burn triggered
           } 
       }).catch(() => { alert("Network Error Loading Wallet"); });
   };
@@ -201,9 +216,9 @@
         document.getElementById("greetingText").innerText = "Hello, " + data.customerName.split(" ")[0] + "!";
     }
     
-    // AGE-SPECIFIC WHATSAPP LINK ACTIVATION (SOLUTION 1)
+    // AGE-SPECIFIC WHATSAPP LINK ACTIVATION (DYNAMIC CATCHER)
     let cat = localStorage.getItem("revizo_category") || data.category || "default";
-    let waLink = VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
+    let waLink = data.dynamicWaLink || VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
     
     if(waLink && !waLink.includes("PASTE_LINK")) {
         document.getElementById("dynamicWaBtn").href = waLink;
@@ -213,12 +228,17 @@
     let sCount = data.stamps || 0; 
     let vText = data.voucher ? data.voucher.toString().toUpperCase() : "";
     
-    if(vText === "TRY AGAIN" || vText === "JACKPOT" || vText.includes("FREE")) {
+    // CUSTOM REWARD DISPLAY FORMATTER
+    if(vText === "N/A") {
+        document.getElementById("revVoucher").innerHTML = "<span style='font-size: 16px;'>Visit Logged! Earn ₹50 next time.</span>";
+    } else if (vText === "GIFT") {
+        document.getElementById("revVoucher").innerHTML = "<span style='font-size: 22px;'>🎁 Gift Earned!</span>";
+    } else if(vText === "TRY AGAIN" || vText === "JACKPOT" || vText.includes("FREE")) {
         document.getElementById("revVoucher").innerHTML = vText;
     } else {
-        // ADDED MINIMUM PURCHASE TEXT BELOW COUPON
         document.getElementById("revVoucher").innerHTML = "<span style='font-size: 16px; opacity: 0.8;'>₹</span> " + vText + " <span style='font-size: 14px; opacity: 0.8;'>OFF</span><br><span style='font-size: 12px; font-weight: 800; color: #e0f7fa; letter-spacing: 0.5px;'>*Min. purchase ₹499</span>";
     }
+    
     document.getElementById("stampCountText").innerText = sCount;
     
     // CUSTOM PRICING FOR VISITS (0 on 1st, Exact ₹ amounts on 2nd-4th, Gift on 5th)
@@ -249,6 +269,10 @@
       document.getElementById("visitStatus").innerText = "✅ Loyalty Card Up to Date"; 
       document.getElementById("visitStatus").className = "status-badge bg-success";
       nBtn.disabled = true; nBtn.innerHTML = "⏳ COME BACK TOMORROW";
+
+      // TRIGGER ANTI-FRAUD ANIMATION ON ACTIVE VOUCHER
+      document.getElementById("voucher-box").classList.add("anti-fraud-pulse");
+      document.getElementById("live-time").style.display = "block";
     } else if (data.status === "PENDING") {
       document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
       document.getElementById("visitStatus").className = "status-badge bg-warning";
