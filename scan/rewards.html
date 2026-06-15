@@ -87,13 +87,21 @@
   </div>
 
   <button id="newStampBtn" class="btn-2050 neon-blue" onclick="requestNewStamp()">📍 I'M AT THE SHOP - LOG VISIT</button>
-  
-  <a id="dynamicWaBtn" href="#" target="_blank" style="text-decoration: none; display: none;">
-    <button type="button" class="btn-2050 neon-green">💬 JOIN WHATSAPP TO SAVE REWARDS</button>
-  </a>
 
   <!-- 100% BULLETPROOF LOG OUT BUTTON -->
   <button id="logoutBtn" onclick="secureLogout()" style="background: transparent; border: 2px solid #ff4444; color: #ff4444; padding: 12px; border-radius: 12px; margin-top: 25px; width: 100%; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; box-sizing: border-box;">🚪 LOG OUT</button>
+</div>
+
+<!-- STEP 1: FROSTED GLASS OVERLAY -->
+<div id="waGateOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;">
+    <div style="background: white; padding: 30px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 350px; width: 100%;">
+        <div style="font-size: 50px; margin-bottom: 10px;">🎁</div>
+        <h2 style="color: #333; margin-bottom: 10px; font-family: sans-serif;">Reward Locked</h2>
+        <p style="color: #666; margin-bottom: 25px; font-family: sans-serif; font-size: 15px; line-height: 1.5;">Join our VIP WhatsApp Community to verify your profile and instantly reveal your voucher!</p>
+        <a href="#" id="dynamicWaGateLink" onclick="unlockWallet()" target="_blank" style="display: block; background-color: #25D366; color: white; padding: 15px; border-radius: 12px; text-decoration: none; font-size: 18px; font-weight: bold; font-family: sans-serif; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4);">
+            🟢 Join to Reveal
+        </a>
+    </div>
 </div>
 
 <script>
@@ -107,6 +115,12 @@
       window.location.replace("index.html" + window.location.search);
   } else {
       document.body.style.display = "flex"; // Show exactly centered
+  }
+
+  // STEP 2: UNLOCK FUNCTION
+  function unlockWallet() {
+      document.getElementById("waGateOverlay").style.display = "none";
+      localStorage.setItem("wa_joined_gate", "true"); // System memory: Never force them again!
   }
 
   // ULTIMATE "SCORCHED EARTH" LOGOUT FUNCTION
@@ -124,6 +138,7 @@
           // targeted burn + carpet bomb
           localStorage.removeItem("revizo_mobile");
           localStorage.removeItem("revizo_category");
+          localStorage.removeItem("wa_joined_gate"); // Reset the WhatsApp gate on logout
           localStorage.clear();
           sessionStorage.clear();
           
@@ -216,13 +231,16 @@
         document.getElementById("greetingText").innerText = "Hello, " + data.customerName.split(" ")[0] + "!";
     }
     
-    // AGE-SPECIFIC WHATSAPP LINK ACTIVATION (DYNAMIC CATCHER)
+    // STEP 3: AGE-SPECIFIC WHATSAPP LINK ACTIVATION WITH FROSTED GLASS TRIGGER
     let cat = localStorage.getItem("revizo_category") || data.category || "default";
     let waLink = data.dynamicWaLink || VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
     
     if(waLink && !waLink.includes("PASTE_LINK")) {
-        document.getElementById("dynamicWaBtn").href = waLink;
-        document.getElementById("dynamicWaBtn").style.display = "block";
+        document.getElementById("dynamicWaGateLink").href = waLink;
+        // Only drop the glass if they have never joined before!
+        if(!localStorage.getItem("wa_joined_gate")) {
+            document.getElementById("waGateOverlay").style.display = "flex";
+        }
     }
     
     let sCount = data.stamps || 0; 
