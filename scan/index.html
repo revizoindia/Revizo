@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Welcome to VIP Kiosk</title>
-  <meta name="mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="application-name" content="VIP Kiosk">
 <meta name="apple-mobile-web-app-title" content="VIP Kiosk">
@@ -18,7 +18,6 @@
   :root { --bg: #1a1a1a; --card: #252525; --input: #333333; --border: #4a4a4a; --text: #ffffff; }
   @media (prefers-color-scheme: light) { :root { --bg: #e0e0e0; --card: #ffffff; --input: #f0f0f0; --border: #cccccc; --text: #000000; } }
 
-  /* ZERO FLICKER FIX: display starts as none, JS switches it to flex */
   body { display: none; font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 15px; justify-content: center; align-items: center; min-height: 90vh; transition: background-color 0.5s; }
   
   .card { background: var(--card); width: 100%; max-width: 400px; padding: 30px; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); text-align: center; display: block; position: relative; box-sizing: border-box; }
@@ -70,6 +69,12 @@
   .listening-hint { font-size: 11px; color: #888; display: none; margin-bottom: 15px; } 
   .footer-links { font-size: 10px; color: #666; margin-top: 20px; text-align: center; text-decoration: underline; cursor: pointer; }
 
+  /* VIP Welcome Banner */
+  #welcome-back-msg { display: none; background: rgba(76, 175, 80, 0.1); border: 1px solid #4CAF50; color: #4CAF50; padding: 15px; border-radius: 15px; font-weight: bold; margin-bottom: 15px; animation: floatAnim 3s ease-in-out infinite; text-align: center; font-size: 16px; }
+
+  /* Red Warning Text styling */
+  .govt-warning-text { color: #ff5252; font-size: 12px; font-weight: 500; margin-top: 5px; margin-bottom: 15px; text-align: left; padding-left: 5px; line-height: 1.4; background: rgba(255, 82, 82, 0.1); padding: 15px; border-radius: 15px; border-left: 4px solid #ff5252; }
+
   #inapp-warning { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; backdrop-filter: blur(15px); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; text-align: center; }
   .warning-box { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 35px; border-radius: 30px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
   #network-badge { position: absolute; top: 20px; right: 20px; width: 12px; height: 12px; border-radius: 50%; background: #4CAF50; box-shadow: 0 0 10px #4CAF50; transition: 0.3s; }
@@ -98,30 +103,45 @@
   <div class="input-wrapper">
     <div class="phone-wrapper" id="phone-box-visual">
       <div class="prefix">+91</div>
+      <!-- AMNESIA BUG FIX: inputmode numeric, autocorrect off -->
       <input type="tel" id="input-phone" class="phone-input-raw save-draft" placeholder="WhatsApp Number" maxlength="10" autocomplete="off" autocorrect="off" spellcheck="false" inputmode="numeric">
     </div>
     <p id="phone-error" class="error-text">Invalid 10-digit number detected.</p>
   </div>
 
-  <div class="input-group">
-    <input type="text" id="input-name" class="dark-input save-draft" placeholder="Name" maxlength="50" autocomplete="off" autocorrect="off" spellcheck="false">
-    <button class="btn-mic-dark" onclick="startMic('input-name', this)">🎙️</button>
-  </div>
-  <p id="name-error" class="error-text">Please enter a valid name (No numbers).</p>
-  
-  <div class="input-group">
-    <input type="text" id="input-age" class="dark-input save-draft" placeholder="Age" maxlength="3" autocomplete="off" inputmode="numeric">
-    <button class="btn-mic-dark" onclick="startMic('input-age', this)">🎙️</button>
-  </div>
-  
-  <div class="input-group">
-    <input type="text" id="input-dob" class="dark-input save-draft" placeholder="Birthday" maxlength="30" autocomplete="off">
-    <button class="btn-mic-dark" onclick="startMic('input-dob', this)">🎙️</button>
-  </div>
+  <!-- The Welcome Back message for Auto-Login -->
+  <div id="welcome-back-msg">🎉 Welcome back, <span id="welcome-back-name">VIP</span>!</div>
 
-  <div class="input-group">
-    <input type="text" id="input-anni" class="dark-input save-draft" placeholder="Anniversary (Optional)" maxlength="30" autocomplete="off">
-    <button class="btn-mic-dark" onclick="startMic('input-anni', this)">🎙️</button>
+  <!-- I grouped your exact old inputs in this div so they can disappear instantly for returning VIPs -->
+  <div id="profile-fields">
+      <div class="input-group">
+        <input type="text" id="input-name" class="dark-input save-draft" placeholder="Name" maxlength="50" autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="btn-mic-dark" onclick="startMic('input-name', this)">🎙️</button>
+      </div>
+      <p id="name-error" class="error-text">Please enter a valid name (No numbers).</p>
+      
+      <div class="input-group">
+        <input type="text" id="input-age" class="dark-input save-draft" placeholder="Age" maxlength="3" autocomplete="off" inputmode="numeric">
+        <button class="btn-mic-dark" onclick="startMic('input-age', this)">🎙️</button>
+      </div>
+      
+      <div class="input-group">
+        <input type="text" id="input-dob" class="dark-input save-draft" placeholder="Birthday" maxlength="30" autocomplete="off">
+        <button class="btn-mic-dark" onclick="startMic('input-dob', this)">🎙️</button>
+      </div>
+
+      <div class="input-group">
+        <input type="text" id="input-anni" class="dark-input save-draft" placeholder="Anniversary (Optional)" maxlength="30" autocomplete="off">
+        <button class="btn-mic-dark" onclick="startMic('input-anni', this)">🎙️</button>
+      </div>
+
+      <!-- BULLETPROOF ANTI-FRAUD RED WARNING TEXT -->
+      <div class="govt-warning-text">
+        🔴 <b>Strict Verification Rules:</b><br><br>
+        • Valid Govt. D.O.B proof (Aadhaar/PAN) is MANDATORY to claim Birthday discounts at the counter.<br><br>
+        • Instant Birthdays (Under 15 days on 1st visit) receive a max 5% discount.<br><br>
+        • Anniversary offers unlock strictly on your 2nd visit (15-day cooling period applies).
+      </div>
   </div>
 
   <div class="consent-box">
@@ -171,14 +191,12 @@
   window.onload = function() {
     const savedMobile = localStorage.getItem("revizo_mobile"); 
     
-    // 1. APPLE IOS BMB-SQUAD (Back-Forward Cache Killer)
     window.addEventListener('pageshow', function(event) {
         if (event.persisted) {
             window.location.reload(); 
         }
     });
 
-    // 2. ZERO-FLICKER ROUTING
     if (savedMobile) {
         window.location.replace("rewards.html" + window.location.search);
         return; 
@@ -222,11 +240,72 @@
   function toggleVisitorMenu(e) { if(e) e.preventDefault(); const menu = document.getElementById("visitor-ages"); menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none"; }
   function joinVisitor(ageGroup) { const link = VISITOR_LINKS[ageGroup] || VISITOR_LINKS["default"]; if (link && link !== "PASTE_LINK_DEFAULT" && !link.includes("PASTE_LINK")) { window.open(link, '_blank'); document.getElementById("visitor-ages").style.display = "none"; } else { alert("Community link not yet configured."); } }
 
-  document.getElementById('input-phone').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
+  // RESTORED OFFLINE SYNC
+  function syncOfflineData() { 
+      let savedProfile = localStorage.getItem('offline_payload'); 
+      if (savedProfile) { 
+          let data = JSON.parse(savedProfile); 
+          fetch(REVIZO_API + "?action=submitFullProfile&shopId=" + data.shopId + "&mobile=" + data.mobile + "&name=" + encodeURIComponent(data.name) + "&category=" + data.category + "&dob=" + data.dob + "&anniversary=" + data.anniversary)
+          .then(() => { localStorage.removeItem('offline_payload'); }); 
+      } 
+  }
+
+  // 10-DIGIT SILENT TRIGGER & AUTO-LOGIN (Amnesia Bug Fixed inside)
+  document.getElementById('input-phone').addEventListener('input', function() { 
+    this.value = this.value.replace(/\D/g, ''); 
+    if (this.value.length === 10) {
+       if (/^(?!([0-9])\1{9})[6-9]\d{9}$/.test(this.value)) {
+           verifyCustomerSilently(this.value);
+       }
+    } else {
+       // If they backspace, show the form again just in case
+       document.getElementById('profile-fields').style.display = 'block';
+       document.getElementById('welcome-back-msg').style.display = 'none';
+       document.getElementById('btn-submit').innerText = "ACCESS VIP WALLET";
+       document.getElementById('btn-submit').disabled = false;
+    }
+  });
+
+  function verifyCustomerSilently(phone) {
+      const btn = document.getElementById('btn-submit');
+      btn.innerText = "CHECKING STATUS...";
+      btn.disabled = true; 
+      
+      fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + phone)
+      .then(res => res.json())
+      .then(data => {
+          // FIX APPLIED: We only check if they are NOT_FOUND. 
+          // This guarantees your 206 old users will auto-login successfully!
+          if (data.status !== "NOT_FOUND") {
+              document.getElementById('profile-fields').style.display = 'none';
+              document.getElementById('welcome-back-msg').style.display = 'block';
+              if(data.customerName) {
+                  let firstName = data.customerName.split(" ")[0];
+                  document.getElementById('welcome-back-name').innerText = firstName;
+              }
+              
+              btn.innerText = "LOGGING IN...";
+              localStorage.setItem("revizo_mobile", phone);
+              localStorage.setItem("revizo_category", data.category || "default");
+              isFormDirty = false;
+
+              setTimeout(() => {
+                  window.location.replace("rewards.html" + window.location.search);
+              }, 1200);
+
+          } else {
+              btn.innerText = "ACCESS VIP WALLET";
+              btn.disabled = false;
+          }
+      })
+      .catch(() => { 
+          btn.innerText = "ACCESS VIP WALLET"; 
+          btn.disabled = false;
+      });
+  }
+
   document.getElementById('input-name').addEventListener('blur', function() { let val = this.value.trim().replace(/[<>]/g, ""); this.value = val.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()); const err = document.getElementById('name-error'); if(/\d/.test(this.value)) { this.classList.add('error-border'); err.style.display = 'block'; } else { this.classList.remove('error-border'); err.style.display = 'none'; } });
   document.getElementById('input-phone').addEventListener('blur', function() { const isLazy = /^(?!([0-9])\1{9})[6-9]\d{9}$/.test(this.value); const err = document.getElementById('phone-error'); if(!isLazy && this.value !== '') { document.getElementById('phone-box-visual').classList.add('error-border'); err.style.display = 'block'; } else { document.getElementById('phone-box-visual').classList.remove('error-border'); err.style.display = 'none'; } });
-
-  function syncOfflineData() { let savedProfile = localStorage.getItem('offline_payload'); if (savedProfile) { let data = JSON.parse(savedProfile); fetch(REVIZO_API + "?action=submitFullProfile&shopId=" + data.shopId + "&mobile=" + data.mobile + "&name=" + encodeURIComponent(data.name) + "&category=" + data.category + "&dob=" + data.dob + "&anniversary=" + data.anniversary).then(() => { localStorage.removeItem('offline_payload'); }); } }
 
   function submitForm() {
     const phone = document.getElementById('input-phone').value;
@@ -241,23 +320,30 @@
     const btn = document.getElementById('btn-submit');
     btn.disabled = true; btn.innerText = "LOADING...";
 
+    // FAST-CLICK SAFETY NET: Matches exactly how your old code treated existing users
     fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + phone)
       .then(res => res.json()).then(data => {
         if(data.status !== "NOT_FOUND") {
           localStorage.setItem("revizo_mobile", phone); 
-          localStorage.setItem("revizo_category", data.category || "default"); // FIX: Prevents "cat is not defined" crash for returning users
-
+          localStorage.setItem("revizo_category", data.category || "default");
           isFormDirty = false;
-          window.location.replace("rewards.html" + window.location.search); // UPGRADED: Forces native redirect
+          window.location.replace("rewards.html" + window.location.search); 
         } else {
+          
           let name = nameInput.value.trim().replace(/[<>]/g, ""); 
           let ageStr = formatSmartAge(document.getElementById('input-age').value);
           let dob = formatSmartDate(document.getElementById('input-dob').value);
           let profileErr = false;
+          
           if (name.length < 2 || /\d/.test(name)) { nameInput.classList.add('error-border'); profileErr = true; } 
           if(!ageStr) { document.getElementById('input-age').classList.add('error-border'); profileErr = true; }
           if(!dob) { document.getElementById('input-dob').classList.add('error-border'); profileErr = true; }
-          if(profileErr) { alert("NEW VIP: Please fill Name, Age, and Birthday to create wallet!"); btn.disabled = false; btn.innerText = "ACCESS VIP WALLET"; return; }
+          
+          if(profileErr) { 
+              alert("NEW VIP: Please fill Name, Age, and Birthday to create wallet!"); 
+              btn.disabled = false; btn.innerText = "ACCESS VIP WALLET"; 
+              return; 
+          }
           
           let ageNum = parseInt(ageStr); let cat = "Other";
           if(ageNum >= 16 && ageNum <= 20) cat = "16 to 20"; else if(ageNum >= 21 && ageNum <= 25) cat = "21 to 25"; else if(ageNum >= 26 && ageNum <= 35) cat = "26 to 35"; else if(ageNum >= 36 && ageNum <= 44) cat = "36 to 44"; else if(ageNum >= 45) cat = "45 to 55";
@@ -268,7 +354,7 @@
           fetch(REVIZO_API + "?action=submitFullProfile&shopId=" + SHOP_ID + "&mobile=" + phone + "&name=" + encodeURIComponent(name) + "&category=" + cat + "&dob=" + dob + "&anniversary=" + ann)
             .then(() => {
               isFormDirty = false; document.querySelectorAll('.save-draft').forEach(i => localStorage.removeItem('draft_' + i.id));
-              window.location.replace("rewards.html" + window.location.search); // UPGRADED: Forces native redirect
+              window.location.replace("rewards.html" + window.location.search);
             }).catch(() => {
               let offData = { shopId: SHOP_ID, mobile: phone, name: name, category: cat, dob: dob, anniversary: ann };
               localStorage.setItem('offline_payload', JSON.stringify(offData));
