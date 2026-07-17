@@ -134,26 +134,20 @@
   if (!savedMobile) {
       window.location.replace("index.html" + window.location.search);
   } else {
-      document.body.style.display = "flex"; // Show exactly centered
+      document.body.style.display = "flex"; 
   }
 
-  // STEP 2: UNLOCK FUNCTION
   function unlockWallet() {
       document.getElementById("waGateOverlay").style.display = "none";
-      localStorage.setItem("wa_joined_gate", "true"); // System memory: Never force them again!
+      localStorage.setItem("wa_joined_gate", "true"); 
   }
 
-  // ULTIMATE "SCORCHED EARTH" LOGOUT FUNCTION
   function secureLogout() {
-      // Shield: Prevent double clicks
       var lBtn = document.getElementById("logoutBtn");
       lBtn.disabled = true;
       lBtn.innerHTML = "⏳ CLEARING...";
-      
-      // Visual Kill: Instantly fade screen to hide processing
       document.body.style.opacity = '0';
       
-      // Execute Advanced Clear after a microscopic delay
       setTimeout(() => {
           localStorage.removeItem("revizo_mobile");
           localStorage.removeItem("revizo_category");
@@ -179,7 +173,6 @@
       "45 to 55": "https://wa.me/919811026506"
   };
 
-  // ANTI-FRAUD LIVE CLOCK
   setInterval(function() {
     let clockElement = document.getElementById('live-time');
     if (clockElement && clockElement.style.display === "block") {
@@ -190,11 +183,13 @@
   window.onload = function() {
     if (!savedMobile) return;
 
-    // Fixed fetch logic to securely trim whitespace preventing backend mismatch bugs for 206 old users
-    fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim())
+    // UPGRADE: Added cache-buster '&cb=' to stop browsers from serving old NOT_FOUND memory!
+    // UPGRADE: Removed 'EXPIRED' kick-out rule to let old customers see their wallet!
+    let url = REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim() + "&cb=" + new Date().getTime();
+    
+    fetch(url)
       .then(r => r.json()).then(d => { 
-          // Re-Visit Bounce Loop fixed: Loosened strictly to handle legacy sheet outputs perfectly
-          if(d.status !== "NOT_FOUND" && d.status !== "EXPIRED") {
+          if(d.status !== "NOT_FOUND") {
               showRewards(d); 
           } else { 
               secureLogout(); 
@@ -213,10 +208,12 @@
 
     btn.disabled = true; btn.innerHTML = "⏳ REQUESTING...";
     
-    fetch(REVIZO_API + "?action=submitVisit&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim()).then(r => r.json()).then(data => {
+    // UPGRADE: Cache buster added here as well for safety
+    let url = REVIZO_API + "?action=submitVisit&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim() + "&cb=" + new Date().getTime();
+    
+    fetch(url).then(r => r.json()).then(data => {
       if(data.status === "RATE_LIMITED") { alert("Too many requests."); btn.disabled=false; btn.innerHTML="📍 I'M AT THE SHOP - LOG VISIT"; return; }
       
-      // ANTI-FRAUD 24 HOUR LOCK
       if (data.status === "ALREADY_APPROVED") {
         btn.innerHTML = "⏳ COME BACK TOMORROW";
         btn.disabled = true;
@@ -231,14 +228,17 @@
         document.getElementById("visitStatus").className = "status-badge bg-warning";
         waitForCashier(savedMobile.trim());
       } else { 
-        fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim()).then(r => r.json()).then(showRewards); 
+        // UPGRADE: Cache buster added
+        fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim() + "&cb=" + new Date().getTime()).then(r => r.json()).then(showRewards); 
       }
     }).catch(() => { btn.disabled=false; btn.innerHTML="📍 I'M AT THE SHOP - LOG VISIT"; alert("Network error."); });
   }
 
   function waitForCashier(mobile) {
     let checkInterval = setInterval(() => {
-      fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + mobile).then(r => r.json()).then(data => { 
+      // UPGRADE: Critical cache-buster added here so the UI doesn't get stuck on WAITING...
+      let url = REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + mobile + "&cb=" + new Date().getTime();
+      fetch(url).then(r => r.json()).then(data => { 
         if(data.status === "APPROVED" || data.status === "CLAIMED") { clearInterval(checkInterval); showRewards(data); } 
       });
     }, 4000);
@@ -252,18 +252,15 @@
         document.getElementById("greetingText").innerText = "Hello, " + data.customerName.split(" ")[0] + "!";
     }
     
-    // Feature 4: Displaying Lifetime Visits
     if (data.lifetimeVisits !== undefined || data.totalVisits !== undefined) {
         let lifeVisits = data.lifetimeVisits || data.totalVisits;
         document.getElementById("lifetimeVisitsBadge").style.display = "inline-block";
         document.getElementById("lifetimeCount").innerText = lifeVisits;
     } else if (data.stamps !== undefined) {
-        // Fallback measure if your script isn't updated yet
         document.getElementById("lifetimeVisitsBadge").style.display = "inline-block";
         document.getElementById("lifetimeCount").innerText = data.stamps;
     }
     
-    // STEP 3: AGE-SPECIFIC WHATSAPP LINK ACTIVATION WITH FROSTED GLASS TRIGGER
     let cat = localStorage.getItem("revizo_category") || data.category || "default";
     let waLink = data.dynamicWaLink || VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
     
@@ -277,7 +274,6 @@
     let sCount = data.stamps || 0; 
     let vText = data.voucher ? data.voucher.toString().toUpperCase() : "";
     
-    // CUSTOM REWARD DISPLAY FORMATTER
     if(vText === "N/A" || !vText) {
         document.getElementById("revVoucher").innerHTML = "<span style='font-size: 16px;'>Visit Logged! Earn ₹50 next time.</span>";
     } else if (vText === "GIFT") {
@@ -290,7 +286,6 @@
     
     document.getElementById("stampCountText").innerText = sCount;
     
-    // CUSTOM PRICING FOR VISITS (0 on 1st, Exact ₹ amounts on 2nd-4th, Gift on 5th)
     const rewardPrices = [0, 50, 75, 100, 150]; 
     let journeyHTML = ""; 
     for(let i = 1; i <= 5; i++) {
@@ -319,7 +314,6 @@
       document.getElementById("visitStatus").className = "status-badge bg-success";
       nBtn.disabled = true; nBtn.innerHTML = "⏳ COME BACK TOMORROW";
 
-      // TRIGGER ANTI-FRAUD ANIMATION ON ACTIVE VOUCHER
       document.getElementById("voucher-box").classList.add("anti-fraud-pulse");
       document.getElementById("live-time").style.display = "block";
     } else if (data.status === "PENDING") {
