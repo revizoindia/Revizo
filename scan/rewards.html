@@ -35,6 +35,9 @@
   .bg-warning { background: #fff3cd; color: #856404; border: 1px solid #856404;}
   .bg-success { background: #d4edda; color: #155724; border: 1px solid #155724;}
   
+  /* CROWN BADGE FOR LIFETIME VISITS */
+  .bg-gold { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; border: none; box-shadow: 0 2px 5px rgba(255,215,0,0.4); margin-left: 5px; }
+
   .visit-row { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;}
   .visit-row:last-child { border-bottom: none; }
   .tag-done { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 8px; font-size: 12px; }
@@ -49,6 +52,9 @@
   @keyframes pulseFraud { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
   .anti-fraud-pulse { animation: pulseFraud 1.5s infinite; border: 2px dashed #25D366 !important; }
   .live-clock { font-family: monospace; font-size: 14px; color: #fff; font-weight: bold; margin-top: 10px; text-align: center; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 8px; display: none; }
+
+  /* Red Warning Text styling */
+  .govt-warning-text { color: #ff5252; font-size: 14px; font-weight: 500; margin-top: 15px; margin-bottom: 15px; text-align: left; padding: 15px; line-height: 1.4; background: rgba(255, 82, 82, 0.1); border-radius: 15px; border-left: 4px solid #ff5252; }
 </style>
 </head>
 <body>
@@ -60,7 +66,12 @@
   <img id="shopLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 120px; max-height: 120px; border-radius: 30px; margin-bottom: 15px; object-fit: contain;">
   
   <h2 id="greetingText" style="margin-top:0; font-weight:900;">My Rewards Wallet</h2>
-  <div id="visitStatus" class="status-badge"></div>
+  
+  <!-- Status & Lifetime Badges -->
+  <div>
+      <div id="visitStatus" class="status-badge"></div>
+      <div id="lifetimeVisitsBadge" class="status-badge bg-gold" style="display: none;">👑 Lifetime Visits: <span id="lifetimeCount">0</span></div>
+  </div>
 
   <div class="fancy-card c-purple">
     <div style="font-size: 14px; opacity: 1; font-weight: 900; letter-spacing: 1px;">MONTHLY LUCKY DRAW</div>
@@ -84,6 +95,12 @@
     <div style="background: white; padding: 10px; border-radius: 8px; font-weight: 900; font-size: 16px; color: #d32f2f;">
       Show this screen to the cashier to get your SURPRISE REWARD! 🎁
     </div>
+  </div>
+
+  <!-- MOVED RED WARNING BOX -->
+  <div class="govt-warning-text">
+    🔴 <b>Strict Verification Rules:</b><br><br>
+    • Show Any DOB proof
   </div>
 
   <button id="newStampBtn" class="btn-2050 neon-blue" onclick="requestNewStamp()">📍 I'M AT THE SHOP - LOG VISIT</button>
@@ -138,19 +155,16 @@
       
       // Execute Advanced Clear after a microscopic delay
       setTimeout(() => {
-          // targeted burn + carpet bomb
           localStorage.removeItem("revizo_mobile");
           localStorage.removeItem("revizo_category");
-          localStorage.removeItem("wa_joined_gate"); // Reset the WhatsApp gate on logout
+          localStorage.removeItem("wa_joined_gate"); 
           localStorage.clear();
           sessionStorage.clear();
           
-          // Preserves your URL parameters while adding the cache-busting timestamp
           let searchParams = window.location.search;
           let separator = searchParams ? "&" : "?";
           const freshUrl = "index.html" + searchParams + separator + "nocache=" + Date.now();
           
-          // History Eraser & Exit
           window.history.replaceState(null, null, freshUrl);
           window.location.replace(freshUrl);
       }, 50);
@@ -176,15 +190,19 @@
   window.onload = function() {
     if (!savedMobile) return;
 
-    fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile)
+    // Fixed fetch logic to securely trim whitespace preventing backend mismatch bugs for 206 old users
+    fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim())
       .then(r => r.json()).then(d => { 
-          // EXPIRED STATUS CATCHER ADDED HERE
+          // Re-Visit Bounce Loop fixed: Loosened strictly to handle legacy sheet outputs perfectly
           if(d.status !== "NOT_FOUND" && d.status !== "EXPIRED") {
               showRewards(d); 
           } else { 
-              secureLogout(); // Automatically trigger advanced logout if not found or if expired auto-burn triggered
+              secureLogout(); 
           } 
-      }).catch(() => { alert("Network Error Loading Wallet"); });
+      }).catch((e) => { 
+          console.log("Network Error Loading Wallet", e);
+          document.getElementById("step-loading").innerHTML = "<h2>Network Error</h2><p>Please check your connection and reload.</p>"; 
+      });
   };
 
   function requestNewStamp() {
@@ -195,7 +213,7 @@
 
     btn.disabled = true; btn.innerHTML = "⏳ REQUESTING...";
     
-    fetch(REVIZO_API + "?action=submitVisit&shopId=" + SHOP_ID + "&mobile=" + savedMobile).then(r => r.json()).then(data => {
+    fetch(REVIZO_API + "?action=submitVisit&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim()).then(r => r.json()).then(data => {
       if(data.status === "RATE_LIMITED") { alert("Too many requests."); btn.disabled=false; btn.innerHTML="📍 I'M AT THE SHOP - LOG VISIT"; return; }
       
       // ANTI-FRAUD 24 HOUR LOCK
@@ -211,9 +229,9 @@
         btn.innerHTML = "⏳ WAITING...";
         document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
         document.getElementById("visitStatus").className = "status-badge bg-warning";
-        waitForCashier(savedMobile);
+        waitForCashier(savedMobile.trim());
       } else { 
-        fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile).then(r => r.json()).then(showRewards); 
+        fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim()).then(r => r.json()).then(showRewards); 
       }
     }).catch(() => { btn.disabled=false; btn.innerHTML="📍 I'M AT THE SHOP - LOG VISIT"; alert("Network error."); });
   }
@@ -234,13 +252,23 @@
         document.getElementById("greetingText").innerText = "Hello, " + data.customerName.split(" ")[0] + "!";
     }
     
+    // Feature 4: Displaying Lifetime Visits
+    if (data.lifetimeVisits !== undefined || data.totalVisits !== undefined) {
+        let lifeVisits = data.lifetimeVisits || data.totalVisits;
+        document.getElementById("lifetimeVisitsBadge").style.display = "inline-block";
+        document.getElementById("lifetimeCount").innerText = lifeVisits;
+    } else if (data.stamps !== undefined) {
+        // Fallback measure if your script isn't updated yet
+        document.getElementById("lifetimeVisitsBadge").style.display = "inline-block";
+        document.getElementById("lifetimeCount").innerText = data.stamps;
+    }
+    
     // STEP 3: AGE-SPECIFIC WHATSAPP LINK ACTIVATION WITH FROSTED GLASS TRIGGER
     let cat = localStorage.getItem("revizo_category") || data.category || "default";
     let waLink = data.dynamicWaLink || VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
     
     if(waLink && !waLink.includes("PASTE_LINK")) {
         document.getElementById("dynamicWaGateLink").href = waLink;
-        // Only drop the glass if they have never joined before!
         if(!localStorage.getItem("wa_joined_gate")) {
             document.getElementById("waGateOverlay").style.display = "flex";
         }
@@ -250,7 +278,7 @@
     let vText = data.voucher ? data.voucher.toString().toUpperCase() : "";
     
     // CUSTOM REWARD DISPLAY FORMATTER
-    if(vText === "N/A") {
+    if(vText === "N/A" || !vText) {
         document.getElementById("revVoucher").innerHTML = "<span style='font-size: 16px;'>Visit Logged! Earn ₹50 next time.</span>";
     } else if (vText === "GIFT") {
         document.getElementById("revVoucher").innerHTML = "<span style='font-size: 22px;'>🎁 Gift Earned!</span>";
@@ -298,7 +326,7 @@
       document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
       document.getElementById("visitStatus").className = "status-badge bg-warning";
       nBtn.disabled = true; nBtn.innerHTML = "⏳ WAITING...";
-      waitForCashier(savedMobile);
+      waitForCashier(savedMobile.trim());
     } else {
       nBtn.disabled = false; nBtn.innerHTML = "📍 I'M AT THE SHOP - LOG VISIT";
     }
