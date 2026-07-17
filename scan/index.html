@@ -73,7 +73,7 @@
   #welcome-back-msg { display: none; background: rgba(76, 175, 80, 0.1); border: 1px solid #4CAF50; color: #4CAF50; padding: 15px; border-radius: 15px; font-weight: bold; margin-bottom: 15px; animation: floatAnim 3s ease-in-out infinite; text-align: center; font-size: 16px; }
 
   /* Red Warning Text styling */
-  .govt-warning-text { color: #ff5252; font-size: 12px; font-weight: 500; margin-top: 5px; margin-bottom: 15px; text-align: left; padding-left: 5px; line-height: 1.4; background: rgba(255, 82, 82, 0.1); padding: 15px; border-radius: 15px; border-left: 4px solid #ff5252; }
+  .govt-warning-text { color: #ff5252; font-size: 14px; font-weight: 500; margin-top: 5px; margin-bottom: 15px; text-align: left; padding-left: 5px; line-height: 1.4; background: rgba(255, 82, 82, 0.1); padding: 15px; border-radius: 15px; border-left: 4px solid #ff5252; }
 
   #inapp-warning { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; backdrop-filter: blur(15px); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; text-align: center; }
   .warning-box { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 35px; border-radius: 30px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
@@ -87,7 +87,7 @@
   <div class="warning-box">
     <h2 style="margin-top:0; color: #ff8a8a;">⚠️ Action Required</h2>
     <p style="font-size: 18px; line-height: 1.5;">For Voice Typing to work smoothly, please click the <b>3 dots (⋮)</b> in the corner and select<br><br><b>"Open in Chrome"</b> or <b>"Open in Safari"</b>.</p>
-    <button onclick="document.getElementById('inapp-warning').style.display='none'" style="margin-top:20px; padding: 15px 30px; border-radius: 15px; background: #ffffff; border: none; color: #000; font-weight: 900; cursor: pointer; font-size: 16px;">CONTINUE WITHOUT VOICE</button>
+    <button type="button" onclick="document.getElementById('inapp-warning').style.display='none'" style="margin-top:20px; padding: 15px 30px; border-radius: 15px; background: #ffffff; border: none; color: #000; font-weight: 900; cursor: pointer; font-size: 16px;">CONTINUE WITHOUT VOICE</button>
   </div>
 </div>
 
@@ -103,44 +103,39 @@
   <div class="input-wrapper">
     <div class="phone-wrapper" id="phone-box-visual">
       <div class="prefix">+91</div>
-      <!-- AMNESIA BUG FIX: inputmode numeric, autocorrect off -->
       <input type="tel" id="input-phone" class="phone-input-raw save-draft" placeholder="WhatsApp Number" maxlength="10" autocomplete="off" autocorrect="off" spellcheck="false" inputmode="numeric">
     </div>
     <p id="phone-error" class="error-text">Invalid 10-digit number detected.</p>
   </div>
 
-  <!-- The Welcome Back message for Auto-Login -->
   <div id="welcome-back-msg">🎉 Welcome back, <span id="welcome-back-name">VIP</span>!</div>
 
-  <!-- I grouped your exact old inputs in this div so they can disappear instantly for returning VIPs -->
   <div id="profile-fields">
       <div class="input-group">
         <input type="text" id="input-name" class="dark-input save-draft" placeholder="Name" maxlength="50" autocomplete="off" autocorrect="off" spellcheck="false">
-        <button class="btn-mic-dark" onclick="startMic('input-name', this)">🎙️</button>
+        <button type="button" class="btn-mic-dark" onclick="startMic('input-name', this)">🎙️</button>
       </div>
       <p id="name-error" class="error-text">Please enter a valid name (No numbers).</p>
       
       <div class="input-group">
         <input type="text" id="input-age" class="dark-input save-draft" placeholder="Age" maxlength="3" autocomplete="off" inputmode="numeric">
-        <button class="btn-mic-dark" onclick="startMic('input-age', this)">🎙️</button>
+        <button type="button" class="btn-mic-dark" onclick="startMic('input-age', this)">🎙️</button>
       </div>
       
       <div class="input-group">
         <input type="text" id="input-dob" class="dark-input save-draft" placeholder="Birthday" maxlength="30" autocomplete="off">
-        <button class="btn-mic-dark" onclick="startMic('input-dob', this)">🎙️</button>
+        <button type="button" class="btn-mic-dark" onclick="startMic('input-dob', this)">🎙️</button>
       </div>
 
       <div class="input-group">
         <input type="text" id="input-anni" class="dark-input save-draft" placeholder="Anniversary (Optional)" maxlength="30" autocomplete="off">
-        <button class="btn-mic-dark" onclick="startMic('input-anni', this)">🎙️</button>
+        <button type="button" class="btn-mic-dark" onclick="startMic('input-anni', this)">🎙️</button>
       </div>
 
-      <!-- BULLETPROOF ANTI-FRAUD RED WARNING TEXT -->
+      <!-- UPDATED SHORT RED WARNING TEXT -->
       <div class="govt-warning-text">
         🔴 <b>Strict Verification Rules:</b><br><br>
-        • Valid Govt. D.O.B proof (Aadhaar/PAN) is MANDATORY to claim Birthday discounts at the counter.<br><br>
-        • Instant Birthdays (Under 15 days on 1st visit) receive a max 5% discount.<br><br>
-        • Anniversary offers unlock strictly on your 2nd visit (15-day cooling period applies).
+        • Show Any DOB proof
       </div>
   </div>
 
@@ -150,7 +145,8 @@
   </div>
   
   <div class="submit-container">
-    <button class="futuristic-btn" id="btn-submit" onclick="submitForm()">ACCESS VIP WALLET</button>
+    <!-- FIX: Added type="button" to prevent Ghost Submits -->
+    <button type="button" class="futuristic-btn" id="btn-submit" onclick="submitForm()">ACCESS VIP WALLET</button>
     
     <button type="button" class="futuristic-btn btn-visitor" onclick="toggleVisitorMenu(event)">👁️ CONTINUE AS VISITOR</button>
     <div id="visitor-ages" style="display:none;">
@@ -176,14 +172,9 @@
   
   let VISITOR_LINKS = { "default": "", "16 to 20": "", "21 to 25": "", "26 to 35": "", "36 to 44": "", "45 to 55": "" };
 
-  // DYNAMIC BRIDGE: Automatically pulls your WhatsApp links from your Google Sheet
   fetch(REVIZO_API + "?action=getShopMeta&shop=" + SHOP_ID)
     .then(res => res.json())
-    .then(data => {
-      if(data.waLinks) {
-        VISITOR_LINKS = data.waLinks;
-      }
-    })
+    .then(data => { if(data.waLinks) VISITOR_LINKS = data.waLinks; })
     .catch(err => console.log("Failed to load WhatsApp links from sheet", err));
 
   let isFormDirty = false;
@@ -191,14 +182,15 @@
   window.onload = function() {
     const savedMobile = localStorage.getItem("revizo_mobile"); 
     
+    // Less aggressive page reload for BFCache
     window.addEventListener('pageshow', function(event) {
-        if (event.persisted) {
+        if (event.persisted && !savedMobile) {
             window.location.reload(); 
         }
     });
 
     if (savedMobile) {
-        window.location.replace("rewards.html" + window.location.search);
+        window.location.href = "rewards.html" + window.location.search;
         return; 
     } else {
         document.body.style.display = "flex"; 
@@ -240,7 +232,6 @@
   function toggleVisitorMenu(e) { if(e) e.preventDefault(); const menu = document.getElementById("visitor-ages"); menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none"; }
   function joinVisitor(ageGroup) { const link = VISITOR_LINKS[ageGroup] || VISITOR_LINKS["default"]; if (link && link !== "PASTE_LINK_DEFAULT" && !link.includes("PASTE_LINK")) { window.open(link, '_blank'); document.getElementById("visitor-ages").style.display = "none"; } else { alert("Community link not yet configured."); } }
 
-  // RESTORED OFFLINE SYNC
   function syncOfflineData() { 
       let savedProfile = localStorage.getItem('offline_payload'); 
       if (savedProfile) { 
@@ -250,7 +241,6 @@
       } 
   }
 
-  // 10-DIGIT SILENT TRIGGER & AUTO-LOGIN (Amnesia Bug Fixed inside)
   document.getElementById('input-phone').addEventListener('input', function() { 
     this.value = this.value.replace(/\D/g, ''); 
     if (this.value.length === 10) {
@@ -258,7 +248,6 @@
            verifyCustomerSilently(this.value);
        }
     } else {
-       // If they backspace, show the form again just in case
        document.getElementById('profile-fields').style.display = 'block';
        document.getElementById('welcome-back-msg').style.display = 'none';
        document.getElementById('btn-submit').innerText = "ACCESS VIP WALLET";
@@ -274,8 +263,6 @@
       fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + phone)
       .then(res => res.json())
       .then(data => {
-          // FIX APPLIED: We only check if they are NOT_FOUND. 
-          // This guarantees your 206 old users will auto-login successfully!
           if (data.status !== "NOT_FOUND") {
               document.getElementById('profile-fields').style.display = 'none';
               document.getElementById('welcome-back-msg').style.display = 'block';
@@ -289,8 +276,9 @@
               localStorage.setItem("revizo_category", data.category || "default");
               isFormDirty = false;
 
+              // FIXED Redirect Logic
               setTimeout(() => {
-                  window.location.replace("rewards.html" + window.location.search);
+                  window.location.href = "rewards.html" + window.location.search;
               }, 1200);
 
           } else {
@@ -320,14 +308,13 @@
     const btn = document.getElementById('btn-submit');
     btn.disabled = true; btn.innerText = "LOADING...";
 
-    // FAST-CLICK SAFETY NET: Matches exactly how your old code treated existing users
     fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + phone)
       .then(res => res.json()).then(data => {
         if(data.status !== "NOT_FOUND") {
           localStorage.setItem("revizo_mobile", phone); 
           localStorage.setItem("revizo_category", data.category || "default");
           isFormDirty = false;
-          window.location.replace("rewards.html" + window.location.search); 
+          window.location.href = "rewards.html" + window.location.search; 
         } else {
           
           let name = nameInput.value.trim().replace(/[<>]/g, ""); 
@@ -354,7 +341,7 @@
           fetch(REVIZO_API + "?action=submitFullProfile&shopId=" + SHOP_ID + "&mobile=" + phone + "&name=" + encodeURIComponent(name) + "&category=" + cat + "&dob=" + dob + "&anniversary=" + ann)
             .then(() => {
               isFormDirty = false; document.querySelectorAll('.save-draft').forEach(i => localStorage.removeItem('draft_' + i.id));
-              window.location.replace("rewards.html" + window.location.search);
+              window.location.href = "rewards.html" + window.location.search;
             }).catch(() => {
               let offData = { shopId: SHOP_ID, mobile: phone, name: name, category: cat, dob: dob, anniversary: ann };
               localStorage.setItem('offline_payload', JSON.stringify(offData));
