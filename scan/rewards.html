@@ -76,8 +76,8 @@
   <div id="personalDates" class="status-badge bg-blue-light" style="display: none; margin-bottom: 15px;"></div>
 
   <div class="fancy-card c-purple">
-    <div style="font-size: 14px; opacity: 1; font-weight: 900; letter-spacing: 1px;">MONTHLY LUCKY DRAW</div>
-    <div style="font-size: 16px; font-weight: 900; margin-top: 4px;">LIFETIME ENTRY CONFIRMED ✅</div>
+    <div style="font-size: 15px; opacity: 1; font-weight: 900; letter-spacing: 1px;">MONTHLY LUCKY DRAW 🎁</div>
+    <div style="font-size: 15px; font-weight: 900; margin-top: 4px;">LIFETIME ENTRY CONFIRMED ✅</div>
   </div>
 
   <div id="voucher-box" class="fancy-card c-light-purple">
@@ -101,10 +101,10 @@
 
   <!-- FRIENDLY GREEN DOB PROOF BOX -->
   <div class="friendly-green-box">
-    🟢 Show any DOB Proof for Birthday Discount
+    🟢 Show DOB Proof for Birthday Discount
   </div>
 
-  <button id="newStampBtn" class="btn-2050 neon-blue" onclick="requestNewStamp()">📍 I'M AT THE SHOP - LOG VISIT</button>
+  <button id="newStampBtn" class="btn-2050 neon-blue" onclick="requestNewStamp()">📍 I'M AT SHOP - APPROVE VISIT</button>
 
   <button id="logoutBtn" onclick="secureLogout()" style="background: transparent; border: 2px solid #ff4444; color: #ff4444; padding: 12px; border-radius: 12px; margin-top: 25px; width: 100%; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; box-sizing: border-box;">🚪 LOG OUT</button>
 </div>
@@ -114,9 +114,9 @@
     <div style="background: white; padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 320px; width: 100%; box-sizing: border-box; margin: auto;">
         <div style="font-size: 42px; margin-bottom: 5px;">🎁</div>
         <h2 style="color: #333; margin: 0 0 8px 0; font-family: sans-serif; font-size: 22px; font-weight: 800;">Reward Locked</h2>
-        <p style="color: #666; margin: 0 0 20px 0; font-family: sans-serif; font-size: 14px; line-height: 1.4;">Join our VIP WhatsApp Community to verify your profile and instantly reveal your voucher!</p>
+        <p style="color: #666; margin: 0 0 20px 0; font-family: sans-serif; font-size: 14px; line-height: 1.4;"></p>
         <a href="#" id="dynamicWaGateLink" onclick="unlockWallet()" target="_blank" style="display: block; background-color: #25D366; color: white; padding: 14px; border-radius: 12px; text-decoration: none; font-size: 16px; font-weight: 900; font-family: sans-serif; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4); width: 100%; box-sizing: border-box;">
-            🟢 JOIN TO REVEAL
+            🟢 JOIN WHATSAPP FOR REWARDS
         </a>
     </div>
 </div>
@@ -203,7 +203,7 @@
     let url = REVIZO_API + "?action=submitVisit&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim() + "&cb=" + new Date().getTime();
     
     fetch(url).then(r => r.json()).then(data => {
-      if(data.status === "RATE_LIMITED") { alert("Too many requests."); btn.disabled=false; btn.innerHTML="📍 I'M AT THE SHOP - LOG VISIT"; return; }
+      if(data.status === "RATE_LIMITED") { alert("Too many requests."); btn.disabled=false; btn.innerHTML="📍 I'M AT SHOP - APPROVE VISIT"; return; }
       
       if (data.status === "ALREADY_APPROVED") {
         btn.innerHTML = "⏳ COME BACK TOMORROW";
@@ -215,13 +215,13 @@
 
       if (data.status === "SUCCESS" || data.status === "ALREADY_PENDING") {
         btn.innerHTML = "⏳ WAITING...";
-        document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
+        document.getElementById("visitStatus").innerText = "⏳ WAITING 4 APPROVAL"; 
         document.getElementById("visitStatus").className = "status-badge bg-warning";
         waitForCashier(savedMobile.trim());
       } else { 
         fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim() + "&cb=" + new Date().getTime()).then(r => r.json()).then(showRewards); 
       }
-    }).catch(() => { btn.disabled=false; btn.innerHTML="📍 I'M AT THE SHOP - LOG VISIT"; alert("Network error."); });
+    }).catch(() => { btn.disabled=false; btn.innerHTML="📍 I'M AT SHOP - APPROVE VISIT"; alert("Network error."); });
   }
 
   function waitForCashier(mobile) {
@@ -324,7 +324,7 @@
       document.getElementById("live-time").style.display = "block";
       
     } else if (data.status === "PENDING") {
-      document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
+      document.getElementById("visitStatus").innerText = "⏳ WAITING 4 APPROVAL"; 
       document.getElementById("visitStatus").className = "status-badge bg-warning";
       nBtn.disabled = true; nBtn.innerHTML = "⏳ WAITING...";
       
@@ -334,7 +334,7 @@
       
       waitForCashier(savedMobile.trim());
     } else {
-      nBtn.disabled = false; nBtn.innerHTML = "📍 I'M AT THE SHOP - LOG VISIT";
+      nBtn.disabled = false; nBtn.innerHTML = "📍 I'M AT SHOP - APPROVE VISIT";
       document.getElementById("voucher-box").classList.remove("anti-fraud-pulse");
       document.getElementById("live-time").style.display = "none";
     }
