@@ -218,8 +218,27 @@
   }
   function formatSmartAge(raw) { if (!raw) return ""; let numbers = raw.match(/\d+/g); return (numbers && numbers.length > 0) ? numbers[0] : ""; }
 
+  // NEW FIX: Force native app opening by bypassing _blank interceptors
+  function forceOpenWhatsApp(url) {
+      let a = document.createElement('a');
+      a.href = url;
+      a.target = "_top"; // Breaks out of browser frames to trigger the phone's native App Link interceptor
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+  }
+
   function toggleVisitorMenu(e) { if(e) e.preventDefault(); const menu = document.getElementById("visitor-ages"); menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none"; }
-  function joinVisitor(ageGroup) { const link = VISITOR_LINKS[ageGroup] || VISITOR_LINKS["default"]; if (link && link !== "PASTE_LINK_DEFAULT" && !link.includes("PASTE_LINK")) { window.open(link, '_blank'); document.getElementById("visitor-ages").style.display = "none"; } else { alert("Community link not yet configured."); } }
+  
+  function joinVisitor(ageGroup) { 
+      const link = VISITOR_LINKS[ageGroup] || VISITOR_LINKS["default"]; 
+      if (link && link !== "PASTE_LINK_DEFAULT" && !link.includes("PASTE_LINK")) { 
+          forceOpenWhatsApp(link); // Calls the new forcing function
+          document.getElementById("visitor-ages").style.display = "none"; 
+      } else { 
+          alert("Community link not yet configured."); 
+      } 
+  }
 
   function syncOfflineData() { 
       let savedProfile = localStorage.getItem('offline_payload'); 
@@ -253,7 +272,6 @@
       .then(res => res.json())
       .then(data => {
           if (data.status !== "NOT_FOUND") {
-              // Hide keyboard so screen looks clean
               document.getElementById('input-phone').blur(); 
               
               document.getElementById('profile-fields').style.display = 'none';
@@ -268,7 +286,6 @@
               localStorage.setItem("revizo_category", data.category || "default");
               isFormDirty = false;
 
-              // Force redirect using replace to stop history loops
               setTimeout(() => {
                   window.location.replace("rewards.html" + window.location.search);
               }, 1200);
@@ -334,13 +351,18 @@
             .then(() => {
               isFormDirty = false; document.querySelectorAll('.save-draft').forEach(i => localStorage.removeItem('draft_' + i.id));
               
-              // NEW UPGRADE: Auto-Join WhatsApp Community on Registration
+              // NEW UPGRADE: Auto-Join WhatsApp Community on Registration with Native App Intent
               let waLink = VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
               if (waLink && waLink !== "PASTE_LINK_DEFAULT" && !waLink.includes("PASTE_LINK")) {
-                  window.open(waLink, '_blank'); 
+                  forceOpenWhatsApp(waLink);
+                  // We add a short 1.5s delay to redirect so the OS has time to pull up WhatsApp first
+                  setTimeout(() => {
+                      window.location.replace("rewards.html" + window.location.search);
+                  }, 1500);
+              } else {
+                  window.location.replace("rewards.html" + window.location.search);
               }
-
-              window.location.replace("rewards.html" + window.location.search);
+              
             }).catch(() => {
               let offData = { shopId: SHOP_ID, mobile: phone, name: name, category: cat, dob: dob, anniversary: ann };
               localStorage.setItem('offline_payload', JSON.stringify(offData));
