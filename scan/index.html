@@ -218,11 +218,11 @@
   }
   function formatSmartAge(raw) { if (!raw) return ""; let numbers = raw.match(/\d+/g); return (numbers && numbers.length > 0) ? numbers[0] : ""; }
 
-  // NEW FIX: Force native app opening by bypassing _blank interceptors
+  // Force native app opening by bypassing _blank interceptors (Used for Visitor Button)
   function forceOpenWhatsApp(url) {
       let a = document.createElement('a');
       a.href = url;
-      a.target = "_top"; // Breaks out of browser frames to trigger the phone's native App Link interceptor
+      a.target = "_top"; 
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -233,7 +233,7 @@
   function joinVisitor(ageGroup) { 
       const link = VISITOR_LINKS[ageGroup] || VISITOR_LINKS["default"]; 
       if (link && link !== "PASTE_LINK_DEFAULT" && !link.includes("PASTE_LINK")) { 
-          forceOpenWhatsApp(link); // Calls the new forcing function
+          forceOpenWhatsApp(link); 
           document.getElementById("visitor-ages").style.display = "none"; 
       } else { 
           alert("Community link not yet configured."); 
@@ -349,19 +349,11 @@
 
           fetch(REVIZO_API + "?action=submitFullProfile&shopId=" + SHOP_ID + "&mobile=" + phone + "&name=" + encodeURIComponent(name) + "&category=" + cat + "&dob=" + dob + "&anniversary=" + ann)
             .then(() => {
-              isFormDirty = false; document.querySelectorAll('.save-draft').forEach(i => localStorage.removeItem('draft_' + i.id));
+              isFormDirty = false; 
+              document.querySelectorAll('.save-draft').forEach(i => localStorage.removeItem('draft_' + i.id));
               
-              // NEW UPGRADE: Auto-Join WhatsApp Community on Registration with Native App Intent
-              let waLink = VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
-              if (waLink && waLink !== "PASTE_LINK_DEFAULT" && !waLink.includes("PASTE_LINK")) {
-                  forceOpenWhatsApp(waLink);
-                  // We add a short 1.5s delay to redirect so the OS has time to pull up WhatsApp first
-                  setTimeout(() => {
-                      window.location.replace("rewards.html" + window.location.search);
-                  }, 1500);
-              } else {
-                  window.location.replace("rewards.html" + window.location.search);
-              }
+              // OPTION 2 APPLIED: Instant redirect to wallet without forcing WhatsApp on the Home Page
+              window.location.replace("rewards.html" + window.location.search);
               
             }).catch(() => {
               let offData = { shopId: SHOP_ID, mobile: phone, name: name, category: cat, dob: dob, anniversary: ann };
