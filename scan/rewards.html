@@ -3,268 +3,411 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Cashier Terminal</title>
-  <!-- ADD TO HOME SCREEN APP SETTINGS -->
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="application-name" content="Revizo">
-<meta name="apple-mobile-web-app-title" content="Revizo">
-<meta name="theme-color" content="#1a1a1a">
-
-<link rel="apple-touch-icon" href="https://i.ibb.co/KjkyPZXX/IMG-20260610-225132.jpg">
-<link rel="icon" type="image/png" href="https://i.ibb.co/KjkyPZXX/IMG-20260610-225132.jpg">
-<link rel="manifest" href="manifest.json">
-  
+<title>VIP Rewards Wallet</title>
 <style>
-  :root { --bg: #1a1a1a; --card: #252525; --text: #ffffff; }
-  @media (prefers-color-scheme: light) { :root { --bg: #e0e0e0; --card: #ffffff; --text: #000000; } }
+  :root { --bg: #f0f4f8; --card: #ffffff; --text: #000000; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --card: #252525; --text: #ffffff; } }
 
-  body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 40px 15px 15px 15px; display: flex; justify-content: center; align-items: flex-start; min-height: 90vh; }
+  /* ZERO FLICKER & FADE OUT READY */
+  body { display: none; font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; justify-content: center; overflow-x: hidden; min-height: 90vh; align-items: center; transition: opacity 0.1s ease, background-color 0.5s; opacity: 1; }
   
-  .card { background: var(--card); width: 100%; max-width: 500px; padding: 30px; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); text-align: center; display: none; box-sizing: border-box; margin: 0 auto; }
+  .container { width: 100%; max-width: 440px; background: var(--card); padding: 20px 15px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; box-sizing: border-box; margin: auto; display: none; }
   .active { display: block; }
   
-  .futuristic-btn { position: relative; border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 50px; color: #000000 !important; font-weight: 900; font-size: clamp(16px, 4vw, 20px); letter-spacing: 1px; padding: 18px 20px; width: 100%; cursor: pointer; transition: all 0.3s ease; }
-  .futuristic-btn:active { transform: scale(0.95) !important; }
+  /* 2050 FULL GLOSSY BUTTONS */
+  .btn-2050 { position: relative; width: 100%; padding: 18px 10px; border-radius: 20px; font-size: 17px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(255, 255, 255, 0.5); cursor: pointer; overflow: hidden; transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); box-sizing: border-box; text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-top: 15px; display: block; }
+  .btn-2050::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%; background: linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0)); border-radius: 20px 20px 100px 100px / 20px 20px 25px 25px; pointer-events: none; }
+  .btn-2050:active { transform: scale(0.95); }
+  .btn-2050:disabled { background: #888 !important; box-shadow: none !important; cursor: not-allowed; border-color: #555; }
+      
+  /* SPECIFIC BUTTON COLORS */
+  .neon-green { background: linear-gradient(135deg, #00ff87, #00b75a); box-shadow: 0 12px 25px rgba(0, 255, 135, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
+  .neon-orange { background: linear-gradient(135deg, #ff8a00, #e52e71); box-shadow: 0 12px 25px rgba(229, 46, 113, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
+  .neon-blue { background: linear-gradient(135deg, #00c6ff, #0072ff); box-shadow: 0 12px 25px rgba(0, 114, 255, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
 
-  .stats-bar { display: flex; gap: 10px; margin-bottom: 20px; }
-  .stat-box { flex: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 15px; border-radius: 12px; text-align: center; }
-  .stat-num { font-size: 24px; font-weight: 900; color: #00ff87; }
-  .list-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 18px 20px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; text-align: left;}
+  .fancy-card { border-radius: 15px; padding: 15px; margin-bottom: 12px; color: white; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s ease;}
+  .c-purple { background: linear-gradient(135deg, #8E54E9, #4776E6); }
+  .c-light-purple { background: linear-gradient(135deg, #ab47bc, #df78ef); }
+  .c-green { background: linear-gradient(135deg, #00b09b, #96c93d); }
+  .c-blue { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+  .c-orange { background: linear-gradient(135deg, #ff8a00, #e52e71); }
   
-  .crm-card { border-left: 4px solid #ff8a00; }
-  .thank-card { border-left: 4px solid #00c6ff; }
+  .status-badge { display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 5px; }
+  .bg-warning { background: #fff3cd; color: #856404; border: 1px solid #856404;}
+  .bg-success { background: #d4edda; color: #155724; border: 1px solid #155724;}
   
-  .btn-approve { background: #25D366; color: white; border: none; padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: transform 0.1s; }
-  .btn-approve:active { transform: scale(0.95); }
-  .btn-reject { background: rgba(255,59,48,0.2); color: #ff3b30; border: 1px solid rgba(255,59,48,0.5); padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: transform 0.1s; }
-  .btn-reject:active { transform: scale(0.95); }
-  .btn-wa { background:#25D366; color:#fff; padding:10px 14px; border:none; border-radius:10px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); transition: transform 0.1s; }
-  .btn-wa:active { transform: scale(0.95); }
+  /* CROWN BADGE FOR LIFETIME VISITS */
+  .bg-gold { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; border: none; box-shadow: 0 2px 5px rgba(255,215,0,0.4); margin: 0; }
 
-  .pin-input { width: 100%; padding: 16px; font-size: 28px; text-align: center; letter-spacing: 12px; border-radius: 14px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: var(--text); margin-bottom: 20px; outline: none; }
+  .visit-row { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;}
+  .visit-row:last-child { border-bottom: none; }
+  .tag-done { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 8px; font-size: 12px; }
+  .tag-surprise { background: #ffd700; color: #000; padding: 4px 10px; border-radius: 8px; font-size: 12px; animation: pulse 1.5s infinite; }
   
-  /* Audit Popup Styling */
-  .audit-btn { background: rgba(0,198,255,0.1); border: 1px solid #00c6ff; color: var(--text); padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-  .audit-btn:active { transform: scale(0.95); background: #00c6ff; color: #000; }
+  .congrats-box { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #FFD700, #FFA500); padding: 20px; border-radius: 15px; margin-top: 15px; margin-bottom: 15px; color: #000; box-shadow: 0 5px 15px rgba(255,165,0,0.4); animation: popIn 0.5s ease; border: 2px solid #fff; }
+  
+  @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+  /* ANTI-FRAUD CSS INJECTIONS */
+  @keyframes pulseFraud { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+  .anti-fraud-pulse { animation: pulseFraud 1.5s infinite; border: 2px dashed #25D366 !important; }
+  .live-clock { font-family: monospace; font-size: 14px; color: #fff; font-weight: bold; margin-top: 10px; text-align: center; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 8px; display: none; }
+
 </style>
 </head>
 <body>
 
-<div id="cashier-view" style="width: 100%; max-width: 500px;">
+<div id="step-loading" class="container active"><h2>⏳ Securely Loading...</h2></div>
+
+<div id="step-wallet" class="container">
   
-  <!-- PIN LOGIN SCREEN -->
-  <div id="cashier-login" class="card active">
-    <img src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 100px; border-radius: 20px; margin-bottom: 15px; object-fit: contain;">
-    <h2 style="margin-top:0;">Cashier Terminal</h2>
-    <p style="opacity:0.7;">Enter 4-Digit PIN</p>
-    <input type="password" id="pinInput" class="pin-input" maxlength="4" placeholder="••••" inputmode="numeric">
-    <button id="unlockBtn" class="futuristic-btn" style="background:#00c6ff;" onclick="unlockDashboard()">UNLOCK TERMINAL</button>
+  <img id="shopLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 120px; max-height: 120px; border-radius: 30px; margin-bottom: 15px; object-fit: contain;">
+  
+  <h2 id="greetingText" style="margin-top:0; font-weight:900;">My Rewards Wallet</h2>
+  
+  <!-- FIX 1: Flexbox Wrapper to Perfectly Center the Status and Yellow Badge -->
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; margin-bottom: 15px;">
+      <div id="visitStatus" class="status-badge" style="display: none;"></div>
+      <div id="lifetimeVisitsBadge" class="status-badge bg-gold" style="display: none;">👑 Lifetime Visits: <span id="lifetimeCount">0</span></div>
   </div>
 
-  <!-- MAIN DASHBOARD -->
-  <div id="cashier-dashboard" class="card" style="display:none; text-align: left;">
-    <div style="text-align:center; margin-bottom:20px;">
-      <img src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 60px; border-radius: 15px; margin-bottom: 10px; object-fit: contain;">
-      <h2 style="margin:0;">🛒 Dashboard</h2>
-    </div>
-    
-    <div class="stats-bar">
-      <div class="stat-box"><div class="stat-num" id="statToday">⏳</div><div style="font-size:11px; text-transform:uppercase; opacity:0.7;">Visits Today</div></div>
-      <div class="stat-box"><div class="stat-num" id="statVIPs" style="color:#00c6ff;">⏳</div><div style="font-size:11px; text-transform:uppercase; opacity:0.7;">Total VIPs</div></div>
-    </div>
-    
-    <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">⏳ Pending Approvals</h3>
-    <div id="pendingList" style="margin-bottom: 25px;">
-      <div style='color:#888; text-align:center;'>Fetching live data...</div>
-    </div>
+  <!-- FIX 3: Green Active Box and Orange Promo Box Moved to the Top -->
+  <div id="activeRewardBox" class="fancy-card c-green"></div>
+  <div id="specialPromoBox" class="fancy-card c-orange" style="display: none;"></div>
 
-    <!-- NEW: THANK YOU QUEUE -->
-    <div id="thankYouSection" style="display:none; margin-bottom:25px;">
-      <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">💬 Send Thank You Messages</h3>
-      <div id="thankYouList"></div>
-    </div>
-    
-    <!-- STICKY CRM REMINDERS -->
-    <div id="remindersSection" style="display:none; margin-bottom:25px;">
-      <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">📅 Action Required: VIP Reminders</h3>
-      <div id="reminderList"></div>
+  <!-- Purple Informational Boxes Pushed Down -->
+  <div class="fancy-card c-purple">
+    <div style="font-size: 15px; opacity: 1; font-weight: 900; letter-spacing: 1px;">MONTHLY LUCKY DRAW 🎁</div>
+    <div style="font-size: 15px; font-weight: 900; margin-top: 4px;">LIFETIME ENTRY CONFIRMED ✅</div>
+  </div>
+
+  <div id="voucher-box" class="fancy-card c-light-purple">
+    <div style="font-size: 14px; opacity: 1; font-weight: 900; letter-spacing: 1px;">YOUR NEXT-BUY COUPON</div>
+    <div id="revVoucher" style="font-size: 20px; font-weight: 900; margin-top: 6px;">...</div>
+  </div>
+
+  <div class="fancy-card c-blue">
+    <div style="font-size: 14px; opacity: 1; font-weight: 900; margin-bottom: 10px; letter-spacing: 1px;">STAMP JOURNEY (<span id="stampCountText">0</span>/5)</div>
+    <div id="journeyList"></div>
+  </div>
+
+  <div id="congratsBox" class="congrats-box" style="display: none;">
+    <h2 style="margin: 0 0 10px 0; font-size: 24px;">🎉 CONGRATULATIONS! 🎉</h2>
+    <p style="font-size: 16px; margin-bottom: 10px;">You completed 5 visits!</p>
+    <div style="background: white; padding: 10px; border-radius: 8px; font-weight: 900; font-size: 16px; color: #d32f2f;">
+      Show this screen to the cashier to get your SURPRISE REWARD! 🎁
     </div>
   </div>
+
+  <button id="logoutBtn" onclick="secureLogout()" style="background: transparent; border: 2px solid #ff4444; color: #ff4444; padding: 12px; border-radius: 12px; margin-top: 25px; width: 100%; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; box-sizing: border-box;">🚪 LOG OUT</button>
 </div>
 
-<!-- NEW: APPROVAL AUDIT POPUP -->
-<div id="auditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; padding: 20px; box-sizing: border-box;">
-   <div class="card" style="display:block; text-align:center; background: #252525; border: 1px solid #444;">
-      <h3 style="margin-top: 0; color: #00c6ff;">Confirm Reward Given</h3>
-      <p style="margin-bottom: 20px;">Approving Mobile: <span id="auditMobileLabel" style="font-weight: bold; font-size: 20px;"></span></p>
-      
-      <p style="font-size: 13px; color: #ff8a00; margin-bottom: 15px;">Check customer's phone and select what they clicked. This is logged to the owner.</p>
-      
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
-         <button class="audit-btn" onclick="confirmApprove('Log Visit (No Discount)', 0)">Log 1st Visit</button>
-         <button class="audit-btn" onclick="confirmApprove('₹50 Off', 50)">₹50 Off</button>
-         <button class="audit-btn" onclick="confirmApprove('₹75 Off', 75)">₹75 Off</button>
-         <button class="audit-btn" onclick="confirmApprove('₹100 Off', 100)">₹100 Off</button>
-         <button class="audit-btn" onclick="confirmApprove('Surprise Gift', 0)" style="border-color: #ffd700; color: #ffd700;">Surprise Gift</button>
-         <button class="audit-btn" onclick="confirmApprove('10% Birthday/Anniv', 0)" style="border-color: #ff8a00; color: #ff8a00;">10% Special Promo</button>
-      </div>
-      <button class="btn-reject" style="width: 100%;" onclick="closeModal()">CANCEL APPROVAL</button>
-   </div>
+<!-- FROSTED GLASS OVERLAY (Bypass untouched, relies on LocalStorage & WaLinks as designed) -->
+<div id="waGateOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box;">
+    <div style="background: white; padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 320px; width: 100%; box-sizing: border-box; margin: auto;">
+        <div style="font-size: 42px; margin-bottom: 5px;">🎁</div>
+        <h2 style="color: #333; margin: 0 0 8px 0; font-family: sans-serif; font-size: 22px; font-weight: 800;">Reward Locked</h2>
+        <p style="color: #666; margin: 0 0 20px 0; font-family: sans-serif; font-size: 14px; line-height: 1.4;"></p>
+        <a href="#" id="dynamicWaGateLink" onclick="unlockWallet()" target="_blank" style="display: block; background-color: #25D366; color: white; padding: 14px; border-radius: 12px; text-decoration: none; font-size: 16px; font-weight: 900; font-family: sans-serif; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4); width: 100%; box-sizing: border-box;">
+            🟢 JOIN WHATSAPP FOR REWARDS
+        </a>
+    </div>
 </div>
 
 <script>
   const REVIZO_API = "https://script.google.com/macros/s/AKfycbyxbGnwYbRkO1-tUPkY7PVhuc0HNPo4QXtOLukwQk2RSXzvM5SEiVdW8cDN_y0r0-MZ/exec"; 
   const urlParams = new URLSearchParams(window.location.search);
   const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
-  let authToken = localStorage.getItem('revizo3_auth_' + SHOP_ID) || '';
-  
-  // DYNAMIC WALLET LINK GENERATOR
-  const WALLET_LINK = window.location.href.split('?')[0].replace('terminal.html', 'index.html') + "?shop=" + SHOP_ID;
+  const savedMobile = localStorage.getItem("revizo_mobile");
 
-  window.onload = function() {
-    if(authToken) launchDashboard();
+  if (!savedMobile) {
+      window.location.replace("index.html" + window.location.search);
+  } else {
+      document.body.style.display = "flex"; 
+  }
+
+  function unlockWallet() {
+      document.getElementById("waGateOverlay").style.display = "none";
+      localStorage.setItem("wa_joined_gate", "true"); 
+  }
+
+  function secureLogout() {
+      var lBtn = document.getElementById("logoutBtn");
+      lBtn.disabled = true;
+      lBtn.innerHTML = "⏳ CLEARING...";
+      document.body.style.opacity = '0';
+      
+      setTimeout(() => {
+          localStorage.removeItem("revizo_mobile");
+          localStorage.removeItem("revizo_category");
+          localStorage.removeItem("wa_joined_gate"); 
+          localStorage.clear();
+          sessionStorage.clear();
+          
+          let searchParams = window.location.search;
+          let separator = searchParams ? "&" : "?";
+          const freshUrl = "index.html" + searchParams + separator + "nocache=" + Date.now();
+          
+          window.history.replaceState(null, null, freshUrl);
+          window.location.replace(freshUrl);
+      }, 50);
+  }
+
+  const VISITOR_LINKS = {
+      "default": "https://wa.me/919811026506",
+      "16 to 20": "https://wa.me/919811026506",
+      "21 to 25": "https://wa.me/919811026506",
+      "26 to 35": "https://wa.me/919811026506",
+      "36 to 44": "https://wa.me/919811026506",
+      "45 to 55": "https://wa.me/919811026506"
   };
 
-  function unlockDashboard() {
-    const pin = document.getElementById('pinInput').value;
-    if(pin.length < 4) return;
-    document.getElementById('unlockBtn').innerText = 'CHECKING...';
-    
-    fetch(REVIZO_API + "?action=getCashierData&shopId=" + SHOP_ID + "&auth=" + pin)
-      .then(r => r.json()).then(data => {
-        if(data.error) {
-          alert("Invalid PIN"); document.getElementById('pinInput').value = ''; document.getElementById('unlockBtn').innerText = 'UNLOCK TERMINAL';
-        } else { authToken = pin; localStorage.setItem('revizo3_auth_' + SHOP_ID, pin); launchDashboard(); }
-      }).catch(() => { document.getElementById('unlockBtn').innerText = 'UNLOCK TERMINAL'; alert("Network Error"); });
-  }
-
-  function launchDashboard() {
-    document.getElementById('cashier-login').classList.remove('active');
-    document.getElementById('cashier-dashboard').style.display = 'block';
-    loadPending(); setInterval(() => { if(!document.hidden) loadPending(); }, 8000);
-  }
-
-  function loadPending() {
-    fetch(REVIZO_API + "?action=getCashierData&shopId=" + SHOP_ID + "&auth=" + authToken)
-      .then(r => r.json()).then(data => {
-        if(!data.error) { 
-          document.getElementById('statToday').innerText = data.data.stats.today; 
-          document.getElementById('statVIPs').innerText = data.data.stats.vips; 
-          renderLists(data.data.pending, data.data.reminders, data.data.stickyThankYous); 
+  // Live Anti-Fraud Clock Global Ticker
+  setInterval(function() {
+    let clocks = document.querySelectorAll('.live-clock');
+    clocks.forEach(clock => {
+        if (clock.style.display === "block") {
+            clock.innerText = "Live Verification: " + new Date().toLocaleTimeString();
         }
-      });
-  }
+    });
+  }, 1000);
 
-  function renderLists(pending, reminders, thankYous) {
-    // 1. PENDING APPROVALS
-    const list = document.getElementById('pendingList'); list.innerHTML = '';
-    if(pending && pending.length > 0) {
-      pending.forEach(num => {
-        const masked = '******' + String(num).slice(-4);
-        list.innerHTML += `<div class='list-card' id='card-${num}'><div style='font-size:20px; font-weight:bold;'>${masked}</div><div style='display:flex; gap:8px;'><button class='btn-reject' onclick='rejectReq("${num}")'>❌</button><button class='btn-approve' onclick='openAuditModal("${num}")'>✓ APPROVE</button></div></div>`;
+  window.onload = function() {
+    if (!savedMobile) return;
+    let url = REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim() + "&cb=" + new Date().getTime();
+    fetch(url)
+      .then(r => r.json()).then(d => { 
+          if(d.status !== "NOT_FOUND") {
+              showRewards(d); 
+          } else { 
+              secureLogout(); 
+          } 
+      }).catch((e) => { 
+          console.log("Network Error Loading Wallet", e);
+          document.getElementById("step-loading").innerHTML = "<h2>Network Error</h2><p>Please check your connection and reload.</p>"; 
       });
-    } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
+  };
+
+  // Unified function handles claims for both standard discounts and Birthday promos
+  function claimRewardPing(boxId) {
+    let lastSub = sessionStorage.getItem('last_stamp_req');
+    if(lastSub && (Date.now() - lastSub < 10000)) return alert("Wait before requesting again.");
+    sessionStorage.setItem('last_stamp_req', Date.now());
     
-    // 2. THANK YOU QUEUE
-    const tyList = document.getElementById('thankYouList'); tyList.innerHTML = '';
-    if(thankYous && thankYous.length > 0) {
-      document.getElementById('thankYouSection').style.display = 'block';
-      thankYous.forEach(ty => {
-        const maskedName = ty.name ? ty.name : '******' + String(ty.mobile).slice(-4);
-        tyList.innerHTML += `<div class='list-card thank-card' id='ty-${ty.mobile}'><div><div style='font-weight:bold;'>${maskedName}</div><div style='font-size:12px; color:#00c6ff;'>Pending Thank You</div></div><button class='btn-wa' onclick='sendThankYou("${ty.mobile}", "${ty.name}")'>💬 SEND MSG</button></div>`;
-      });
-    } else { document.getElementById('thankYouSection').style.display = 'none'; }
+    let url = REVIZO_API + "?action=submitVisit&shopId=" + SHOP_ID + "&mobile=" + savedMobile.trim() + "&cb=" + new Date().getTime();
+    
+    fetch(url).then(r => r.json()).then(data => {
+      if(data.status === "RATE_LIMITED") { return alert("Too many requests."); }
+      
+      if (data.status === "ALREADY_APPROVED") {
+        alert("Limit Reached For Today");
+        window.location.reload();
+        return;
+      }
 
-    // 3. STICKY CRM REMINDERS
-    const remList = document.getElementById('reminderList'); remList.innerHTML = '';
-    let visibleReminders = 0;
-    if(reminders && reminders.length > 0) {
-      reminders.forEach(rem => {
-        const year = new Date().getFullYear();
-        const sentKey = 'rem_sent_' + rem.mobile + '_' + rem.type + '_' + year;
-        
-        // If cashier already sent it this year, hide it permanently
-        if(!localStorage.getItem(sentKey)) {
-            visibleReminders++;
-            remList.innerHTML += `<div class='list-card crm-card' id='rem-${rem.mobile}'><div><div style='font-weight:bold;'>${rem.name}</div><div style='font-size:12px; color:#00ff87;'><b>${rem.time}</b> to ${rem.type}</div></div><button class='btn-wa' onclick='sendReminder("${rem.mobile}", "${rem.name}", "${rem.type}", "${rem.time}")'>💬 MSG</button></div>`;
+      if (data.status === "SUCCESS" || data.status === "ALREADY_PENDING") {
+        // INSTANT ANTI-FRAUD FLICKER TRIGGERED
+        let targetBox = document.getElementById(boxId);
+        if (targetBox) {
+            targetBox.classList.add("anti-fraud-pulse");
+            let btn = targetBox.querySelector('button');
+            if(btn) {
+                btn.innerHTML = "⏳ PENDING - SHOW TO CASHIER";
+                btn.disabled = true;
+                btn.style.background = "#555";
+                btn.classList.remove("neon-green", "neon-orange");
+            }
+            let clock = targetBox.querySelector('.live-clock');
+            if(clock) clock.style.display = "block";
         }
-      });
-    }
-    document.getElementById('remindersSection').style.display = (visibleReminders > 0) ? 'block' : 'none';
-  }
-
-  // ==========================================
-  // MODAL AUDIT LOGIC (FOR NIGHTLY EMAIL)
-  // ==========================================
-  let currentAuditMobile = "";
-  
-  function openAuditModal(mobile) {
-    currentAuditMobile = mobile;
-    document.getElementById('auditMobileLabel').innerText = '******' + String(mobile).slice(-4);
-    document.getElementById('auditModal').style.display = 'flex';
-  }
-
-  function closeModal() {
-    document.getElementById('auditModal').style.display = 'none';
-    currentAuditMobile = "";
-  }
-
-  function confirmApprove(discountType, amount) {
-    document.getElementById('auditModal').style.display = 'none';
-    document.getElementById('card-'+currentAuditMobile).style.opacity = '0.5';
-    
-    // 1. Log to Audit Email
-    fetch(REVIZO_API + "?action=claimOffer&shopId=" + SHOP_ID + "&mobile=" + currentAuditMobile + "&auth=" + authToken + "&discountType=" + encodeURIComponent(discountType) + "&amountRs=" + amount);
-    
-    // 2. Actually Approve User
-    fetch(REVIZO_API + "?action=approveUser&shopId=" + SHOP_ID + "&mobile=" + currentAuditMobile + "&auth=" + authToken)
-      .then(r => r.json()).then(d => { if(d.success) loadPending(); });
-  }
-
-  function rejectReq(mobile) {
-    document.getElementById('card-'+mobile).style.opacity = '0.5';
-    fetch(REVIZO_API + "?action=rejectUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken).then(r => r.json()).then(d => { if(d.success) loadPending(); });
-  }
-
-  // ==========================================
-  // WHATSAPP GENERATORS & CLEARING LOGIC
-  // ==========================================
-  function cleanPhone(mobile) {
-    let clean = String(mobile).replace(/\D/g, '');
-    return (clean.length === 10) ? '91' + clean : clean;
-  }
-
-  function sendThankYou(mobile, name) {
-    document.getElementById('ty-'+mobile).style.opacity = '0.5';
-    let customerName = name ? name.split(" ")[0] : "VIP";
-    let msg = `Hi ${customerName}! Thanks for visiting us today. We hope you enjoyed your reward! \n\nCheck your updated VIP Wallet to see your next reward here: \n${WALLET_LINK}`;
-    
-    // Clear from queue in Backend
-    fetch(REVIZO_API + "?action=markThankYouSent&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken)
-        .then(r => r.json()).then(d => { if(d.success) loadPending(); });
         
-    window.open(`https://wa.me/${cleanPhone(mobile)}?text=${encodeURIComponent(msg)}`, '_blank');
+        let visitBadge = document.getElementById("visitStatus");
+        visitBadge.innerText = "⏳ WAITING 4 APPROVAL"; 
+        visitBadge.className = "status-badge bg-warning";
+        visitBadge.style.display = "inline-block";
+        waitForCashier(savedMobile.trim());
+      } else { 
+        window.location.reload(); 
+      }
+    }).catch(() => { alert("Network error."); });
   }
 
-  function sendReminder(mobile, name, type, time) {
-    let customerName = name ? name.split(" ")[0] : "VIP";
-    let msg = "";
+  function waitForCashier(mobile) {
+    let checkInterval = setInterval(() => {
+      let url = REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + mobile + "&cb=" + new Date().getTime();
+      fetch(url).then(r => r.json()).then(data => { 
+        if(data.status === "APPROVED" || data.status === "CLAIMED") { clearInterval(checkInterval); showRewards(data); } 
+      });
+    }, 4000);
+  }
+
+  // Helper for Date Logic
+  function checkSpecial(dateStr, redeemedYear, typeLabel) {
+      if(!dateStr) return null;
+      let d = new Date(dateStr);
+      let today = new Date();
+      let currentYear = today.getFullYear().toString();
+      
+      d.setFullYear(today.getFullYear());
+      let diffDays = Math.ceil((d.getTime() - today.getTime()) / (1000 * 3600 * 24));
+      
+      if(diffDays >= -15 && diffDays <= 15) {
+          if(redeemedYear === currentYear) return "REDEEMED";
+          return { daysLeft: (diffDays >= 0 ? diffDays : 15 + diffDays), type: typeLabel };
+      }
+      return null;
+  }
+
+  function showRewards(data) {
+    document.getElementById("step-loading").classList.remove('active'); 
+    document.getElementById("step-wallet").classList.add('active');
     
-    // GOLDEN DAY LOGIC
-    if(time === '0 Days') {
-        msg = `Hi ${customerName}! 🎉 Wishing you a very Happy ${type} from our team! Drop by today for your special Golden Day surprise! \n\nCheck your VIP Wallet here: \n${WALLET_LINK}`;
+    let cName = data.customerName || data.name || data.Name || data.CustomerName;
+    if(cName) {
+        let firstName = cName.split(" ")[0];
+        document.getElementById("greetingText").innerText = "Hi " + firstName + ", Welcome!";
     } else {
-        msg = `Hi ${customerName}! Your ${type} is coming up in ${time}! We have unlocked a special 10% discount for you. \n\nCheck your VIP Wallet here: \n${WALLET_LINK}`;
+        document.getElementById("greetingText").innerText = "Hi VIP, Welcome!";
+    }
+    
+    let lifeVisits = data.lifetimeVisits || data.totalVisits || data.stamps || 1;
+    document.getElementById("lifetimeVisitsBadge").style.display = "inline-block";
+    document.getElementById("lifetimeCount").innerText = lifeVisits;
+    
+    // FIX 2: The messy UI Date String code was completely deleted here. The data variables remain intact.
+
+    let cat = localStorage.getItem("revizo_category") || data.category || "default";
+    let waLink = data.dynamicWaLink || VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
+    if(waLink && !waLink.includes("PASTE_LINK")) {
+        document.getElementById("dynamicWaGateLink").href = waLink;
+        if(!localStorage.getItem("wa_joined_gate")) {
+            document.getElementById("waGateOverlay").style.display = "flex";
+        }
+    }
+    
+    let sCount = data.stamps || 0; 
+    let isApprovedToday = (data.status === "APPROVED" || data.status === "CLAIMED");
+    let isPendingToday = (data.status === "PENDING");
+
+    let nextRewardAmt = "";
+    if (sCount === 1) nextRewardAmt = "₹50";
+    else if (sCount === 2) nextRewardAmt = "₹75";
+    else if (sCount === 3) nextRewardAmt = "₹100";
+    else if (sCount >= 4) nextRewardAmt = "🎁 Gift";
+    else nextRewardAmt = "₹50"; 
+    
+    document.getElementById("revVoucher").innerHTML = `
+        <span style='font-size: 20px;'>Earn ${nextRewardAmt} Next Time</span>
+        <br>
+        <span style='font-size: 12px; font-weight: 800; color: #e0f7fa; letter-spacing: 0.5px;'>*Min. purchase ₹499</span>
+    `;
+
+    // Dynamic Button Generator
+    let rewardText = ""; let btnText = "";
+    if(sCount === 0) { rewardText = "₹0"; btnText = "LOG 1ST VISIT"; }
+    else if(sCount === 1) { rewardText = "₹50 OFF"; btnText = "CLAIM ₹50 OFF"; }
+    else if(sCount === 2) { rewardText = "₹75 OFF"; btnText = "CLAIM ₹75 OFF"; }
+    else if(sCount === 3) { rewardText = "₹100 OFF"; btnText = "CLAIM ₹100 OFF"; }
+    else { rewardText = "SURPRISE GIFT"; btnText = "CLAIM SURPRISE GIFT"; }
+
+    let activeBoxHTML = "";
+    let visitBadge = document.getElementById("visitStatus");
+    
+    if (isApprovedToday) {
+        visitBadge.innerText = "✅ Loyalty Card Up to Date"; 
+        visitBadge.className = "status-badge bg-success";
+        visitBadge.style.display = "inline-block";
+        document.getElementById("activeRewardBox").classList.remove("anti-fraud-pulse");
+        activeBoxHTML = `
+            <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S REWARD</div>
+            <div style="font-size: 24px; font-weight: 900; margin: 10px 0;">✅ REDEEMED</div>
+            <div style="background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px; font-size: 13px; font-weight: bold; text-align: center;">Valid Today Only (Expires 11:59 PM)</div>
+        `;
+    } else if (isPendingToday) {
+        visitBadge.innerText = "⏳ WAITING 4 APPROVAL"; 
+        visitBadge.className = "status-badge bg-warning";
+        visitBadge.style.display = "inline-block";
+        document.getElementById("activeRewardBox").classList.add("anti-fraud-pulse");
+        activeBoxHTML = `
+            <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S DISCOUNT: ${rewardText}</div>
+            <button class="btn-2050" disabled style="background: #555; border-color: #444; margin-top: 15px;">⏳ PENDING - SHOW TO CASHIER</button>
+            <div class="live-clock" style="display:block; font-size: 16px; padding: 10px;"></div>
+        `;
+        waitForCashier(savedMobile.trim());
+    } else {
+        visitBadge.style.display = "none";
+        document.getElementById("activeRewardBox").classList.remove("anti-fraud-pulse");
+        // FIX 4: Upgraded the Min. Purchase text to be bold, white, with a dark background pill.
+        activeBoxHTML = `
+            <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S DISCOUNT: ${rewardText}</div>
+            <button class="btn-2050 neon-green" onclick="claimRewardPing('activeRewardBox')" style="margin-top: 15px;">${btnText}</button>
+            <div class="live-clock" style="display:none; font-size: 16px; padding: 10px;"></div>
+            <div style="text-align: center;">
+               <div style="font-size: 12px; font-weight: 900; background: rgba(0,0,0,0.25); color: #fff; padding: 6px 12px; border-radius: 20px; display: inline-block; margin-top: 12px; letter-spacing: 0.5px;">*MIN. PURCHASE ₹499</div>
+            </div>
+        `;
+    }
+    document.getElementById("activeRewardBox").innerHTML = activeBoxHTML;
+
+    // BIRTHDAY / ANNIVERSARY 15-DAY LOGIC
+    let bPromo = checkSpecial(data.dob, data.bdayRedeemedYear, "Birthday");
+    let aPromo = checkSpecial(data.anniversary, data.annivRedeemedYear, "Anniversary");
+    let activePromo = bPromo !== "REDEEMED" && bPromo ? bPromo : (aPromo !== "REDEEMED" && aPromo ? aPromo : null);
+    
+    if(activePromo && !isApprovedToday) {
+        document.getElementById("specialPromoBox").style.display = "block";
+        let promoHTML = `<div style="font-size: 15px; font-weight: 900; letter-spacing: 1px;">🎁 10% ${activePromo.type.toUpperCase()} DISCOUNT</div>`;
+        
+        if (lifeVisits < 2) {
+             promoHTML += `
+                 <div style="margin: 15px 0; font-size: 14px; font-weight: bold; text-align: center;">
+                    ${activePromo.daysLeft} Days Left! Come back for Visit 2 to claim your 10% Gift!
+                 </div>
+                 <button class="btn-2050" disabled style="background: #555; border-color: #444; margin-top: 5px;">🔒 Unlocks on 2nd Visit</button>
+                 <div style="text-align: center;">
+                    <div style="font-size: 12px; font-weight: 900; background: rgba(0,0,0,0.25); color: #fff; padding: 6px 12px; border-radius: 20px; display: inline-block; margin-top: 12px; letter-spacing: 0.5px;">*MIN. PURCHASE ₹499</div>
+                 </div>
+             `;
+        } else {
+             promoHTML += `
+                 <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: bold; margin: 15px 0; border: 1px solid #c3e6cb; text-align: center;">
+                    🟢 Show DOB Proof to Cashier to Claim
+                 </div>
+                 <button class="btn-2050 neon-orange" onclick="claimRewardPing('specialPromoBox')">CLAIM 10% OFF</button>
+                 <div class="live-clock" style="display:none; font-size: 16px; padding: 10px;"></div>
+             `;
+        }
+        document.getElementById("specialPromoBox").innerHTML = promoHTML;
+    } else {
+        document.getElementById("specialPromoBox").style.display = "none";
     }
 
-    // Save sticky lock to cashier's browser so it disappears permanently for the year
-    const year = new Date().getFullYear();
-    localStorage.setItem('rem_sent_' + mobile + '_' + type + '_' + year, 'true');
-    
-    // Refresh to hide the card, then open WA
-    loadPending();
-    window.open(`https://wa.me/${cleanPhone(mobile)}?text=${encodeURIComponent(msg)}`, '_blank');
+    // STAMP JOURNEY BUILDER
+    document.getElementById("stampCountText").innerText = sCount;
+    const rewardPrices = [0, 50, 75, 100, 150]; 
+    let journeyHTML = ""; 
+    for(let i = 1; i <= 5; i++) {
+      if(i <= sCount) {
+        if (i === sCount && isPendingToday) {
+            journeyHTML += `<div class="visit-row">⏳ VISIT ${i} <span class="tag-done" style="background:#ffc107; color:#000;">Pending...</span></div>`;
+        } else {
+            if(i === 1) {
+                journeyHTML += `<div class="visit-row">✅ VISIT 1 <span class="tag-done">Joined</span></div>`;
+            } else if (i === 5) {
+                journeyHTML += `<div class="visit-row">✅ VISIT 5 <span class="tag-done">🎁 Gift Claimed</span></div>`;
+            } else {
+                journeyHTML += `<div class="visit-row">✅ VISIT ${i} <span class="tag-done">₹${rewardPrices[i-1]} Redeemed</span></div>`;
+            }
+        }
+      } else if (i === 5) {
+        journeyHTML += `<div class="visit-row" style="opacity: 0.6;">⬜ VISIT 5 <span class="tag-surprise">🎁 GIFT REWARD</span></div>`;
+      } else {
+        journeyHTML += `<div class="visit-row" style="opacity: 0.6;">⬜ VISIT ${i} <span style="font-size:12px;">₹${rewardPrices[i-1]} Reward</span></div>`;
+      }
+    }
+    document.getElementById("journeyList").innerHTML = journeyHTML;
+    document.getElementById("congratsBox").style.display = (sCount >= 5) ? "block" : "none";
   }
 </script>
 </body>
