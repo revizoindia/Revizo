@@ -25,6 +25,10 @@
   .neon-orange { background: linear-gradient(135deg, #ff8a00, #e52e71); box-shadow: 0 12px 25px rgba(229, 46, 113, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
   .neon-blue { background: linear-gradient(135deg, #00c6ff, #0072ff); box-shadow: 0 12px 25px rgba(0, 114, 255, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
 
+  /* NEW: BUTTON PULSE ANIMATION */
+  @keyframes clickMePulse { 0% { transform: scale(1); } 50% { transform: scale(1.04); } 100% { transform: scale(1); } }
+  .btn-pulse { animation: clickMePulse 1.8s infinite ease-in-out; }
+
   .fancy-card { border-radius: 15px; padding: 15px; margin-bottom: 12px; color: white; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s ease;}
   .c-purple { background: linear-gradient(135deg, #8E54E9, #4776E6); }
   .c-light-purple { background: linear-gradient(135deg, #ab47bc, #df78ef); }
@@ -66,17 +70,14 @@
   
   <h2 id="greetingText" style="margin-top:0; font-weight:900;">My Rewards Wallet</h2>
   
-  <!-- FIX 1: Flexbox Wrapper to Perfectly Center the Status and Yellow Badge -->
   <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; margin-bottom: 15px;">
       <div id="visitStatus" class="status-badge" style="display: none;"></div>
       <div id="lifetimeVisitsBadge" class="status-badge bg-gold" style="display: none;">👑 Lifetime Visits: <span id="lifetimeCount">0</span></div>
   </div>
 
-  <!-- FIX 3: Green Active Box and Orange Promo Box Moved to the Top -->
   <div id="activeRewardBox" class="fancy-card c-green"></div>
   <div id="specialPromoBox" class="fancy-card c-orange" style="display: none;"></div>
 
-  <!-- Purple Informational Boxes Pushed Down -->
   <div class="fancy-card c-purple">
     <div style="font-size: 15px; opacity: 1; font-weight: 900; letter-spacing: 1px;">MONTHLY LUCKY DRAW 🎁</div>
     <div style="font-size: 15px; font-weight: 900; margin-top: 4px;">LIFETIME ENTRY CONFIRMED ✅</div>
@@ -103,7 +104,7 @@
   <button id="logoutBtn" onclick="secureLogout()" style="background: transparent; border: 2px solid #ff4444; color: #ff4444; padding: 12px; border-radius: 12px; margin-top: 25px; width: 100%; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; box-sizing: border-box;">🚪 LOG OUT</button>
 </div>
 
-<!-- FROSTED GLASS OVERLAY (Bypass untouched, relies on LocalStorage & WaLinks as designed) -->
+<!-- FROSTED GLASS OVERLAY -->
 <div id="waGateOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box;">
     <div style="background: white; padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 320px; width: 100%; box-sizing: border-box; margin: auto;">
         <div style="font-size: 42px; margin-bottom: 5px;">🎁</div>
@@ -163,7 +164,6 @@
       "45 to 55": "https://wa.me/919811026506"
   };
 
-  // Live Anti-Fraud Clock Global Ticker
   setInterval(function() {
     let clocks = document.querySelectorAll('.live-clock');
     clocks.forEach(clock => {
@@ -189,7 +189,6 @@
       });
   };
 
-  // Unified function handles claims for both standard discounts and Birthday promos
   function claimRewardPing(boxId) {
     let lastSub = sessionStorage.getItem('last_stamp_req');
     if(lastSub && (Date.now() - lastSub < 10000)) return alert("Wait before requesting again.");
@@ -207,7 +206,6 @@
       }
 
       if (data.status === "SUCCESS" || data.status === "ALREADY_PENDING") {
-        // INSTANT ANTI-FRAUD FLICKER TRIGGERED
         let targetBox = document.getElementById(boxId);
         if (targetBox) {
             targetBox.classList.add("anti-fraud-pulse");
@@ -216,7 +214,7 @@
                 btn.innerHTML = "⏳ PENDING - SHOW TO CASHIER";
                 btn.disabled = true;
                 btn.style.background = "#555";
-                btn.classList.remove("neon-green", "neon-orange");
+                btn.classList.remove("neon-green", "neon-orange", "btn-pulse"); // Stops the zoom animation instantly
             }
             let clock = targetBox.querySelector('.live-clock');
             if(clock) clock.style.display = "block";
@@ -242,7 +240,6 @@
     }, 4000);
   }
 
-  // Helper for Date Logic
   function checkSpecial(dateStr, redeemedYear, typeLabel) {
       if(!dateStr) return null;
       let d = new Date(dateStr);
@@ -274,8 +271,6 @@
     let lifeVisits = data.lifetimeVisits || data.totalVisits || data.stamps || 1;
     document.getElementById("lifetimeVisitsBadge").style.display = "inline-block";
     document.getElementById("lifetimeCount").innerText = lifeVisits;
-    
-    // FIX 2: The messy UI Date String code was completely deleted here. The data variables remain intact.
 
     let cat = localStorage.getItem("revizo_category") || data.category || "default";
     let waLink = data.dynamicWaLink || VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
@@ -290,12 +285,12 @@
     let isApprovedToday = (data.status === "APPROVED" || data.status === "CLAIMED");
     let isPendingToday = (data.status === "PENDING");
 
+    // NEW LOGIC FIX: The Purple Box now looks one step ahead of the active reward
     let nextRewardAmt = "";
-    if (sCount === 1) nextRewardAmt = "₹50";
-    else if (sCount === 2) nextRewardAmt = "₹75";
-    else if (sCount === 3) nextRewardAmt = "₹100";
-    else if (sCount >= 4) nextRewardAmt = "🎁 Gift";
-    else nextRewardAmt = "₹50"; 
+    if (sCount === 0) nextRewardAmt = "₹50";
+    else if (sCount === 1) nextRewardAmt = "₹75";
+    else if (sCount === 2) nextRewardAmt = "₹100";
+    else nextRewardAmt = "🎁 Gift";
     
     document.getElementById("revVoucher").innerHTML = `
         <span style='font-size: 20px;'>Earn ${nextRewardAmt} Next Time</span>
@@ -338,10 +333,11 @@
     } else {
         visitBadge.style.display = "none";
         document.getElementById("activeRewardBox").classList.remove("anti-fraud-pulse");
-        // FIX 4: Upgraded the Min. Purchase text to be bold, white, with a dark background pill.
+        
+        // ADDED THE PULSE CLASS HERE
         activeBoxHTML = `
             <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S DISCOUNT: ${rewardText}</div>
-            <button class="btn-2050 neon-green" onclick="claimRewardPing('activeRewardBox')" style="margin-top: 15px;">${btnText}</button>
+            <button class="btn-2050 neon-green btn-pulse" onclick="claimRewardPing('activeRewardBox')" style="margin-top: 15px;">${btnText}</button>
             <div class="live-clock" style="display:none; font-size: 16px; padding: 10px;"></div>
             <div style="text-align: center;">
                <div style="font-size: 12px; font-weight: 900; background: rgba(0,0,0,0.25); color: #fff; padding: 6px 12px; border-radius: 20px; display: inline-block; margin-top: 12px; letter-spacing: 0.5px;">*MIN. PURCHASE ₹499</div>
@@ -350,7 +346,6 @@
     }
     document.getElementById("activeRewardBox").innerHTML = activeBoxHTML;
 
-    // BIRTHDAY / ANNIVERSARY 15-DAY LOGIC
     let bPromo = checkSpecial(data.dob, data.bdayRedeemedYear, "Birthday");
     let aPromo = checkSpecial(data.anniversary, data.annivRedeemedYear, "Anniversary");
     let activePromo = bPromo !== "REDEEMED" && bPromo ? bPromo : (aPromo !== "REDEEMED" && aPromo ? aPromo : null);
@@ -370,11 +365,12 @@
                  </div>
              `;
         } else {
+             // ADDED THE PULSE CLASS HERE
              promoHTML += `
                  <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: bold; margin: 15px 0; border: 1px solid #c3e6cb; text-align: center;">
                     🟢 Show DOB Proof to Cashier to Claim
                  </div>
-                 <button class="btn-2050 neon-orange" onclick="claimRewardPing('specialPromoBox')">CLAIM 10% OFF</button>
+                 <button class="btn-2050 neon-orange btn-pulse" onclick="claimRewardPing('specialPromoBox')">CLAIM 10% OFF</button>
                  <div class="live-clock" style="display:none; font-size: 16px; padding: 10px;"></div>
              `;
         }
