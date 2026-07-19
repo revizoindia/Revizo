@@ -13,7 +13,7 @@
 
 <link rel="apple-touch-icon" href="https://i.ibb.co/KjkyPZXX/IMG-20260610-225132.jpg">
 <link rel="icon" type="image/png" href="https://i.ibb.co/KjkyPZXX/IMG-20260610-225132.jpg">
-  <link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json">
   
 <style>
   :root { --bg: #1a1a1a; --card: #252525; --text: #ffffff; }
@@ -31,12 +31,22 @@
   .stat-box { flex: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 15px; border-radius: 12px; text-align: center; }
   .stat-num { font-size: 24px; font-weight: 900; color: #00ff87; }
   .list-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 18px 20px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; text-align: left;}
+  
   .crm-card { border-left: 4px solid #ff8a00; }
+  .thank-card { border-left: 4px solid #00c6ff; }
+  
   .btn-approve { background: #25D366; color: white; border: none; padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: transform 0.1s; }
   .btn-approve:active { transform: scale(0.95); }
   .btn-reject { background: rgba(255,59,48,0.2); color: #ff3b30; border: 1px solid rgba(255,59,48,0.5); padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: transform 0.1s; }
   .btn-reject:active { transform: scale(0.95); }
+  .btn-wa { background:#25D366; color:#fff; padding:10px 14px; border:none; border-radius:10px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); transition: transform 0.1s; }
+  .btn-wa:active { transform: scale(0.95); }
+
   .pin-input { width: 100%; padding: 16px; font-size: 28px; text-align: center; letter-spacing: 12px; border-radius: 14px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: var(--text); margin-bottom: 20px; outline: none; }
+  
+  /* Audit Popup Styling */
+  .audit-btn { background: rgba(0,198,255,0.1); border: 1px solid #00c6ff; color: var(--text); padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+  .audit-btn:active { transform: scale(0.95); background: #00c6ff; color: #000; }
 </style>
 </head>
 <body>
@@ -45,7 +55,6 @@
   
   <!-- PIN LOGIN SCREEN -->
   <div id="cashier-login" class="card active">
-    <!-- LOGO ADDED HERE -->
     <img src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 100px; border-radius: 20px; margin-bottom: 15px; object-fit: contain;">
     <h2 style="margin-top:0;">Cashier Terminal</h2>
     <p style="opacity:0.7;">Enter 4-Digit PIN</p>
@@ -56,27 +65,52 @@
   <!-- MAIN DASHBOARD -->
   <div id="cashier-dashboard" class="card" style="display:none; text-align: left;">
     <div style="text-align:center; margin-bottom:20px;">
-      <!-- LOGO ADDED HERE -->
       <img src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 60px; border-radius: 15px; margin-bottom: 10px; object-fit: contain;">
       <h2 style="margin:0;">🛒 Dashboard</h2>
     </div>
     
     <div class="stats-bar">
-      <!-- CHANGED '0' TO '⏳' FOR LOADING -->
       <div class="stat-box"><div class="stat-num" id="statToday">⏳</div><div style="font-size:11px; text-transform:uppercase; opacity:0.7;">Visits Today</div></div>
       <div class="stat-box"><div class="stat-num" id="statVIPs" style="color:#00c6ff;">⏳</div><div style="font-size:11px; text-transform:uppercase; opacity:0.7;">Total VIPs</div></div>
     </div>
     
-    <div id="remindersSection" style="display:none; margin-bottom:25px;">
-      <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">📅 CRM Event Alerts</h3>
-      <div id="reminderList"></div>
-    </div>
-    
-    <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">⏳ Pending Verifications</h3>
-    <div id="pendingList">
+    <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">⏳ Pending Approvals</h3>
+    <div id="pendingList" style="margin-bottom: 25px;">
       <div style='color:#888; text-align:center;'>Fetching live data...</div>
     </div>
+
+    <!-- NEW: THANK YOU QUEUE -->
+    <div id="thankYouSection" style="display:none; margin-bottom:25px;">
+      <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">💬 Send Thank You Messages</h3>
+      <div id="thankYouList"></div>
+    </div>
+    
+    <!-- STICKY CRM REMINDERS -->
+    <div id="remindersSection" style="display:none; margin-bottom:25px;">
+      <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">📅 Action Required: VIP Reminders</h3>
+      <div id="reminderList"></div>
+    </div>
   </div>
+</div>
+
+<!-- NEW: APPROVAL AUDIT POPUP -->
+<div id="auditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; padding: 20px; box-sizing: border-box;">
+   <div class="card" style="display:block; text-align:center; background: #252525; border: 1px solid #444;">
+      <h3 style="margin-top: 0; color: #00c6ff;">Confirm Reward Given</h3>
+      <p style="margin-bottom: 20px;">Approving Mobile: <span id="auditMobileLabel" style="font-weight: bold; font-size: 20px;"></span></p>
+      
+      <p style="font-size: 13px; color: #ff8a00; margin-bottom: 15px;">Check customer's phone and select what they clicked. This is logged to the owner.</p>
+      
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+         <button class="audit-btn" onclick="confirmApprove('Log Visit (No Discount)', 0)">Log 1st Visit</button>
+         <button class="audit-btn" onclick="confirmApprove('₹50 Off', 50)">₹50 Off</button>
+         <button class="audit-btn" onclick="confirmApprove('₹75 Off', 75)">₹75 Off</button>
+         <button class="audit-btn" onclick="confirmApprove('₹100 Off', 100)">₹100 Off</button>
+         <button class="audit-btn" onclick="confirmApprove('Surprise Gift', 0)" style="border-color: #ffd700; color: #ffd700;">Surprise Gift</button>
+         <button class="audit-btn" onclick="confirmApprove('10% Birthday/Anniv', 0)" style="border-color: #ff8a00; color: #ff8a00;">10% Special Promo</button>
+      </div>
+      <button class="btn-reject" style="width: 100%;" onclick="closeModal()">CANCEL APPROVAL</button>
+   </div>
 </div>
 
 <script>
@@ -84,6 +118,9 @@
   const urlParams = new URLSearchParams(window.location.search);
   const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
   let authToken = localStorage.getItem('revizo3_auth_' + SHOP_ID) || '';
+  
+  // DYNAMIC WALLET LINK GENERATOR
+  const WALLET_LINK = window.location.href.split('?')[0].replace('terminal.html', 'index.html') + "?shop=" + SHOP_ID;
 
   window.onload = function() {
     if(authToken) launchDashboard();
@@ -111,43 +148,123 @@
   function loadPending() {
     fetch(REVIZO_API + "?action=getCashierData&shopId=" + SHOP_ID + "&auth=" + authToken)
       .then(r => r.json()).then(data => {
-        if(!data.error) { document.getElementById('statToday').innerText = data.data.stats.today; document.getElementById('statVIPs').innerText = data.data.stats.vips; renderList(data.data.pending, data.data.reminders); }
+        if(!data.error) { 
+          document.getElementById('statToday').innerText = data.data.stats.today; 
+          document.getElementById('statVIPs').innerText = data.data.stats.vips; 
+          renderLists(data.data.pending, data.data.reminders, data.data.stickyThankYous); 
+        }
       });
   }
 
-  function renderList(pending, reminders) {
+  function renderLists(pending, reminders, thankYous) {
+    // 1. PENDING APPROVALS
     const list = document.getElementById('pendingList'); list.innerHTML = '';
     if(pending && pending.length > 0) {
       pending.forEach(num => {
         const masked = '******' + String(num).slice(-4);
-        list.innerHTML += `<div class='list-card' id='card-${num}'><div style='font-size:20px; font-weight:bold;'>${masked}</div><div style='display:flex; gap:8px;'><button class='btn-reject' onclick='rejectReq("${num}")'>❌</button><button class='btn-approve' onclick='approveReq("${num}")'>✓ APPROVE</button></div></div>`;
+        list.innerHTML += `<div class='list-card' id='card-${num}'><div style='font-size:20px; font-weight:bold;'>${masked}</div><div style='display:flex; gap:8px;'><button class='btn-reject' onclick='rejectReq("${num}")'>❌</button><button class='btn-approve' onclick='openAuditModal("${num}")'>✓ APPROVE</button></div></div>`;
       });
     } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
     
-    const remList = document.getElementById('reminderList'); remList.innerHTML = '';
-    if(reminders && reminders.length > 0) {
-      document.getElementById('remindersSection').style.display = 'block';
-      reminders.forEach(rem => {
-        
-        // BULLETPROOF WHATSAPP NUMBER CLEANER
-        let cleanMobile = String(rem.mobile).replace(/\D/g, '');
-        if (cleanMobile.length === 10) { cleanMobile = '91' + cleanMobile; }
-
-        const msg = encodeURIComponent(`Hi ${rem.name}! Your ${rem.type} is ${rem.time} away! Claim VIP offers at the store.`);
-        
-        remList.innerHTML += `<div class='list-card crm-card'><div><div style='font-weight:bold;'>${rem.name}</div><div style='font-size:12px; color:#00ff87;'><b>${rem.time}</b> to ${rem.type}</div></div><a href='https://wa.me/${cleanMobile}?text=${msg}' target='_blank' style='background:#25D366; color:#fff; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:bold; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);'>💬 MSG</a></div>`;
+    // 2. THANK YOU QUEUE
+    const tyList = document.getElementById('thankYouList'); tyList.innerHTML = '';
+    if(thankYous && thankYous.length > 0) {
+      document.getElementById('thankYouSection').style.display = 'block';
+      thankYous.forEach(ty => {
+        const maskedName = ty.name ? ty.name : '******' + String(ty.mobile).slice(-4);
+        tyList.innerHTML += `<div class='list-card thank-card' id='ty-${ty.mobile}'><div><div style='font-weight:bold;'>${maskedName}</div><div style='font-size:12px; color:#00c6ff;'>Pending Thank You</div></div><button class='btn-wa' onclick='sendThankYou("${ty.mobile}", "${ty.name}")'>💬 SEND MSG</button></div>`;
       });
-    } else { document.getElementById('remindersSection').style.display = 'none'; }
+    } else { document.getElementById('thankYouSection').style.display = 'none'; }
+
+    // 3. STICKY CRM REMINDERS
+    const remList = document.getElementById('reminderList'); remList.innerHTML = '';
+    let visibleReminders = 0;
+    if(reminders && reminders.length > 0) {
+      reminders.forEach(rem => {
+        const year = new Date().getFullYear();
+        const sentKey = 'rem_sent_' + rem.mobile + '_' + rem.type + '_' + year;
+        
+        // If cashier already sent it this year, hide it permanently
+        if(!localStorage.getItem(sentKey)) {
+            visibleReminders++;
+            remList.innerHTML += `<div class='list-card crm-card' id='rem-${rem.mobile}'><div><div style='font-weight:bold;'>${rem.name}</div><div style='font-size:12px; color:#00ff87;'><b>${rem.time}</b> to ${rem.type}</div></div><button class='btn-wa' onclick='sendReminder("${rem.mobile}", "${rem.name}", "${rem.type}", "${rem.time}")'>💬 MSG</button></div>`;
+        }
+      });
+    }
+    document.getElementById('remindersSection').style.display = (visibleReminders > 0) ? 'block' : 'none';
   }
 
-  function approveReq(mobile) {
-    document.getElementById('card-'+mobile).style.opacity = '0.5';
-    fetch(REVIZO_API + "?action=approveUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken).then(r => r.json()).then(d => { if(d.success) document.getElementById('card-'+mobile).remove(); loadPending(); });
+  // ==========================================
+  // MODAL AUDIT LOGIC (FOR NIGHTLY EMAIL)
+  // ==========================================
+  let currentAuditMobile = "";
+  
+  function openAuditModal(mobile) {
+    currentAuditMobile = mobile;
+    document.getElementById('auditMobileLabel').innerText = '******' + String(mobile).slice(-4);
+    document.getElementById('auditModal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('auditModal').style.display = 'none';
+    currentAuditMobile = "";
+  }
+
+  function confirmApprove(discountType, amount) {
+    document.getElementById('auditModal').style.display = 'none';
+    document.getElementById('card-'+currentAuditMobile).style.opacity = '0.5';
+    
+    // 1. Log to Audit Email
+    fetch(REVIZO_API + "?action=claimOffer&shopId=" + SHOP_ID + "&mobile=" + currentAuditMobile + "&auth=" + authToken + "&discountType=" + encodeURIComponent(discountType) + "&amountRs=" + amount);
+    
+    // 2. Actually Approve User
+    fetch(REVIZO_API + "?action=approveUser&shopId=" + SHOP_ID + "&mobile=" + currentAuditMobile + "&auth=" + authToken)
+      .then(r => r.json()).then(d => { if(d.success) loadPending(); });
   }
 
   function rejectReq(mobile) {
     document.getElementById('card-'+mobile).style.opacity = '0.5';
-    fetch(REVIZO_API + "?action=rejectUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken).then(r => r.json()).then(d => { if(d.success) document.getElementById('card-'+mobile).remove(); loadPending(); });
+    fetch(REVIZO_API + "?action=rejectUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken).then(r => r.json()).then(d => { if(d.success) loadPending(); });
+  }
+
+  // ==========================================
+  // WHATSAPP GENERATORS & CLEARING LOGIC
+  // ==========================================
+  function cleanPhone(mobile) {
+    let clean = String(mobile).replace(/\D/g, '');
+    return (clean.length === 10) ? '91' + clean : clean;
+  }
+
+  function sendThankYou(mobile, name) {
+    document.getElementById('ty-'+mobile).style.opacity = '0.5';
+    let customerName = name ? name.split(" ")[0] : "VIP";
+    let msg = `Hi ${customerName}! Thanks for visiting us today. We hope you enjoyed your reward! \n\nCheck your updated VIP Wallet to see your next reward here: \n${WALLET_LINK}`;
+    
+    // Clear from queue in Backend
+    fetch(REVIZO_API + "?action=markThankYouSent&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken)
+        .then(r => r.json()).then(d => { if(d.success) loadPending(); });
+        
+    window.open(`https://wa.me/${cleanPhone(mobile)}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+
+  function sendReminder(mobile, name, type, time) {
+    let customerName = name ? name.split(" ")[0] : "VIP";
+    let msg = "";
+    
+    // GOLDEN DAY LOGIC
+    if(time === '0 Days') {
+        msg = `Hi ${customerName}! 🎉 Wishing you a very Happy ${type} from our team! Drop by today for your special Golden Day surprise! \n\nCheck your VIP Wallet here: \n${WALLET_LINK}`;
+    } else {
+        msg = `Hi ${customerName}! Your ${type} is coming up in ${time}! We have unlocked a special 10% discount for you. \n\nCheck your VIP Wallet here: \n${WALLET_LINK}`;
+    }
+
+    // Save sticky lock to cashier's browser so it disappears permanently for the year
+    const year = new Date().getFullYear();
+    localStorage.setItem('rem_sent_' + mobile + '_' + type + '_' + year, 'true');
+    
+    // Refresh to hide the card, then open WA
+    loadPending();
+    window.open(`https://wa.me/${cleanPhone(mobile)}?text=${encodeURIComponent(msg)}`, '_blank');
   }
 </script>
 </body>
