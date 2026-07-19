@@ -32,20 +32,18 @@
   .c-blue { background: linear-gradient(135deg, #00c6ff, #0072ff); }
   .c-orange { background: linear-gradient(135deg, #ff8a00, #e52e71); }
   
-  .status-badge { display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+  .status-badge { display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 5px; }
   .bg-warning { background: #fff3cd; color: #856404; border: 1px solid #856404;}
   .bg-success { background: #d4edda; color: #155724; border: 1px solid #155724;}
   
   /* CROWN BADGE FOR LIFETIME VISITS */
-  .bg-gold { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; border: none; box-shadow: 0 2px 5px rgba(255,215,0,0.4); margin-left: 5px; }
-  .bg-blue-light { background: #e3f2fd; color: #0d47a1; border: none; }
+  .bg-gold { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; border: none; box-shadow: 0 2px 5px rgba(255,215,0,0.4); margin: 0; }
 
   .visit-row { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;}
   .visit-row:last-child { border-bottom: none; }
   .tag-done { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 8px; font-size: 12px; }
   .tag-surprise { background: #ffd700; color: #000; padding: 4px 10px; border-radius: 8px; font-size: 12px; animation: pulse 1.5s infinite; }
   
-  /* POINT 1 FIX: Centered Alignment for Congrats Box */
   .congrats-box { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #FFD700, #FFA500); padding: 20px; border-radius: 15px; margin-top: 15px; margin-bottom: 15px; color: #000; box-shadow: 0 5px 15px rgba(255,165,0,0.4); animation: popIn 0.5s ease; border: 2px solid #fff; }
   
   @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
@@ -68,13 +66,17 @@
   
   <h2 id="greetingText" style="margin-top:0; font-weight:900;">My Rewards Wallet</h2>
   
-  <!-- Status, Lifetime, and Date Badges -->
-  <div>
-      <div id="visitStatus" class="status-badge"></div>
+  <!-- FIX 1: Flexbox Wrapper to Perfectly Center the Status and Yellow Badge -->
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; margin-bottom: 15px;">
+      <div id="visitStatus" class="status-badge" style="display: none;"></div>
       <div id="lifetimeVisitsBadge" class="status-badge bg-gold" style="display: none;">👑 Lifetime Visits: <span id="lifetimeCount">0</span></div>
   </div>
-  <div id="personalDates" class="status-badge bg-blue-light" style="display: none; margin-bottom: 15px;"></div>
 
+  <!-- FIX 3: Green Active Box and Orange Promo Box Moved to the Top -->
+  <div id="activeRewardBox" class="fancy-card c-green"></div>
+  <div id="specialPromoBox" class="fancy-card c-orange" style="display: none;"></div>
+
+  <!-- Purple Informational Boxes Pushed Down -->
   <div class="fancy-card c-purple">
     <div style="font-size: 15px; opacity: 1; font-weight: 900; letter-spacing: 1px;">MONTHLY LUCKY DRAW 🎁</div>
     <div style="font-size: 15px; font-weight: 900; margin-top: 4px;">LIFETIME ENTRY CONFIRMED ✅</div>
@@ -84,12 +86,6 @@
     <div style="font-size: 14px; opacity: 1; font-weight: 900; letter-spacing: 1px;">YOUR NEXT-BUY COUPON</div>
     <div id="revVoucher" style="font-size: 20px; font-weight: 900; margin-top: 6px;">...</div>
   </div>
-  
-  <!-- POINT 4: BRAND NEW DYNAMIC REWARD BOX -->
-  <div id="activeRewardBox" class="fancy-card c-green"></div>
-  
-  <!-- POINT 5: BIRTHDAY & ANNIVERSARY CREDIT NOTE BOX -->
-  <div id="specialPromoBox" class="fancy-card c-orange" style="display: none;"></div>
 
   <div class="fancy-card c-blue">
     <div style="font-size: 14px; opacity: 1; font-weight: 900; margin-bottom: 10px; letter-spacing: 1px;">STAMP JOURNEY (<span id="stampCountText">0</span>/5)</div>
@@ -193,7 +189,7 @@
       });
   };
 
-  // POINT 4 & 5 TRIGER: This unified function handles claims for both standard discounts and Birthday promos
+  // Unified function handles claims for both standard discounts and Birthday promos
   function claimRewardPing(boxId) {
     let lastSub = sessionStorage.getItem('last_stamp_req');
     if(lastSub && (Date.now() - lastSub < 10000)) return alert("Wait before requesting again.");
@@ -226,8 +222,10 @@
             if(clock) clock.style.display = "block";
         }
         
-        document.getElementById("visitStatus").innerText = "⏳ WAITING 4 APPROVAL"; 
-        document.getElementById("visitStatus").className = "status-badge bg-warning";
+        let visitBadge = document.getElementById("visitStatus");
+        visitBadge.innerText = "⏳ WAITING 4 APPROVAL"; 
+        visitBadge.className = "status-badge bg-warning";
+        visitBadge.style.display = "inline-block";
         waitForCashier(savedMobile.trim());
       } else { 
         window.location.reload(); 
@@ -244,7 +242,7 @@
     }, 4000);
   }
 
-  // Helper for Point 5 Date Logic
+  // Helper for Date Logic
   function checkSpecial(dateStr, redeemedYear, typeLabel) {
       if(!dateStr) return null;
       let d = new Date(dateStr);
@@ -254,7 +252,6 @@
       d.setFullYear(today.getFullYear());
       let diffDays = Math.ceil((d.getTime() - today.getTime()) / (1000 * 3600 * 24));
       
-      // 15 day window logic (before or after)
       if(diffDays >= -15 && diffDays <= 15) {
           if(redeemedYear === currentYear) return "REDEEMED";
           return { daysLeft: (diffDays >= 0 ? diffDays : 15 + diffDays), type: typeLabel };
@@ -278,17 +275,7 @@
     document.getElementById("lifetimeVisitsBadge").style.display = "inline-block";
     document.getElementById("lifetimeCount").innerText = lifeVisits;
     
-    let bday = data.dob || data.birthday || data.birthDate;
-    let anniv = data.anniversary || data.doa;
-    let dateString = "";
-    if (bday) dateString += "🎂 " + bday + " ";
-    if (bday && anniv) dateString += " | ";
-    if (anniv) dateString += "💍 " + anniv;
-    
-    if (dateString) {
-        document.getElementById("personalDates").innerText = dateString;
-        document.getElementById("personalDates").style.display = "inline-block";
-    }
+    // FIX 2: The messy UI Date String code was completely deleted here. The data variables remain intact.
 
     let cat = localStorage.getItem("revizo_category") || data.category || "default";
     let waLink = data.dynamicWaLink || VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
@@ -303,9 +290,6 @@
     let isApprovedToday = (data.status === "APPROVED" || data.status === "CLAIMED");
     let isPendingToday = (data.status === "PENDING");
 
-    // ==========================================
-    // POINT 4: DYNAMIC REWARD LOGIC
-    // ==========================================
     let nextRewardAmt = "";
     if (sCount === 1) nextRewardAmt = "₹50";
     else if (sCount === 2) nextRewardAmt = "₹75";
@@ -328,9 +312,12 @@
     else { rewardText = "SURPRISE GIFT"; btnText = "CLAIM SURPRISE GIFT"; }
 
     let activeBoxHTML = "";
+    let visitBadge = document.getElementById("visitStatus");
+    
     if (isApprovedToday) {
-        document.getElementById("visitStatus").innerText = "✅ Loyalty Card Up to Date"; 
-        document.getElementById("visitStatus").className = "status-badge bg-success";
+        visitBadge.innerText = "✅ Loyalty Card Up to Date"; 
+        visitBadge.className = "status-badge bg-success";
+        visitBadge.style.display = "inline-block";
         document.getElementById("activeRewardBox").classList.remove("anti-fraud-pulse");
         activeBoxHTML = `
             <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S REWARD</div>
@@ -338,8 +325,9 @@
             <div style="background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px; font-size: 13px; font-weight: bold; text-align: center;">Valid Today Only (Expires 11:59 PM)</div>
         `;
     } else if (isPendingToday) {
-        document.getElementById("visitStatus").innerText = "⏳ WAITING 4 APPROVAL"; 
-        document.getElementById("visitStatus").className = "status-badge bg-warning";
+        visitBadge.innerText = "⏳ WAITING 4 APPROVAL"; 
+        visitBadge.className = "status-badge bg-warning";
+        visitBadge.style.display = "inline-block";
         document.getElementById("activeRewardBox").classList.add("anti-fraud-pulse");
         activeBoxHTML = `
             <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S DISCOUNT: ${rewardText}</div>
@@ -348,19 +336,21 @@
         `;
         waitForCashier(savedMobile.trim());
     } else {
+        visitBadge.style.display = "none";
         document.getElementById("activeRewardBox").classList.remove("anti-fraud-pulse");
+        // FIX 4: Upgraded the Min. Purchase text to be bold, white, with a dark background pill.
         activeBoxHTML = `
             <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S DISCOUNT: ${rewardText}</div>
             <button class="btn-2050 neon-green" onclick="claimRewardPing('activeRewardBox')" style="margin-top: 15px;">${btnText}</button>
             <div class="live-clock" style="display:none; font-size: 16px; padding: 10px;"></div>
-            <div style="font-size: 11px; margin-top: 8px; opacity: 0.8; text-align: center;">*Min. purchase ₹499</div>
+            <div style="text-align: center;">
+               <div style="font-size: 12px; font-weight: 900; background: rgba(0,0,0,0.25); color: #fff; padding: 6px 12px; border-radius: 20px; display: inline-block; margin-top: 12px; letter-spacing: 0.5px;">*MIN. PURCHASE ₹499</div>
+            </div>
         `;
     }
     document.getElementById("activeRewardBox").innerHTML = activeBoxHTML;
 
-    // ==========================================
-    // POINT 5: BIRTHDAY / ANNIVERSARY 15-DAY LOGIC
-    // ==========================================
+    // BIRTHDAY / ANNIVERSARY 15-DAY LOGIC
     let bPromo = checkSpecial(data.dob, data.bdayRedeemedYear, "Birthday");
     let aPromo = checkSpecial(data.anniversary, data.annivRedeemedYear, "Anniversary");
     let activePromo = bPromo !== "REDEEMED" && bPromo ? bPromo : (aPromo !== "REDEEMED" && aPromo ? aPromo : null);
@@ -375,7 +365,9 @@
                     ${activePromo.daysLeft} Days Left! Come back for Visit 2 to claim your 10% Gift!
                  </div>
                  <button class="btn-2050" disabled style="background: #555; border-color: #444; margin-top: 5px;">🔒 Unlocks on 2nd Visit</button>
-                 <div style="font-size: 11px; margin-top: 8px; opacity: 0.8; text-align: center;">*Min. purchase ₹499</div>
+                 <div style="text-align: center;">
+                    <div style="font-size: 12px; font-weight: 900; background: rgba(0,0,0,0.25); color: #fff; padding: 6px 12px; border-radius: 20px; display: inline-block; margin-top: 12px; letter-spacing: 0.5px;">*MIN. PURCHASE ₹499</div>
+                 </div>
              `;
         } else {
              promoHTML += `
@@ -391,9 +383,7 @@
         document.getElementById("specialPromoBox").style.display = "none";
     }
 
-    // ==========================================
     // STAMP JOURNEY BUILDER
-    // ==========================================
     document.getElementById("stampCountText").innerText = sCount;
     const rewardPrices = [0, 50, 75, 100, 150]; 
     let journeyHTML = ""; 
