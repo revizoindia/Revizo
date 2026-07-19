@@ -136,7 +136,7 @@
   </div>
   
   <div class="submit-container">
-    <button type="button" class="futuristic-btn" id="btn-submit" onclick="submitForm()">CONFIRM VISIT</button>
+    <button type="button" class="futuristic-btn" id="btn-submit" CLICK HERE & TELL LAST 4 DIGITS AT COUNTER
     
     <button type="button" class="futuristic-btn btn-visitor" onclick="toggleVisitorMenu(event)">👁️ CONTINUE AS VISITOR</button>
     <div id="visitor-ages" style="display:none;">
@@ -258,7 +258,7 @@
     } else {
        document.getElementById('profile-fields').style.display = 'block';
        document.getElementById('welcome-back-msg').style.display = 'none';
-       document.getElementById('btn-submit').innerText = "CONFIRM ENTRY";
+       document.getElementById('btn-submit').innerText = "CLICK HERE & TELL LAST 4 DIGITS AT COUNTER";
        document.getElementById('btn-submit').disabled = false;
     }
   });
@@ -291,12 +291,12 @@
               }, 1200);
 
           } else {
-              btn.innerText = "CONFIRM ENTRY";
+              btn.innerText = "CLICK HERE & TELL LAST 4 DIGITS AT COUNTER";
               btn.disabled = false;
           }
       })
       .catch(() => { 
-          btn.innerText = "CONFIRM ENTRY"; 
+          btn.innerText = "CLICK HERE & TELL LAST 4 DIGITS AT COUNTER"; 
           btn.disabled = false;
       });
   }
@@ -337,7 +337,7 @@
           
           if(profileErr) { 
               alert("NEW VIP: Please fill Name, Age, and Birthday to create wallet!"); 
-              btn.disabled = false; btn.innerText = "CONFIRM ENTRY"; 
+              btn.disabled = false; btn.innerText = "CLICK HERE & TELL LAST 4 DIGITS AT COUNTER"; 
               return; 
           }
           
@@ -360,10 +360,10 @@
               localStorage.setItem('offline_payload', JSON.stringify(offData));
               btn.style.backgroundColor = "rgba(255, 80, 80, 0.8)"; setTimeout(() => { btn.style.backgroundColor = ""; }, 3000);
               alert("INTERNET ERROR: Saved locally. We will auto-submit when online.");
-              btn.disabled = false; btn.innerText = "CONFIRM ENTRY";
+              btn.disabled = false; btn.innerText = "CLICK HERE & TELL LAST 4 DIGITS AT COUNTER";
             });
         }
-      }).catch(() => { btn.disabled = false; btn.innerText = "CONFIRM ENTRY"; btn.style.backgroundColor = "rgba(255, 80, 80, 0.8)"; setTimeout(() => { btn.style.backgroundColor = ""; }, 3000); });
+      }).catch(() => { btn.disabled = false; btn.innerText = "CLICK HERE & TELL LAST 4 DIGITS AT COUNTER"; btn.style.backgroundColor = "rgba(255, 80, 80, 0.8)"; setTimeout(() => { btn.style.backgroundColor = ""; }, 3000); });
   }
 
   function startMic(id, btnElement) {
