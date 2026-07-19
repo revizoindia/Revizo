@@ -214,7 +214,7 @@
                 btn.innerHTML = "⏳ PENDING - SHOW TO CASHIER";
                 btn.disabled = true;
                 btn.style.background = "#555";
-                btn.classList.remove("neon-green", "neon-orange", "btn-pulse"); // Stops the zoom animation instantly
+                btn.classList.remove("neon-green", "neon-orange", "btn-pulse"); 
             }
             let clock = targetBox.querySelector('.live-clock');
             if(clock) clock.style.display = "block";
@@ -285,11 +285,13 @@
     let isApprovedToday = (data.status === "APPROVED" || data.status === "CLAIMED");
     let isPendingToday = (data.status === "PENDING");
 
-    // NEW LOGIC FIX: The Purple Box now looks one step ahead of the active reward
+    // SMART LOOK-AHEAD FIX: Calculates exact next visit based on today's approval status
+    let futureVisitNumber = isApprovedToday ? (sCount + 1) : (sCount + 2);
     let nextRewardAmt = "";
-    if (sCount === 0) nextRewardAmt = "₹50";
-    else if (sCount === 1) nextRewardAmt = "₹75";
-    else if (sCount === 2) nextRewardAmt = "₹100";
+    
+    if (futureVisitNumber <= 2) nextRewardAmt = "₹50";
+    else if (futureVisitNumber === 3) nextRewardAmt = "₹75";
+    else if (futureVisitNumber === 4) nextRewardAmt = "₹100";
     else nextRewardAmt = "🎁 Gift";
     
     document.getElementById("revVoucher").innerHTML = `
@@ -334,7 +336,6 @@
         visitBadge.style.display = "none";
         document.getElementById("activeRewardBox").classList.remove("anti-fraud-pulse");
         
-        // ADDED THE PULSE CLASS HERE
         activeBoxHTML = `
             <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S DISCOUNT: ${rewardText}</div>
             <button class="btn-2050 neon-green btn-pulse" onclick="claimRewardPing('activeRewardBox')" style="margin-top: 15px;">${btnText}</button>
@@ -365,7 +366,6 @@
                  </div>
              `;
         } else {
-             // ADDED THE PULSE CLASS HERE
              promoHTML += `
                  <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: bold; margin: 15px 0; border: 1px solid #c3e6cb; text-align: center;">
                     🟢 Show DOB Proof to Cashier to Claim
