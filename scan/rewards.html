@@ -4,28 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VIP Rewards Wallet</title>
+
+<!-- WHATSAPP LINK PREVIEW SETTINGS -->
+<meta property="og:title" content="Riwaz Garments VIP Wallet">
+<meta property="og:description" content="Click here to unlock your VIP rewards, track your stamps, and claim your discounts!">
+<meta property="og:image" content="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png">
+<meta property="og:type" content="website">
+
 <style>
   :root { --bg: #f0f4f8; --card: #ffffff; --text: #000000; }
   @media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --card: #252525; --text: #ffffff; } }
 
-  /* ZERO FLICKER & FADE OUT READY */
   body { display: none; font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; justify-content: center; overflow-x: hidden; min-height: 90vh; align-items: center; transition: opacity 0.1s ease, background-color 0.5s; opacity: 1; }
   
   .container { width: 100%; max-width: 440px; background: var(--card); padding: 20px 15px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; box-sizing: border-box; margin: auto; display: none; }
   .active { display: block; }
   
-  /* 2050 FULL GLOSSY BUTTONS */
   .btn-2050 { position: relative; width: 100%; padding: 18px 10px; border-radius: 20px; font-size: 17px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(255, 255, 255, 0.5); cursor: pointer; overflow: hidden; transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); box-sizing: border-box; text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-top: 15px; display: block; }
   .btn-2050::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%; background: linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0)); border-radius: 20px 20px 100px 100px / 20px 20px 25px 25px; pointer-events: none; }
   .btn-2050:active { transform: scale(0.95); }
   .btn-2050:disabled { background: #888 !important; box-shadow: none !important; cursor: not-allowed; border-color: #555; }
       
-  /* SPECIFIC BUTTON COLORS */
   .neon-green { background: linear-gradient(135deg, #00ff87, #00b75a); box-shadow: 0 12px 25px rgba(0, 255, 135, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
   .neon-orange { background: linear-gradient(135deg, #ff8a00, #e52e71); box-shadow: 0 12px 25px rgba(229, 46, 113, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
   .neon-blue { background: linear-gradient(135deg, #00c6ff, #0072ff); box-shadow: 0 12px 25px rgba(0, 114, 255, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
 
-  /* NEW: BUTTON PULSE ANIMATION */
   @keyframes clickMePulse { 0% { transform: scale(1); } 50% { transform: scale(1.04); } 100% { transform: scale(1); } }
   .btn-pulse { animation: clickMePulse 1.8s infinite ease-in-out; }
 
@@ -39,8 +42,6 @@
   .status-badge { display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 5px; }
   .bg-warning { background: #fff3cd; color: #856404; border: 1px solid #856404;}
   .bg-success { background: #d4edda; color: #155724; border: 1px solid #155724;}
-  
-  /* CROWN BADGE FOR LIFETIME VISITS */
   .bg-gold { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; border: none; box-shadow: 0 2px 5px rgba(255,215,0,0.4); margin: 0; }
 
   .visit-row { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;}
@@ -53,7 +54,6 @@
   @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
   @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-  /* ANTI-FRAUD CSS INJECTIONS */
   @keyframes pulseFraud { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
   .anti-fraud-pulse { animation: pulseFraud 1.5s infinite; border: 2px dashed #25D366 !important; }
   .live-clock { font-family: monospace; font-size: 14px; color: #fff; font-weight: bold; margin-top: 10px; text-align: center; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 8px; display: none; }
@@ -285,7 +285,6 @@
     let isApprovedToday = (data.status === "APPROVED" || data.status === "CLAIMED");
     let isPendingToday = (data.status === "PENDING");
 
-    // SMART LOOK-AHEAD FIX: Calculates exact next visit based on today's approval status
     let futureVisitNumber = isApprovedToday ? (sCount + 1) : (sCount + 2);
     let nextRewardAmt = "";
     
@@ -300,7 +299,6 @@
         <span style='font-size: 12px; font-weight: 800; color: #e0f7fa; letter-spacing: 0.5px;'>*Min. purchase ₹499</span>
     `;
 
-    // Dynamic Button Generator
     let rewardText = ""; let btnText = "";
     if(sCount === 0) { rewardText = "₹0"; btnText = "LOG 1ST VISIT"; }
     else if(sCount === 1) { rewardText = "₹50 OFF"; btnText = "CLAIM ₹50 OFF"; }
@@ -316,34 +314,64 @@
         visitBadge.className = "status-badge bg-success";
         visitBadge.style.display = "inline-block";
         document.getElementById("activeRewardBox").classList.remove("anti-fraud-pulse");
-        activeBoxHTML = `
-            <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S REWARD</div>
-            <div style="font-size: 24px; font-weight: 900; margin: 10px 0;">✅ REDEEMED</div>
-            <div style="background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px; font-size: 13px; font-weight: bold; text-align: center;">Valid Today Only (Expires 11:59 PM)</div>
-        `;
+
+        // FIX: If they just got their 1st visit approved, it says "ACCOUNT ACTIVE" instead of "REDEEMED"
+        if (sCount === 1) {
+             activeBoxHTML = `
+                <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">VIP STATUS</div>
+                <div style="font-size: 24px; font-weight: 900; margin: 10px 0;">✅ ACCOUNT ACTIVE</div>
+                <div style="background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px; font-size: 13px; font-weight: bold; text-align: center;">1st Visit Logged. Rewards unlocked next time!</div>
+            `;
+        } else {
+             activeBoxHTML = `
+                <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S REWARD</div>
+                <div style="font-size: 24px; font-weight: 900; margin: 10px 0;">✅ REDEEMED</div>
+                <div style="background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px; font-size: 13px; font-weight: bold; text-align: center;">Valid Today Only (Expires 11:59 PM)</div>
+            `;
+        }
+
     } else if (isPendingToday) {
         visitBadge.innerText = "⏳ WAITING 4 APPROVAL"; 
         visitBadge.className = "status-badge bg-warning";
         visitBadge.style.display = "inline-block";
         document.getElementById("activeRewardBox").classList.add("anti-fraud-pulse");
-        activeBoxHTML = `
-            <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S DISCOUNT: ${rewardText}</div>
-            <button class="btn-2050" disabled style="background: #555; border-color: #444; margin-top: 15px;">⏳ PENDING - SHOW TO CASHIER</button>
-            <div class="live-clock" style="display:block; font-size: 16px; padding: 10px;"></div>
-        `;
+
+        // FIX: If they are pending their very first visit, it doesn't mention "Discount ₹0"
+        if (sCount === 0) {
+            activeBoxHTML = `
+                <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">WELCOME TO VIP CLUB</div>
+                <button class="btn-2050" disabled style="background: #555; border-color: #444; margin-top: 15px;">⏳ LOGGING 1ST VISIT...</button>
+                <div class="live-clock" style="display:block; font-size: 16px; padding: 10px;"></div>
+            `;
+        } else {
+            activeBoxHTML = `
+                <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S DISCOUNT: ${rewardText}</div>
+                <button class="btn-2050" disabled style="background: #555; border-color: #444; margin-top: 15px;">⏳ PENDING - SHOW TO CASHIER</button>
+                <div class="live-clock" style="display:block; font-size: 16px; padding: 10px;"></div>
+            `;
+        }
         waitForCashier(savedMobile.trim());
     } else {
         visitBadge.style.display = "none";
         document.getElementById("activeRewardBox").classList.remove("anti-fraud-pulse");
         
-        activeBoxHTML = `
-            <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S DISCOUNT: ${rewardText}</div>
-            <button class="btn-2050 neon-green btn-pulse" onclick="claimRewardPing('activeRewardBox')" style="margin-top: 15px;">${btnText}</button>
-            <div class="live-clock" style="display:none; font-size: 16px; padding: 10px;"></div>
-            <div style="text-align: center;">
-               <div style="font-size: 12px; font-weight: 900; background: rgba(0,0,0,0.25); color: #fff; padding: 6px 12px; border-radius: 20px; display: inline-block; margin-top: 12px; letter-spacing: 0.5px;">*MIN. PURCHASE ₹499</div>
-            </div>
-        `;
+        // FIX: If they haven't clicked anything yet on their 1st visit
+        if (sCount === 0) {
+            activeBoxHTML = `
+                <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">WELCOME TO VIP CLUB</div>
+                <button class="btn-2050 neon-blue btn-pulse" onclick="claimRewardPing('activeRewardBox')" style="margin-top: 15px;">LOG 1ST VISIT</button>
+                <div class="live-clock" style="display:none; font-size: 16px; padding: 10px;"></div>
+            `;
+        } else {
+            activeBoxHTML = `
+                <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">TODAY'S DISCOUNT: ${rewardText}</div>
+                <button class="btn-2050 neon-green btn-pulse" onclick="claimRewardPing('activeRewardBox')" style="margin-top: 15px;">${btnText}</button>
+                <div class="live-clock" style="display:none; font-size: 16px; padding: 10px;"></div>
+                <div style="text-align: center;">
+                   <div style="font-size: 12px; font-weight: 900; background: rgba(0,0,0,0.25); color: #fff; padding: 6px 12px; border-radius: 20px; display: inline-block; margin-top: 12px; letter-spacing: 0.5px;">*MIN. PURCHASE ₹499</div>
+                </div>
+            `;
+        }
     }
     document.getElementById("activeRewardBox").innerHTML = activeBoxHTML;
 
@@ -379,7 +407,6 @@
         document.getElementById("specialPromoBox").style.display = "none";
     }
 
-    // STAMP JOURNEY BUILDER
     document.getElementById("stampCountText").innerText = sCount;
     const rewardPrices = [0, 50, 75, 100, 150]; 
     let journeyHTML = ""; 
