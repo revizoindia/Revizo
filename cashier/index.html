@@ -4,14 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Cashier Terminal</title>
-  <!-- ADD TO HOME SCREEN APP SETTINGS -->
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="application-name" content="Revizo">
 <meta name="apple-mobile-web-app-title" content="Revizo">
 <meta name="theme-color" content="#1a1a1a">
 
-<!-- FIXED: Replaced old Revizo logos with Riwaz Logo -->
 <link rel="apple-touch-icon" href="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png">
 <link rel="icon" type="image/png" href="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png">
 <link rel="manifest" href="manifest.json">
@@ -45,7 +43,6 @@
 
   .pin-input { width: 100%; padding: 16px; font-size: 28px; text-align: center; letter-spacing: 12px; border-radius: 14px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: var(--text); margin-bottom: 20px; outline: none; }
   
-  /* Audit Popup Styling */
   .audit-btn { background: rgba(0,198,255,0.1); border: 1px solid #00c6ff; color: var(--text); padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
   .audit-btn:active { transform: scale(0.95); background: #00c6ff; color: #000; }
 </style>
@@ -54,7 +51,6 @@
 
 <div id="cashier-view" style="width: 100%; max-width: 500px;">
   
-  <!-- PIN LOGIN SCREEN -->
   <div id="cashier-login" class="card active">
     <img src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 100px; border-radius: 20px; margin-bottom: 15px; object-fit: contain;">
     <h2 style="margin-top:0;">Cashier Terminal</h2>
@@ -63,7 +59,6 @@
     <button id="unlockBtn" class="futuristic-btn" style="background:#00c6ff;" onclick="unlockDashboard()">UNLOCK TERMINAL</button>
   </div>
 
-  <!-- MAIN DASHBOARD -->
   <div id="cashier-dashboard" class="card" style="display:none; text-align: left;">
     <div style="text-align:center; margin-bottom:20px;">
       <img src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 60px; border-radius: 15px; margin-bottom: 10px; object-fit: contain;">
@@ -80,13 +75,11 @@
       <div style='color:#888; text-align:center;'>Fetching live data...</div>
     </div>
 
-    <!-- NEW: THANK YOU QUEUE -->
     <div id="thankYouSection" style="display:none; margin-bottom:25px;">
       <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">💬 Send Thank You Messages</h3>
       <div id="thankYouList"></div>
     </div>
     
-    <!-- STICKY CRM REMINDERS -->
     <div id="remindersSection" style="display:none; margin-bottom:25px;">
       <h3 style="color:#a0aec0; font-size:14px; text-transform:uppercase;">📅 Action Required: VIP Reminders</h3>
       <div id="reminderList"></div>
@@ -94,7 +87,6 @@
   </div>
 </div>
 
-<!-- NEW: APPROVAL AUDIT POPUP -->
 <div id="auditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; padding: 20px; box-sizing: border-box;">
    <div class="card" style="display:block; text-align:center; background: #252525; border: 1px solid #444;">
       <h3 style="margin-top: 0; color: #00c6ff;">Confirm Reward Given</h3>
@@ -120,7 +112,6 @@
   const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
   let authToken = localStorage.getItem('revizo3_auth_' + SHOP_ID) || '';
   
-  // FIXED: Hardcoded the customer rewards link for WhatsApp messages
   const WALLET_LINK = "https://revizoindia.github.io/Revizo/index.html?shop=" + SHOP_ID;
 
   window.onload = function() {
@@ -158,7 +149,6 @@
   }
 
   function renderLists(pending, reminders, thankYous) {
-    // 1. PENDING APPROVALS
     const list = document.getElementById('pendingList'); list.innerHTML = '';
     if(pending && pending.length > 0) {
       pending.forEach(num => {
@@ -167,7 +157,6 @@
       });
     } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
     
-    // 2. THANK YOU QUEUE
     const tyList = document.getElementById('thankYouList'); tyList.innerHTML = '';
     if(thankYous && thankYous.length > 0) {
       document.getElementById('thankYouSection').style.display = 'block';
@@ -177,7 +166,6 @@
       });
     } else { document.getElementById('thankYouSection').style.display = 'none'; }
 
-    // 3. STICKY CRM REMINDERS
     const remList = document.getElementById('reminderList'); remList.innerHTML = '';
     let visibleReminders = 0;
     if(reminders && reminders.length > 0) {
@@ -185,7 +173,6 @@
         const year = new Date().getFullYear();
         const sentKey = 'rem_sent_' + rem.mobile + '_' + rem.type + '_' + year;
         
-        // If cashier already sent it this year, hide it permanently
         if(!localStorage.getItem(sentKey)) {
             visibleReminders++;
             remList.innerHTML += `<div class='list-card crm-card' id='rem-${rem.mobile}'><div><div style='font-weight:bold;'>${rem.name}</div><div style='font-size:12px; color:#00ff87;'><b>${rem.time}</b> to ${rem.type}</div></div><button class='btn-wa' onclick='sendReminder("${rem.mobile}", "${rem.name}", "${rem.type}", "${rem.time}")'>💬 MSG</button></div>`;
@@ -195,9 +182,6 @@
     document.getElementById('remindersSection').style.display = (visibleReminders > 0) ? 'block' : 'none';
   }
 
-  // ==========================================
-  // MODAL AUDIT LOGIC (FOR NIGHTLY EMAIL)
-  // ==========================================
   let currentAuditMobile = "";
   
   function openAuditModal(mobile) {
@@ -215,10 +199,8 @@
     document.getElementById('auditModal').style.display = 'none';
     document.getElementById('card-'+currentAuditMobile).style.opacity = '0.5';
     
-    // 1. Log to Audit Email
     fetch(REVIZO_API + "?action=claimOffer&shopId=" + SHOP_ID + "&mobile=" + currentAuditMobile + "&auth=" + authToken + "&discountType=" + encodeURIComponent(discountType) + "&amountRs=" + amount);
     
-    // 2. Actually Approve User
     fetch(REVIZO_API + "?action=approveUser&shopId=" + SHOP_ID + "&mobile=" + currentAuditMobile + "&auth=" + authToken)
       .then(r => r.json()).then(d => { if(d.success) loadPending(); });
   }
@@ -228,20 +210,18 @@
     fetch(REVIZO_API + "?action=rejectUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken).then(r => r.json()).then(d => { if(d.success) loadPending(); });
   }
 
-  // ==========================================
-  // WHATSAPP GENERATORS & CLEARING LOGIC
-  // ==========================================
   function cleanPhone(mobile) {
     let clean = String(mobile).replace(/\D/g, '');
     return (clean.length === 10) ? '91' + clean : clean;
   }
 
+  // FIX: Custom formatted WhatsApp message with no links!
   function sendThankYou(mobile, name) {
     document.getElementById('ty-'+mobile).style.opacity = '0.5';
     let customerName = name ? name.split(" ")[0] : "VIP";
-    let msg = `Hi ${customerName}! Thanks for visiting us today. We hope you enjoyed your reward! \n\nCheck your updated VIP Wallet to see your next reward here: \n${WALLET_LINK}`;
     
-    // Clear from queue in Backend
+    let msg = `🎉 Hi ${customerName}!\n\nThank you for shopping with us! 🛍️\n\nWe hope you loved your purchase. ❤️\n\nVisit us again to unlock exciting rewards and exclusive offers! 🎁\n\n🌟 RIWAZ GARMENTS 🌟`;
+    
     fetch(REVIZO_API + "?action=markThankYouSent&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken)
         .then(r => r.json()).then(d => { if(d.success) loadPending(); });
         
@@ -252,18 +232,15 @@
     let customerName = name ? name.split(" ")[0] : "VIP";
     let msg = "";
     
-    // GOLDEN DAY LOGIC
     if(time === '0 Days') {
         msg = `Hi ${customerName}! 🎉 Wishing you a very Happy ${type} from our team! Drop by today for your special Golden Day surprise! \n\nCheck your VIP Wallet here: \n${WALLET_LINK}`;
     } else {
         msg = `Hi ${customerName}! Your ${type} is coming up in ${time}! We have unlocked a special 10% discount for you. \n\nCheck your VIP Wallet here: \n${WALLET_LINK}`;
     }
 
-    // Save sticky lock to cashier's browser so it disappears permanently for the year
     const year = new Date().getFullYear();
     localStorage.setItem('rem_sent_' + mobile + '_' + type + '_' + year, 'true');
     
-    // Refresh to hide the card, then open WA
     loadPending();
     window.open(`https://wa.me/${cleanPhone(mobile)}?text=${encodeURIComponent(msg)}`, '_blank');
   }
