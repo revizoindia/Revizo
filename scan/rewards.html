@@ -315,7 +315,6 @@
         visitBadge.style.display = "inline-block";
         document.getElementById("activeRewardBox").classList.remove("anti-fraud-pulse");
 
-        // FIX: If they just got their 1st visit approved, it says "ACCOUNT ACTIVE" instead of "REDEEMED"
         if (sCount === 1) {
              activeBoxHTML = `
                 <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">VIP STATUS</div>
@@ -336,11 +335,11 @@
         visitBadge.style.display = "inline-block";
         document.getElementById("activeRewardBox").classList.add("anti-fraud-pulse");
 
-        // FIX: If they are pending their very first visit, it doesn't mention "Discount ₹0"
+        // NEW TEXT APPLIED HERE
         if (sCount === 0) {
             activeBoxHTML = `
-                <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">WELCOME TO VIP CLUB</div>
-                <button class="btn-2050" disabled style="background: #555; border-color: #444; margin-top: 15px;">⏳ LOGGING 1ST VISIT...</button>
+                <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">CONFIRM YOUR VISIT ENTRY</div>
+                <button class="btn-2050" disabled style="background: #555; border-color: #444; margin-top: 15px; font-size: 14px; line-height: 1.4;">⏳ TELL LAST 4 NUMBERS OF YOUR 📱<br>AT SHOP-COUNTER</button>
                 <div class="live-clock" style="display:block; font-size: 16px; padding: 10px;"></div>
             `;
         } else {
@@ -355,10 +354,10 @@
         visitBadge.style.display = "none";
         document.getElementById("activeRewardBox").classList.remove("anti-fraud-pulse");
         
-        // FIX: If they haven't clicked anything yet on their 1st visit
+        // NEW TEXT APPLIED HERE FOR UNCLICKED STATE
         if (sCount === 0) {
             activeBoxHTML = `
-                <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">WELCOME TO VIP CLUB</div>
+                <div style="font-size: 14px; font-weight: 900; letter-spacing: 1px;">CONFIRM YOUR VISIT ENTRY</div>
                 <button class="btn-2050 neon-blue btn-pulse" onclick="claimRewardPing('activeRewardBox')" style="margin-top: 15px;">LOG 1ST VISIT</button>
                 <div class="live-clock" style="display:none; font-size: 16px; padding: 10px;"></div>
             `;
